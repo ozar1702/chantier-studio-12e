@@ -1,0 +1,5 @@
+# config.js est réécrit à chaque déploiement par scripts/config-build.mjs.
+# Décommentez la ligne suivante si vous ne voulez pas versionner les valeurs locales.
+# config.js
+.netlify/
+node_modules/

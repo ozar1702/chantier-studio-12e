@@ -1,0 +1,2767 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#15181b">
+<title>Chantier &amp; Panier — Studio 12e</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%2315181b'/%3E%3Cpath d='M4 26h24v3H4z' fill='%23fab219'/%3E%3Cpath d='M12 6h8v14h-8z' fill='%23f1f2f0'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+
+:root{
+  color-scheme:light;
+  --ground:#eceeec; --surface:#fcfcfb; --surface-2:#f3f4f2; --ink:#15181b; --ink-2:#4b5055; --muted:#80858a;
+  --line:#dfe2df; --line-strong:#c3c7c3; --accent:#1c5cab; --accent-ink:#ffffff;
+  --series:#2a78d6; --track:#cde2fb; --baseline:#a9aea9; --plan:#80858a;
+  --good:#0ca30c; --good-text:#006300; --warn:#fab219; --warn-text:#8a5a00; --serious:#ec835a; --serious-text:#a3431c;
+  --crit:#d03b3b; --crit-text:#b42f2f; --wash-crit:#fbeaea; --wash-warn:#fdf3dc; --wash-good:#e6f4e6;
+  --stripe:#15181b; --shadow:0 1px 2px rgba(21,24,27,.06),0 4px 16px rgba(21,24,27,.05);
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#101214; --surface:#1a1c1e; --surface-2:#222528; --ink:#f1f2f0; --ink-2:#bfc3c1; --muted:#8b9094;
+    --line:#2c3033; --line-strong:#3e4347; --accent:#6da7ec; --accent-ink:#0d1a2b;
+    --series:#3987e5; --track:#1d3553; --baseline:#5d6266; --plan:#9a9fa3;
+    --good-text:#3fc23f; --warn-text:#fab219; --serious-text:#ec835a; --crit-text:#e66767;
+    --wash-crit:#3a1e1e; --wash-warn:#3a2f14; --wash-good:#17301a; --stripe:#f1f2f0; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#101214; --surface:#1a1c1e; --surface-2:#222528; --ink:#f1f2f0; --ink-2:#bfc3c1; --muted:#8b9094;
+  --line:#2c3033; --line-strong:#3e4347; --accent:#6da7ec; --accent-ink:#0d1a2b;
+  --series:#3987e5; --track:#1d3553; --baseline:#5d6266; --plan:#9a9fa3;
+  --good-text:#3fc23f; --warn-text:#fab219; --serious-text:#ec835a; --crit-text:#e66767;
+  --wash-crit:#3a1e1e; --wash-warn:#3a2f14; --wash-good:#17301a; --stripe:#f1f2f0; --shadow:none;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;padding-inline:16px;padding-block:20px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{margin:0;text-wrap:balance}
+h2{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.01em;text-transform:uppercase}
+.mono{font-family:var(--mono)}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+button,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+
+:root{--e1:#2a78d6;--e2:#eb6834;--e3:#1baf7a;--e4:#eda100;--e5:#e87ba4;--e6:#008300;--e7:#4a3aa7;--e0:#80858a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--e1:#3987e5;--e2:#d95926;--e3:#199e70;--e4:#c98500;--e5:#d55181;--e6:#008300;--e7:#9085e9;--e0:#8b9094}}
+:root[data-theme="dark"]{--e1:#3987e5;--e2:#d95926;--e3:#199e70;--e4:#c98500;--e5:#d55181;--e6:#008300;--e7:#9085e9;--e0:#8b9094}
+[hidden]{display:none!important}
+.wrap{max-width:1240px}
+
+/* En-tête */
+.head{background:var(--surface);border:1px solid var(--line-strong);border-radius:4px;overflow:hidden;box-shadow:var(--shadow)}
+.hazard{height:8px;background:repeating-linear-gradient(-45deg,var(--stripe) 0 10px,var(--warn) 10px 20px)}
+.head-in{padding:16px 20px 18px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-end}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.head h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,4.4vw,42px);line-height:1.02;margin-top:6px}
+.head p{margin:4px 0 0;color:var(--ink-2)}
+.sync{display:inline-flex;align-items:center;gap:6px;letter-spacing:.04em;text-transform:none;font-family:var(--sans);font-size:12px}
+.sync i{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.sync.ok i{background:var(--good)} .sync.busy i{background:var(--warn)} .sync.err i{background:var(--crit)}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line-strong);background:var(--surface);padding:7px 12px;border-radius:3px;cursor:pointer;font-weight:500;white-space:nowrap}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.danger{color:var(--crit-text);border-color:color-mix(in srgb,var(--crit) 40%,transparent)}
+.btn.sm{padding:3px 9px;font-size:12.5px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Indicateurs */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.kpi{background:var(--surface);padding:13px 16px 15px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.kpi .lbl{font-size:12px;color:var(--ink-2);font-weight:500}
+.kpi .val{font-family:var(--display);font-weight:600;font-size:32px;line-height:1.05}
+.kpi .val small{font-size:17px;color:var(--ink-2)}
+.kpi .sub{font-size:12px;color:var(--ink-2)}
+.meter{height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden;display:flex;margin:5px 0 2px}
+.meter i{display:block;height:100%}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:1px 7px 1px 5px;border-radius:2px;white-space:nowrap}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.pill.good{color:var(--good-text);background:var(--wash-good)}
+.pill.warn{color:var(--warn-text);background:var(--wash-warn)}
+.pill.crit{color:var(--crit-text);background:var(--wash-crit)}
+.pill.info{color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.pill.neutral{color:var(--ink-2);background:var(--surface-2)}
+.pill.neutral::before{background:var(--muted)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:2px;flex:none}
+
+/* Cartes, onglets */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:16px 18px 18px;min-width:0}
+.card-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.card-head p{margin:2px 0 0;color:var(--ink-2);font-size:12.5px;max-width:70ch}
+.tabs{display:flex;gap:2px;border-bottom:2px solid var(--line-strong);overflow-x:auto}
+.tab{background:none;border:0;padding:10px 14px;cursor:pointer;font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab .count{font-family:var(--mono);font-size:11px;margin-left:6px;padding:0 5px;border-radius:2px;background:var(--surface-2);color:var(--ink-2)}
+
+/* Filtres */
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.filters input,.filters select,.form input,.form select,.form textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);border-radius:3px;padding:6px 8px;min-width:0}
+.filters input[type=search]{flex:1 1 220px}
+.filters .count{font-size:12.5px;color:var(--ink-2);margin-left:auto}
+.chk{display:inline-flex;gap:6px;align-items:center;font-size:13px}
+
+/* Tableaux */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:3px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:7px 8px;border-bottom:1px solid var(--line-strong);white-space:nowrap;background:var(--surface);position:sticky;top:0;z-index:1}
+th.sortable{cursor:pointer}
+th.sortable:hover{color:var(--ink)}
+td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.r,th.r{text-align:right}
+.num{font-variant-numeric:tabular-nums}
+tr.row{cursor:pointer}
+tr.row:hover td{background:var(--surface-2)}
+tr.row.del td{color:var(--muted)}
+tr.row.del .trav{text-decoration:line-through}
+tr.grp td{background:var(--surface-2);font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);cursor:default}
+tfoot td{font-weight:600;border-top:1px solid var(--line-strong);border-bottom:0}
+.trav{min-width:240px;max-width:420px}
+.trav small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:420px}
+.ent{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+select.st{font:inherit;font-size:12px;border:1px solid var(--line-strong);border-radius:3px;background:var(--surface);color:var(--ink);padding:2px 4px}
+.warnmark{color:var(--warn-text);font-weight:600}
+
+/* Entreprises */
+.ents td .bar{height:8px;border-radius:0 3px 3px 0;background:var(--track);overflow:hidden;min-width:60px}
+.ents td .bar i{display:block;height:100%}
+
+/* Planning */
+.gscroll{overflow-x:auto;border:1px solid var(--line);border-radius:3px}
+.gt{position:relative}
+.gr{display:grid;grid-template-columns:var(--lab) 1fr;min-height:28px;border-top:1px solid var(--line)}
+.gr:first-child{border-top:0}
+.gl{position:sticky;left:0;z-index:2;background:var(--surface);border-right:1px solid var(--line);padding:4px 10px;display:flex;align-items:center;gap:8px;min-width:0;font-size:12.5px}
+.gl span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gr.grp{background:var(--surface-2);min-height:26px}
+.gr.grp .gl{background:var(--surface-2);font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2)}
+.gr.task{cursor:pointer}
+.gr.task:hover .gl{background:var(--surface-2)}
+.gk{position:relative}
+.ghead{height:40px}
+.ghead .m{position:absolute;top:4px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2);padding-left:4px;white-space:nowrap}
+.ghead .w{position:absolute;bottom:4px;font-family:var(--mono);font-size:10px;color:var(--muted);transform:translateX(-50%)}
+.gline{position:absolute;top:0;bottom:0;width:1px;background:var(--line)}
+.gline.mo{background:var(--line-strong)}
+.gline.we{width:auto;background:color-mix(in srgb,var(--ink) 3%,transparent)}
+.today{position:absolute;top:0;bottom:0;width:2px;background:var(--crit);z-index:1;pointer-events:none}
+.today span{position:absolute;top:2px;left:4px;font-family:var(--mono);font-size:10px;color:var(--crit-text);background:var(--surface);padding:0 3px;white-space:nowrap}
+.bar2{position:absolute;top:7px;height:14px;border-radius:3px;border:1.5px solid var(--c);background:color-mix(in srgb,var(--c) 22%,var(--surface));box-shadow:0 0 0 2px var(--surface)}
+.bar2.done{background:var(--c)}
+.bar2.run{background:linear-gradient(90deg,var(--c) 50%,color-mix(in srgb,var(--c) 22%,var(--surface)) 50%)}
+.bar2.mod{border-style:dashed}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);align-items:center;margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:22px;height:11px;border-radius:2px;border:1.5px solid var(--e0)}
+.seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden}
+.seg button{border:0;background:var(--surface);padding:5px 10px;cursor:pointer;font-size:12.5px}
+.seg button+button{border-left:1px solid var(--line-strong)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+
+/* Paiements */
+.paygrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.payent h3{display:flex;align-items:center;gap:8px;font-size:15px}
+.payrow{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+.payrow:first-of-type{border-top:0}
+.payrow small{display:block;color:var(--muted);font-size:11.5px}
+.paysum{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-2);padding-top:8px;border-top:1px solid var(--line-strong);margin-top:4px;gap:10px;flex-wrap:wrap}
+
+/* Dialogues */
+dialog{border:1px solid var(--line-strong);border-radius:4px;background:var(--surface);color:var(--ink);padding:0;width:min(760px,calc(100vw - 32px))}
+dialog::backdrop{background:rgba(10,12,14,.5)}
+.dlg{padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.dlg h2{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px 14px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field.full{grid-column:1/-1}
+.field label{font-size:12px;font-weight:500;color:var(--ink-2)}
+.form textarea{min-height:64px;resize:vertical}
+.foot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.alert{border-radius:3px;padding:8px 12px;font-size:13px}
+.alert.err{background:var(--wash-crit)}
+.alert.warn{background:var(--wash-warn)}
+.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line-strong);border-radius:3px}
+#tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--surface);padding:8px 10px;border-radius:3px;font-size:12px;max-width:300px;box-shadow:0 4px 18px rgba(0,0,0,.2)}
+#tip b{display:block;font-weight:600;margin-bottom:3px}
+#tip .row{display:flex;justify-content:space-between;gap:14px;font-family:var(--mono);font-size:11px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--ink);color:var(--surface);border-radius:4px;padding:9px 14px;max-width:calc(100vw - 32px);box-shadow:0 6px 24px rgba(0,0,0,.25);font-size:13px}
+.note{font-size:12px;color:var(--muted)}
+
+/* ============ Coquille d'application ============ */
+html,body{min-height:100%}
+body{padding-block:0 0}
+.app{display:grid;grid-template-columns:82px minmax(0,1fr);gap:0;max-width:1400px;margin:0 auto;min-height:100vh}
+.rail{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:100vh;display:flex;flex-direction:column;gap:4px;
+  padding:14px 8px;background:var(--rail-bg);border-right:1px solid var(--rail-line);color:var(--rail-ink)}
+.rail-mark{font-family:var(--display);font-weight:700;font-size:22px;line-height:1;text-align:center;padding:6px 0 14px;
+  color:var(--rail-ink);border-bottom:1px solid var(--rail-line);margin-bottom:8px;letter-spacing:.02em}
+.rail-mark sup{font-size:11px}
+.rail-b{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px;border:0;border-radius:3px;
+  background:none;color:var(--rail-mut);cursor:pointer;font-size:10.5px;font-family:var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;position:relative;line-height:1.2;text-align:center}
+.rail-b svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.rail-b:hover{color:var(--rail-ink);background:var(--rail-hov)}
+.rail-b[aria-pressed="true"]{color:var(--rail-ink);background:var(--rail-hov);box-shadow:inset 2px 0 0 var(--warn)}
+.rail-badge{position:absolute;top:6px;right:10px;font-style:normal;font-size:9.5px;min-width:15px;height:15px;
+  display:grid;place-items:center;border-radius:8px;background:var(--warn);color:#15181b;font-weight:600}
+.rail-foot{margin-top:auto;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;
+  color:var(--rail-mut);text-align:center;line-height:1.5;display:flex;flex-direction:column;gap:8px}
+.rail-acc{background:none;border:1px solid var(--rail-line);color:var(--rail-mut);cursor:pointer;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:6px 4px;width:100%}
+.rail-acc:hover{color:var(--rail-ink);background:var(--rail-hov)}
+.stage{min-width:0;padding:20px 16px 56px;display:flex;flex-direction:column}
+.stage .wrap{max-width:1180px;width:100%;margin:0 auto}
+@media (max-width:820px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .rail{position:fixed;left:0;right:0;bottom:0;top:auto;height:auto;z-index:40;flex-direction:row;justify-content:center;
+    border-right:0;border-top:1px solid var(--rail-line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+  .rail-mark{display:none}
+  .rail-b{flex:1 1 0;max-width:180px;padding:6px 4px}
+  .rail-b[aria-pressed="true"]{box-shadow:inset 0 2px 0 var(--warn)}
+  .rail-foot{margin-top:0;flex:0 0 auto;justify-content:center}
+  .rail-sig{display:none}
+  .rail-acc{width:auto;white-space:nowrap;padding:6px 10px}
+  .stage{padding-bottom:84px}
+}
+
+/* ============ Espace 1 · Travaux : dossier technique ============ */
+.app:not([data-space="ameublement"]){--rail-bg:#15181b;--rail-line:#32373b;--rail-ink:#f1f2f0;--rail-mut:#9298a0;--rail-hov:#22262a}
+#space-travaux .head,#space-travaux .card,#space-travaux .kpis,#space-travaux .tscroll,#space-travaux .empty{border-radius:0}
+#space-travaux .head{box-shadow:none;border-width:1px 1px 3px}
+#space-travaux .card{box-shadow:none}
+#space-travaux .btn{border-radius:0}
+#space-travaux h2{letter-spacing:.04em}
+#space-travaux th{border-bottom-width:2px;color:var(--ink-2)}
+#space-travaux tfoot td{background:var(--surface-2)}
+#space-travaux .kpi .val{letter-spacing:-.01em}
+#space-travaux .kpi .pill{white-space:normal}
+@media (min-width:1080px){#space-travaux #kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.cartouche{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));border-top:1px solid var(--line-strong);
+  background:var(--surface-2);font-family:var(--mono)}
+.cartouche > div{padding:7px 12px 9px;border-right:1px solid var(--line);min-width:0}
+.cartouche > div:last-child{border-right:0}
+.cartouche dt{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.cartouche dd{margin:3px 0 0;font-family:var(--display);font-weight:600;font-size:16px;line-height:1.1;
+  text-transform:uppercase;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ============ Espace 2 · Ameublement : panier ============ */
+.app[data-space="ameublement"]{
+  --ground:#ffffff;--surface:#ffffff;--surface-2:#f6f6f4;--line:#e7e7e3;--line-strong:#d4d4cf;
+  --ink:#15171a;--ink-2:#55595e;--muted:#8c9093;--accent:#0f5f52;--accent-ink:#ffffff;
+  --rail-bg:#ffffff;--rail-line:#e7e7e3;--rail-ink:#15171a;--rail-mut:#8c9093;--rail-hov:#f2f2ef;
+  background:var(--ground)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .app[data-space="ameublement"]{
+  --ground:#121416;--surface:#1b1e20;--surface-2:#23272a;--line:#2b3033;--line-strong:#3d4246;
+  --ink:#f2f3f1;--ink-2:#c1c5c3;--muted:#8b9094;--accent:#58c9ae;--accent-ink:#0b1a17;
+  --rail-bg:#1b1e20;--rail-line:#2b3033;--rail-ink:#f2f3f1;--rail-mut:#8b9094;--rail-hov:#23272a}}
+:root[data-theme="dark"] .app[data-space="ameublement"]{
+  --ground:#121416;--surface:#1b1e20;--surface-2:#23272a;--line:#2b3033;--line-strong:#3d4246;
+  --ink:#f2f3f1;--ink-2:#c1c5c3;--muted:#8b9094;--accent:#58c9ae;--accent-ink:#0b1a17;
+  --rail-bg:#1b1e20;--rail-line:#2b3033;--rail-ink:#f2f3f1;--rail-mut:#8b9094;--rail-hov:#23272a}
+.app[data-space="ameublement"] .rail-b[aria-pressed="true"]{box-shadow:inset 2px 0 0 var(--accent);color:var(--accent)}
+@media (max-width:820px){.app[data-space="ameublement"] .rail-b[aria-pressed="true"]{box-shadow:inset 0 2px 0 var(--accent)}}
+
+.shop{max-width:1180px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.shop-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;
+  padding-bottom:16px;border-bottom:1px solid var(--line)}
+.shop-kicker{font-size:11.5px;letter-spacing:.16em;color:var(--muted);font-weight:500}
+.shop h1{font-family:var(--sans);font-weight:600;font-size:clamp(26px,3.4vw,34px);letter-spacing:-.015em;margin-top:8px}
+.shop-head p{margin:6px 0 0;color:var(--ink-2);max-width:62ch}
+.shop-count{font-size:13px;color:var(--ink-2);white-space:nowrap}
+.shop-count b{font-family:var(--display);font-size:26px;font-weight:600;display:block;color:var(--ink);line-height:1}
+
+.paste{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,2fr) minmax(0,1fr) 92px auto;gap:10px;align-items:end;
+  background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.paste .pf{display:flex;flex-direction:column;gap:5px;min-width:0}
+.paste label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.paste input{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:9px 11px;min-width:0;width:100%}
+.paste input:focus{border-color:var(--accent)}
+.shop .btn{border-radius:8px;padding:10px 16px;font-weight:600}
+.shop .btn.primary{background:var(--ink);border-color:var(--ink);color:var(--ground)}
+.shop .btn.ghost{background:none;border-color:var(--line-strong);color:var(--ink-2)}
+@media (max-width:900px){.paste{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.paste .btn{grid-column:1/-1}}
+
+.shop-grid{display:grid;grid-template-columns:minmax(0,1fr) 312px;gap:24px;align-items:start}
+@media (max-width:980px){.shop-grid{grid-template-columns:minmax(0,1fr)}}
+.cart{display:flex;flex-direction:column;gap:26px;min-width:0}
+.cart-grp{display:flex;flex-direction:column}
+.cart-grp h3{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-family:var(--sans);
+  font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);
+  padding-bottom:9px;border-bottom:1px solid var(--line)}
+.cart-grp h3 span{font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;text-transform:none;color:var(--muted);font-weight:400}
+.ci{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);align-items:start}
+.ci:hover{background:color-mix(in srgb,var(--surface-2) 60%,transparent)}
+.ci.off{opacity:.55}
+.ci-vig{width:76px;height:76px;border-radius:10px;display:grid;place-items:center;
+  background:color-mix(in srgb,var(--c) 12%,var(--surface-2));color:var(--c)}
+.ci-vig svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.ci-vig{position:relative;overflow:hidden;flex:none}
+.ci-vig img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.ci-vig.bad img{display:none}
+.ci-vig .add{position:absolute;inset:0;display:none;place-items:center;font-size:10.5px;font-family:var(--mono);
+  letter-spacing:.06em;text-transform:uppercase;background:color-mix(in srgb,var(--ink) 62%,transparent);color:#fff;text-align:center;padding:4px}
+.ci:hover .ci-vig.empty .add{display:grid}
+.photo-zone{display:flex;gap:14px;align-items:flex-start;border:1px dashed var(--line-strong);border-radius:10px;padding:12px;background:var(--surface-2)}
+.photo-zone.over{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--surface-2))}
+.photo-prev{width:88px;height:88px;border-radius:8px;flex:none;background:var(--surface);border:1px solid var(--line);
+  display:grid;place-items:center;overflow:hidden;color:var(--muted);font-size:10.5px;font-family:var(--mono);text-align:center;padding:4px}
+.photo-prev img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-txt{display:flex;flex-direction:column;gap:8px;min-width:0;font-size:12.5px;color:var(--ink-2)}
+.photo-txt p{margin:0}
+.photo-url{display:flex;gap:6px}
+.photo-url input{flex:1;min-width:0}
+.ci-main{min-width:0;display:flex;flex-direction:column;gap:7px}
+.ci-main h4{margin:0;font-size:15.5px;font-weight:600;line-height:1.3;letter-spacing:-.005em}
+.ci-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.ci-top .stslide,.ci-top .stoff{flex:none;margin-top:-1px}
+.ci.off .ci-main h4{text-decoration:line-through}
+.ci-meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);align-items:center}
+.ci-meta a{color:var(--accent);text-decoration:none;font-weight:500}
+.ci-meta a:hover{text-decoration:underline}
+.ci-note{margin:0;font-size:12.5px;color:var(--ink-2);background:var(--surface-2);border-radius:6px;padding:5px 9px;max-width:60ch}
+.ci-acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:1px}
+.stslide{display:flex;align-items:center;gap:10px;flex:none}
+.stslide input[type=range]{-webkit-appearance:none;appearance:none;width:124px;height:18px;margin:0;background:none;cursor:grab}
+.stslide input[type=range]:active{cursor:grabbing}
+.stslide input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:999px;
+  background:linear-gradient(to right,var(--c) 0 calc(var(--p) * 1%),var(--surface-2) calc(var(--p) * 1%) 100%)}
+.stslide input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+  background:var(--surface);border:2px solid var(--c);margin-top:-5px;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.stslide input[type=range]::-moz-range-track{height:6px;border-radius:999px;background:var(--surface-2)}
+.stslide input[type=range]::-moz-range-progress{height:6px;border-radius:999px;background:var(--c)}
+.stslide input[type=range]::-moz-range-thumb{width:16px;height:16px;border:2px solid var(--c);border-radius:50%;background:var(--surface)}
+.stslide input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:999px}
+.stslide .stlab{font-size:12.5px;font-weight:600;color:var(--c);min-width:76px;white-space:nowrap}
+.stslide.full{flex:1;width:100%}
+.stslide.full input[type=range]{flex:1;width:auto}
+.stticks{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:4px;
+  font-family:var(--mono);letter-spacing:.04em}
+.stticks span:nth-child(even){opacity:.55}
+.stoff{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--crit-text);
+  background:var(--wash-crit);border-radius:999px;padding:4px 6px 4px 12px;white-space:nowrap}
+.stoff.own{color:var(--ink-2);background:var(--surface-2)}
+.stoff button{font-size:12px}
+.st-sel[data-s="Livré"],.lnk{background:none;border:0;padding:0;font:inherit;font-size:12.5px;color:var(--muted);cursor:pointer;text-decoration:underline}
+.lnk:hover{color:var(--ink)}
+.ci-right{display:flex;flex-direction:column;align-items:flex-end;gap:9px;white-space:nowrap}
+.ci-unit{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.ci-tot{font-family:var(--display);font-weight:600;font-size:21px;line-height:1;font-variant-numeric:tabular-nums}
+.ci-tochiffrer{font-size:12.5px;color:var(--warn-text);font-weight:600}
+.step{display:inline-flex;align-items:center;border:1px solid var(--line-strong);border-radius:999px;overflow:hidden}
+.step button{width:28px;height:26px;border:0;background:var(--surface);color:var(--ink-2);cursor:pointer;font-size:14px;line-height:1}
+.step button:hover{background:var(--surface-2);color:var(--ink)}
+.step span{min-width:26px;text-align:center;font-size:13px;font-variant-numeric:tabular-nums}
+.ci-liv{font-size:12px;color:var(--muted)}
+@media (max-width:620px){
+  .ci{grid-template-columns:60px minmax(0,1fr);gap:12px}
+  .ci-vig{width:60px;height:60px}
+  .ci-right{grid-column:2;flex-direction:row;align-items:center;justify-content:space-between;width:100%;flex-wrap:wrap}
+}
+
+.recap{position:sticky;top:20px;display:flex;flex-direction:column;gap:12px}
+.recap-card{border:1px solid var(--line-strong);border-radius:12px;background:var(--surface);padding:18px}
+.recap-card h3{font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.rl{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:8px 0;border-bottom:1px solid var(--line)}
+.rl b{font-variant-numeric:tabular-nums;font-weight:600}
+.rl.mut{color:var(--muted)}
+.rtot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-top:12px}
+.rtot span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.rtot b{font-family:var(--display);font-weight:700;font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+.rbar{display:flex;height:8px;border-radius:999px;overflow:hidden;background:var(--surface-2);margin:14px 0 8px}
+.rbar i{display:block;height:100%}
+.rleg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11.5px;color:var(--muted)}
+.rleg span{display:inline-flex;align-items:center;gap:5px}
+.rleg i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.rnote{margin:12px 0 0;font-size:11.5px;color:var(--muted);line-height:1.5}
+.rpiece{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:5px 0;color:var(--ink-2)}
+.rpiece b{font-variant-numeric:tabular-nums;font-weight:500}
+.cartbar{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom,0px));z-index:35;display:none;
+  align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:var(--surface);
+  border-top:1px solid var(--line-strong);font-size:13px}
+.cartbar b{font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
+@media (max-width:980px){.app[data-space="ameublement"] .cartbar{display:flex}.recap{position:static}}
+@media (max-width:820px){.app[data-space="ameublement"] .stage{padding-bottom:140px}}
+
+
+/* ============ Espaces techniques : Échanges & Documents ============ */
+.tech{max-width:1180px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.tech-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;
+  background:var(--surface);border:1px solid var(--line-strong);border-bottom-width:3px;padding:16px 20px 18px}
+.tech-head h1{font-family:var(--display);font-weight:700;font-size:clamp(26px,3.6vw,36px);line-height:1.04;margin-top:6px}
+.tech-head p{margin:5px 0 0;color:var(--ink-2);max-width:70ch}
+.tech .card,.tech .tscroll,.tech .btn,.tech .empty{border-radius:0}
+
+/* Fils de discussion */
+.chat{display:grid;grid-template-columns:268px minmax(0,1fr);background:var(--surface);border:1px solid var(--line-strong);min-height:0}
+.chat-list{display:flex;flex-direction:column;border-right:1px solid var(--line);overflow:auto;max-height:68vh}
+.chat-i{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:9px;align-items:start;padding:12px;
+  border:0;border-bottom:1px solid var(--line);background:none;cursor:pointer;text-align:left;width:100%}
+.chat-i:hover{background:var(--surface-2)}
+.chat-i[aria-current="true"]{background:var(--surface-2);box-shadow:inset 3px 0 0 var(--accent)}
+.chat-i i{width:9px;height:9px;border-radius:2px;margin-top:4px;background:var(--c,var(--e0))}
+.chat-i b{display:block;font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-i small{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.chat-i em{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap}
+.chat-i .nu{display:inline-grid;place-items:center;min-width:17px;height:17px;border-radius:9px;background:var(--accent);
+  color:var(--accent-ink);font-size:10.5px;font-weight:600;margin-top:3px}
+.thread{display:flex;flex-direction:column;min-width:0;max-height:68vh}
+.thread-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.thread-head h2{font-size:17px}
+.thread-head .note{margin:0}
+.msgs{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--surface-2)}
+.day{align-self:center;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  background:var(--surface);border:1px solid var(--line);padding:2px 9px;margin:6px 0 2px}
+.msg{max-width:min(80%,580px);background:var(--surface);border:1px solid var(--line);padding:9px 12px 10px}
+.msg.me{align-self:flex-end;background:color-mix(in srgb,var(--accent) 9%,var(--surface));border-color:color-mix(in srgb,var(--accent) 32%,transparent)}
+.msg .who{display:flex;justify-content:space-between;gap:14px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.msg p{margin:0;white-space:pre-wrap}
+.msg .ref{display:inline-flex;align-items:center;gap:6px;margin-top:7px;font-size:12px;background:var(--surface-2);
+  border:1px solid var(--line);border-left:3px solid var(--c,var(--accent));padding:4px 9px;cursor:pointer;max-width:100%}
+.msg .ref span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msg .att{display:inline-flex;align-items:center;gap:7px;margin-top:7px;font-size:12px;color:var(--accent);
+  background:var(--surface-2);border:1px solid var(--line);padding:4px 9px}
+.composer{display:flex;gap:8px;align-items:flex-end;padding:10px 12px;border-top:1px solid var(--line-strong);background:var(--surface)}
+.composer textarea{flex:1;min-height:42px;max-height:130px;resize:vertical;font:inherit;color:var(--ink);
+  background:var(--surface);border:1px solid var(--line-strong);padding:9px 10px}
+@media (max-width:820px){
+  .chat{grid-template-columns:minmax(0,1fr)}
+  .chat-list{flex-direction:row;overflow-x:auto;max-height:none;border-right:0;border-bottom:1px solid var(--line-strong)}
+  .chat-i{min-width:190px;border-bottom:0;border-right:1px solid var(--line)}
+  .chat-i[aria-current="true"]{box-shadow:inset 0 3px 0 var(--accent)}
+  .thread{max-height:none}
+  .msgs{min-height:320px}
+}
+
+/* Documents */
+.drop{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+  border:1px dashed var(--line-strong);background:var(--surface);padding:14px 16px}
+.drop.over{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--surface))}
+.drop p{margin:0;font-size:13px;color:var(--ink-2)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips-st{margin-top:-10px}
+.chips-st .chip{border-radius:999px;font-size:12px;padding:3px 11px}
+.chips-st .chip i{font-style:normal;display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:var(--c,var(--muted))}
+.chips-st .chip[aria-pressed="true"] i{background:var(--surface)}
+.chip{border:1px solid var(--line-strong);background:var(--surface);padding:4px 10px;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.dl-row{display:grid;grid-template-columns:42px minmax(0,1fr) 108px minmax(116px,auto) auto;gap:12px;align-items:center;
+  padding:11px 14px;border-bottom:1px solid var(--line)}
+.dl-row:hover{background:var(--surface-2)}
+.dl-grp{font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);
+  background:var(--surface-2);padding:7px 14px;border-bottom:1px solid var(--line-strong);display:flex;justify-content:space-between;gap:10px}
+.dl-grp span{font-family:var(--mono);font-size:11px;letter-spacing:0;text-transform:none;color:var(--muted)}
+.ftype{width:42px;height:46px;border:1px solid var(--line-strong);border-top-width:3px;border-top-color:var(--c,var(--muted));
+  display:grid;place-items:center;font-family:var(--mono);font-size:10px;font-weight:500;color:var(--c,var(--ink-2));background:var(--surface)}
+.dl-row b{display:block;font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dl-row small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.dl-row .num{font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.dl-row .pill{white-space:normal;text-align:left}
+@media (max-width:760px){
+  .dl-row{grid-template-columns:42px minmax(0,1fr);row-gap:8px}
+  .dl-row > :nth-child(n+3){grid-column:2}
+}
+.share-list{display:flex;flex-direction:column;gap:8px;margin:4px 0 0}
+.share-list label{display:flex;gap:9px;align-items:center;font-size:13.5px;border:1px solid var(--line);padding:8px 11px}
+
+
+/* ============ Entrée : création de compte & connexion ============ */
+#gate{position:fixed;inset:0;z-index:60;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);background:var(--ground);overflow:auto}
+.gate-brand{background:#15181b;color:#f1f2f0;display:flex;flex-direction:column;min-width:0}
+.gate-brand .hazard{flex:none}
+.gate-brand-in{padding:clamp(24px,4vw,56px) clamp(24px,4vw,56px) clamp(20px,3vw,34px);display:flex;flex-direction:column;gap:22px;height:100%;
+  padding-top:calc(clamp(24px,4vw,56px) + env(safe-area-inset-top,0px))}
+.gate-logo{display:flex;align-items:baseline;gap:10px;font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:.02em}
+.gate-logo em{font-style:normal;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#9298a0}
+.gate-brand h2{font-family:var(--display);font-weight:700;font-size:clamp(28px,3.4vw,40px);line-height:1.05;color:#fff;max-width:22ch}
+.gate-brand p{margin:0;color:#c2c7c4;max-width:46ch}
+.gate-pts{display:flex;flex-direction:column;gap:14px;margin-top:auto}
+.gate-pt{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:start}
+.gate-pt svg{width:22px;height:22px;stroke:var(--warn);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-top:2px}
+.gate-pt b{display:block;font-size:14px;color:#fff}
+.gate-pt span{font-size:13px;color:#a8aeb2}
+.gate-legal{font-size:11.5px;color:#80858a;border-top:1px solid #32373b;padding-top:14px}
+.gate-form{display:flex;flex-direction:column;justify-content:center;gap:18px;padding:clamp(24px,4vw,56px);min-width:0;background:var(--surface)}
+.gate-card{width:100%;max-width:404px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.gate-card h1{font-family:var(--display);font-weight:700;font-size:30px;line-height:1.05}
+.gate-card > p{margin:0;color:var(--ink-2);font-size:13.5px}
+.gate-card .field{gap:5px}
+.gate-card input[type=email],.gate-card input[type=text]{font:inherit;color:var(--ink);background:var(--surface);
+  border:1px solid var(--line-strong);padding:10px 12px;width:100%}
+.gate-card input:focus{border-color:var(--accent)}
+.btn-goog{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px;font-weight:600;
+  border:1px solid var(--line-strong);background:var(--surface);cursor:pointer}
+.btn-goog:hover{background:var(--surface-2)}
+.btn-goog i{width:20px;height:20px;border-radius:50%;border:2px solid var(--line-strong);display:inline-block;flex:none}
+.btn-wide{width:100%;padding:12px;font-weight:600;justify-content:center;text-align:center}
+.sep{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase}
+.sep::before,.sep::after{content:"";height:1px;background:var(--line);flex:1}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.role{border:1px solid var(--line-strong);background:var(--surface);padding:10px 12px;cursor:pointer;text-align:left}
+.role[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.role b{display:block;font-size:13.5px}
+.role span{font-size:12px;color:var(--muted)}
+.gate-alt{font-size:13px;color:var(--ink-2)}
+.otp{display:flex;gap:8px}
+.otp input{width:100%;text-align:center;font-family:var(--mono);font-size:20px;padding:12px 0;
+  border:1px solid var(--line-strong);background:var(--surface);color:var(--ink)}
+.inv{display:flex;gap:12px;align-items:center;border:1px solid var(--line-strong);border-left:4px solid var(--accent);
+  background:var(--surface-2);padding:12px 14px}
+.inv b{display:block;font-size:13.5px}
+.inv span{font-size:12.5px;color:var(--ink-2)}
+.steps{display:flex;flex-direction:column;gap:2px;border:1px solid var(--line)}
+.steps div{display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px;padding:11px 13px;border-bottom:1px solid var(--line);align-items:start}
+.steps div:last-child{border-bottom:0}
+.steps i{font-style:normal;font-family:var(--mono);font-size:11px;width:22px;height:22px;display:grid;place-items:center;
+  border:1px solid var(--line-strong);color:var(--ink-2)}
+.steps b{display:block;font-size:13.5px}
+.steps span{font-size:12.5px;color:var(--muted)}
+.gate-demo{border-top:1px dashed var(--line-strong);padding-top:14px;display:flex;flex-direction:row;flex-wrap:wrap;gap:6px;align-items:center;justify-content:flex-start}
+.linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer}
+.linkbtn:hover{color:var(--ink)}
+.gate-demo .note{width:100%;margin:0 0 2px}
+@media (max-width:900px){
+  #gate{grid-template-columns:minmax(0,1fr)}
+  .gate-brand h2{font-size:26px}
+  .gate-pts{display:none}
+  .gate-brand-in{gap:14px;padding-bottom:22px}
+  .gate-legal{display:none}
+}
+
+
+.dstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border:1px solid var(--line-strong);
+  background:var(--surface-2);margin-bottom:14px}
+.dstrip > div{padding:9px 13px 11px;border-right:1px solid var(--line);min-width:0}
+.dstrip > div:last-child{border-right:0}
+.dstrip dt{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.dstrip dd{margin:3px 0 0;font-family:var(--display);font-weight:600;font-size:19px;line-height:1.1;letter-spacing:.01em}
+.dstrip small{display:block;font-size:11.5px;color:var(--ink-2);margin-top:4px;line-height:1.4}
+.dstrip .proj{background:var(--surface)}
+.dstrip .proj dd{color:var(--accent)}
+
+.fab{position:fixed;right:22px;bottom:26px;z-index:45;width:56px;height:56px;border-radius:50%;
+  border:0;background:var(--ink);color:var(--ground);cursor:pointer;display:none;place-items:center;
+  box-shadow:0 4px 18px rgba(0,0,0,.28);transition:transform .12s}
+.fab svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+.fab:hover{transform:scale(1.06)}
+.fab:active{transform:scale(.96)}
+@media (prefers-reduced-motion:reduce){.fab{transition:none}.fab:hover,.fab:active{transform:none}}
+.app[data-space="ameublement"] .fab{display:grid}
+@media (max-width:980px){.fab{bottom:calc(114px + env(safe-area-inset-bottom,0px));right:16px;width:52px;height:52px}}
+.dlg h2{position:relative;padding-right:36px}
+.xclose{position:absolute;top:-6px;right:-6px;width:34px;height:34px;border:0;background:none;color:var(--muted);
+  cursor:pointer;font-size:26px;line-height:1;border-radius:4px;display:grid;place-items:center}
+.xclose:hover{background:var(--surface-2);color:var(--ink)}
+.ci-mod{font-size:12.5px;color:var(--ink-2);margin:0}
+.ci-warn{color:var(--warn-text);font-weight:600}
+
+.sugg{display:flex;flex-direction:column;gap:7px}
+.sugg-list{display:flex;flex-wrap:wrap;gap:7px}
+.sgchip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-strong);background:var(--surface);
+  border-radius:999px;padding:5px 12px 5px 9px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.sgchip:hover{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--surface))}
+.sgchip i{font-style:normal;font-weight:700;color:var(--accent);font-size:14px;line-height:1}
+.sgchip[disabled]{opacity:.5;cursor:default;border-style:dashed}
+.sgchip[disabled] i{color:var(--good-text)}
+
+/* Récupération depuis le lien */
+.lien-row{display:flex;gap:8px;align-items:stretch}
+.lien-row input{flex:1;min-width:0}
+.lien-row .btn{white-space:nowrap}
+.fetchst{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;margin-top:7px;padding:8px 10px;border-radius:8px;line-height:1.45}
+.fetchst.wait{background:var(--surface-2);color:var(--ink-2)}
+.fetchst.ok{background:var(--wash-good);color:var(--good-text)}
+.fetchst.part{background:var(--wash-warn);color:var(--warn-text)}
+.fetchst.no{background:var(--wash-crit);color:var(--crit-text)}
+.fetchst b{font-weight:600}
+.spin{width:13px;height:13px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;
+  flex:none;margin-top:2px;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
+.filled{animation:fl 1.1s ease-out}
+@keyframes fl{0%{background:color-mix(in srgb,var(--accent) 22%,transparent)}100%{background:var(--surface)}}
+.simu{display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-top:1px dashed var(--line-strong);padding-top:10px;margin-top:2px}
+.simu .note{width:100%;margin:0 0 2px}
+
+/* Fiche article : reprend l'identité boutique */
+#dMeuble{--accent:#0f5f52;border-radius:14px;border-color:var(--line-strong)}
+#dMeuble .btn{border-radius:8px}
+#dMeuble .btn.primary{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+#dMeuble input,#dMeuble select,#dMeuble textarea{border-radius:8px;padding:8px 10px}
+.demo-hide{display:none!important}
+body.artisan .client-only{display:none!important}
+body.artisan .fab{display:none!important}
+.jr td{font-size:12.5px}
+.jr .chg{font-family:var(--mono);font-size:11.5px;color:var(--ink-2)}
+
+/* Bascule de vue */
+.viewsw{display:inline-flex;border:1px solid var(--line-strong);border-radius:3px;overflow:hidden}
+.viewsw button{border:0;background:var(--surface);padding:7px 14px;cursor:pointer;font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.viewsw button+button{border-left:1px solid var(--line-strong)}
+.viewsw button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+/* Vue artisan */
+.art-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.art-bar select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);border-radius:3px;padding:6px 8px}
+.hero{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.hero > div{background:var(--surface);padding:16px 18px}
+.gauge{display:flex;flex-direction:column;gap:6px;justify-content:center}
+.gauge .big{font-family:var(--display);font-weight:700;font-size:64px;line-height:.95}
+.gauge .meter{height:12px;border-radius:3px}
+.hero .kpis{border:0;border-radius:0}
+.hero .kpi .val{font-size:26px;white-space:nowrap}
+.dv td.r,.ents td.r,#aPostes td.r{white-space:nowrap}
+.stack{display:flex;height:12px;border-radius:0 3px 3px 0;overflow:hidden;background:var(--track);min-width:80px}
+.stack i{display:block;height:100%}
+.poste-row{cursor:pointer}
+.poste-row:hover td{background:var(--surface-2)}
+.poste-row.on td{background:color-mix(in srgb,var(--accent) 8%,var(--surface))}
+.dv td{vertical-align:middle}
+.dv .sub td{background:var(--surface-2);font-weight:600}
+.dv .grp td{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.03em;text-transform:uppercase;background:var(--surface);border-bottom:1px solid var(--line-strong);padding-top:14px}
+.dv tr.del td{color:var(--muted)}
+.dv tr.del .des{text-decoration:line-through}
+.des small{display:block;color:var(--muted);font-size:11.5px}
+.pctcell{min-width:90px}
+.mini{display:flex;align-items:center;gap:6px}
+.mini .stack{height:6px;flex:1;min-width:40px}
+.sit{display:grid;grid-template-columns:1fr auto;gap:6px 18px;font-size:13.5px;max-width:520px}
+.sit .tot{font-weight:600;border-top:1px solid var(--line-strong);padding-top:6px}
+@media (max-width:700px){.hero{grid-template-columns:1fr}.gauge .big{font-size:52px}}
+@media print{.btns,.filters,.tabs,.seg,.viewsw,.art-bar select{display:none!important}#viewClient:not([hidden]) .panel[hidden]{display:flex!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div id="cfgErr" hidden style="max-width:460px;margin:12vh auto;background:var(--surface);border:1px solid var(--line-strong);padding:22px">
+  <h2>Configuration manquante</h2>
+  <p style="margin:8px 0 0;color:var(--ink-2)">Renseignez l'adresse et la clé publique du projet Supabase dans le fichier <code>config.js</code>, puis rechargez la page.</p>
+</div>
+
+
+<div id="gate">
+  <div class="gate-brand">
+    <div class="hazard" aria-hidden="true"></div>
+    <div class="gate-brand-in">
+      <div class="gate-logo">Chantier &amp; Panier<em>Studio 12e</em></div>
+      <h2>Votre chantier ne tient plus dans un groupe de messagerie.</h2>
+      <p>Le devis suivi ligne à ligne, les achats du logement, les échanges avec chaque entreprise et les pièces du dossier, au même endroit — et chacun ne voit que ce qui le concerne.</p>
+      <div class="gate-pts">
+        <div class="gate-pt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-4 7 4v13"/><path d="M10 21v-6h4v6"/></svg><span><b>Travaux</b><span>Avancement, planning et budget issus du devis.</span></span></div>
+        <div class="gate-pt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18l-1.4 9.2a2 2 0 0 1-2 1.8H6.4a2 2 0 0 1-2-1.8Z"/><path d="M8.5 7V5.5a3.5 3.5 0 0 1 7 0V7"/></svg><span><b>Panier</b><span>Mobilier et électroménager, avec photo et total.</span></span></div>
+        <div class="gate-pt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.5A2.5 2.5 0 0 1 17.5 18H8l-4 3V6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5Z"/></svg><span><b>Échanges</b><span>Un fil par entreprise, rattaché aux lignes du devis.</span></span></div>
+        <div class="gate-pt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/></svg><span><b>Documents</b><span>DPE, études de BET, devis, plans, attestations.</span></span></div>
+      </div>
+      <p class="gate-legal">Base de données et fichiers hébergés dans l'Union européenne. Aucun mot de passe à retenir : la connexion se fait par lien ou par compte Google.</p>
+    </div>
+  </div>
+
+  <div class="gate-form">
+    <!-- Création de compte -->
+    <div class="gate-card" id="g-inscription">
+      <div>
+        <div class="eyebrow">Nouveau compte</div>
+        <h1>Créer mon espace chantier</h1>
+      </div>
+      <p>Pour le maître d'ouvrage qui suit ses travaux, et les artisans qu'il invite.</p>
+      <button class="btn-goog" type="button" data-goog><i aria-hidden="true"></i>Continuer avec Google</button>
+      <div class="sep">ou par e-mail</div>
+      <div class="field"><label for="gNom">Nom et prénom</label><input type="text" id="gNom" autocomplete="name" placeholder="Zakaria"></div>
+      <div class="field"><label for="gMail">Adresse e-mail</label><input type="email" id="gMail" autocomplete="email" placeholder="vous@exemple.fr"></div>
+      <div>
+        <label class="note" style="display:block;margin-bottom:6px">Je suis</label>
+        <div class="roles" role="group" aria-label="Rôle">
+          <button class="role" type="button" data-role="client" aria-pressed="true"><b>Maître d'ouvrage</b><span>Je suis mes travaux</span></button>
+          <button class="role" type="button" data-role="artisan" aria-pressed="false"><b>Artisan</b><span>J'ai reçu une invitation</span></button>
+        </div>
+      </div>
+      <div class="field" id="gCodeInv" hidden><label for="gInv">Code d'invitation</label><input type="text" id="gInv" placeholder="Reçu par e-mail du maître d'ouvrage"></div>
+      <button class="btn primary btn-wide" type="button" data-go="code">Créer mon compte</button>
+      <p class="note">En créant un compte, vous acceptez les conditions d'utilisation et la politique de confidentialité.</p>
+      <p class="gate-alt">Déjà un compte ? <button class="linkbtn" type="button" data-go="connexion">Se connecter</button></p>
+    </div>
+
+    <!-- Connexion -->
+    <div class="gate-card" id="g-connexion" hidden>
+      <div><div class="eyebrow">Connexion</div><h1>Bon retour</h1></div>
+      <button class="btn-goog" type="button" data-goog><i aria-hidden="true"></i>Continuer avec Google</button>
+      <div class="sep">ou par e-mail</div>
+      <div class="field"><label for="gMail2">Adresse e-mail</label><input type="email" id="gMail2" autocomplete="email" placeholder="vous@exemple.fr"></div>
+      <button class="btn primary btn-wide" type="button" data-go="code">Recevoir mon lien de connexion</button>
+      <p class="note">Un lien et un code à six chiffres, valables une heure.</p>
+      <p class="gate-alt">Pas encore de compte ? <button class="linkbtn" type="button" data-go="inscription">Créer mon espace</button></p>
+    </div>
+
+    <!-- Code e-mail -->
+    <div class="gate-card" id="g-code" hidden>
+      <div><div class="eyebrow">Vérification</div><h1>Votre code</h1></div>
+      <p>Nous avons écrit à <b id="gDest">vous@exemple.fr</b>. Ouvrez le lien sur cet appareil, ou saisissez les six chiffres du message.</p>
+      <div class="otp" id="gOtp">
+        <input inputmode="numeric" maxlength="1" aria-label="Chiffre 1"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 2"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 3"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 4"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 5"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 6">
+      </div>
+      <button class="btn primary btn-wide" type="button" id="gValider">Valider</button>
+      <p class="gate-alt"><button class="linkbtn" type="button" data-resend>Renvoyer le code</button> · <button class="linkbtn" type="button" data-go="inscription">Changer d'adresse</button></p>
+    </div>
+
+    <!-- Invitation reçue -->
+    <div class="gate-card" id="g-invitation" hidden>
+      <div><div class="eyebrow">Invitation</div><h1>Rejoindre le chantier</h1></div>
+      <div class="inv"><div><b>Studio 12e — 51 av. Michel Bizot</b><span>Zakaria vous invite comme <b>ISO DECO</b></span></div></div>
+      <p>Vous verrez uniquement les lignes de votre entreprise, vos échéances de paiement et votre fil de discussion. Vous pourrez mettre à jour vos lignes : statut, dates, quantités, montants.</p>
+      <div class="field"><label for="gMail3">Adresse e-mail de l'invitation</label><input type="email" id="gMail3" value="contact@iso-deco.fr" readonly></div>
+      <button class="btn-goog" type="button" data-goog><i aria-hidden="true"></i>Continuer avec Google</button>
+      <button class="btn primary btn-wide" type="button" data-go="code">Recevoir un lien de connexion</button>
+      <p class="note">L'adresse ne peut pas être modifiée : l'accès est attaché à l'invitation.</p>
+    </div>
+
+    <!-- Adresse non autorisée -->
+    <div class="gate-card" id="g-refus" hidden>
+      <div><div class="eyebrow">Accès</div><h1>Adresse non reconnue</h1></div>
+      <div class="alert warn" style="margin:0">Cette adresse n'a pas accès à ce chantier. Seules les personnes invitées par le maître d'ouvrage peuvent se connecter.</div>
+      <p>Si vous êtes l'artisan, vérifiez que vous utilisez bien l'adresse qui a reçu l'invitation. Sinon, demandez au maître d'ouvrage de vous ajouter.</p>
+      <button class="btn primary btn-wide" type="button" data-go="connexion">Essayer une autre adresse</button>
+      <button class="btn btn-wide" type="button" data-go="inscription">Créer mon propre espace</button>
+    </div>
+
+    <!-- Premiers pas -->
+    <div class="gate-card" id="g-bienvenue" hidden>
+      <div><div class="eyebrow">Compte créé</div><h1>Trois pas pour démarrer</h1></div>
+      <p>Votre espace est prêt. Rien n'est obligatoire : vous pouvez aussi entrer et regarder.</p>
+      <div class="steps">
+        <div><i>1</i><span><b>Importer le devis</b><span>PDF, photo ou tableur : les lignes, les montants et les lots sont repris automatiquement.</span></span></div>
+        <div><i>2</i><span><b>Inviter les entreprises</b><span>Une adresse e-mail par artisan. Chacun ne voit que ses lignes.</span></span></div>
+        <div><i>3</i><span><b>Déposer les pièces du dossier</b><span>DPE, étude de BET, plans, attestations d'assurance.</span></span></div>
+        <div><i>4</i><span><b>Questionnaire de besoins <em style="font-style:normal;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line-strong);padding:1px 5px;margin-left:4px">à venir</em></b><span>Quelques questions sur le logement pour préremplir la liste d'ameublement.</span></span></div>
+      </div>
+      <button class="btn primary btn-wide" type="button" data-enter>Entrer dans l'application</button>
+    </div>
+
+    <div class="gate-card" id="g-compte" hidden>
+      <div><div class="eyebrow">Compte</div><h1>Votre accès</h1></div>
+      <div class="inv"><div><b id="cpMail">—</b><span id="cpRole"></span></div></div>
+      <button class="btn primary btn-wide" type="button" data-enter>Retour à l'application</button>
+      <button class="btn btn-wide" type="button" id="cpOut">Se déconnecter</button>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="app" data-space="travaux">
+
+<nav class="rail" aria-label="Espaces">
+  <div class="rail-mark" aria-hidden="true">12<sup>e</sup></div>
+  <button class="rail-b" type="button" data-sp="travaux" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-4 7 4v13"/><path d="M10 21v-6h4v6"/></svg><span>Travaux</span></button>
+  <button class="rail-b client-only" type="button" data-sp="ameublement" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18l-1.4 9.2a2 2 0 0 1-2 1.8H6.4a2 2 0 0 1-2-1.8Z"/><path d="M8.5 7V5.5a3.5 3.5 0 0 1 7 0V7"/><circle cx="9" cy="21" r="1"/><circle cx="15" cy="21" r="1"/></svg><span>Panier</span><em class="rail-badge" id="railCount" hidden></em></button>
+  <button class="rail-b" type="button" data-sp="conversation" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.5a2.5 2.5 0 0 1-2.5 2.5H8l-4 3V6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5Z"/><path d="M8.5 9h7M8.5 13h4"/></svg><span>Échanges</span><em class="rail-badge" id="railChat" hidden></em></button>
+  <button class="rail-b client-only" type="button" data-sp="documents" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span>Documents</span></button>
+  <div class="rail-foot"><button class="rail-acc" type="button" id="railCompte">Compte</button><span class="rail-sig">Studio<br>12e</span></div>
+</nav>
+
+<div class="stage">
+<div class="wrap" id="space-travaux">
+  <header class="head">
+    <div class="hazard" aria-hidden="true"></div>
+    <div class="head-in">
+      <div>
+        <div class="eyebrow"><span id="eyebrowView">Suivi de chantier · vue client</span><span id="sync" class="sync"><i></i><span>Connexion…</span></span></div>
+        <h1 id="titre">Studio 12e — Michel Bizot</h1>
+        <p id="sousTitre">Suivi des travaux côté client : devis, artisans, planning et paiements</p>
+      </div>
+      <div class="btns" style="align-items:center">
+        <div class="viewsw client-only" role="group" aria-label="Vue">
+          <button type="button" data-view="client" aria-pressed="true">Client</button>
+          <button type="button" data-view="artisan" aria-pressed="false">Artisan</button>
+        </div>
+        <button class="btn primary" type="button" id="bAdd">Ajouter une ligne</button>
+        <button class="btn client-only" type="button" id="bCsv">Exporter en CSV</button>
+        <button class="btn" type="button" onclick="window.print()">Imprimer</button>
+      </div>
+    </div>
+    <div class="cartouche" id="cartouche"></div>
+  </header>
+
+  <div id="banner" class="alert warn" hidden></div>
+
+  <div id="viewClient" style="display:flex;flex-direction:column;gap:20px">
+
+  <section class="kpis" id="kpis" aria-label="Indicateurs"></section>
+
+  <section class="card">
+    <div class="card-head"><div><h2>Par intervenant</h2><p>Montants TTC. « Engagé » = lignes des devis signés moins les lignes supprimées et les réductions obtenues, plus les travaux hors devis déjà chiffrés.</p></div></div>
+    <div class="tscroll"><table class="ents" id="tEnts"></table></div>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" id="tab-travaux" aria-selected="true" data-p="travaux">Travaux<span class="count" id="cTrav"></span></button>
+    <button class="tab" role="tab" id="tab-planning" aria-selected="false" data-p="planning">Planning</button>
+    <button class="tab" role="tab" id="tab-paiements" aria-selected="false" data-p="paiements">Paiements</button>
+    <button class="tab" role="tab" id="tab-pieces" aria-selected="false" data-p="pieces">Par pièce</button>
+    <button class="tab client-only" role="tab" id="tab-historique" aria-selected="false" data-p="historique">Historique</button>
+    <button class="tab client-only" role="tab" id="tab-acces" aria-selected="false" data-p="acces">Accès</button>
+  </nav>
+
+  <section class="panel" id="p-travaux" role="tabpanel" aria-labelledby="tab-travaux">
+    <div class="card">
+      <div class="filters" id="filters">
+        <input type="search" id="fQ" placeholder="Rechercher un travail, un commentaire…" aria-label="Rechercher">
+        <select id="fPiece" aria-label="Pièce"></select>
+        <select id="fEnt" aria-label="Intervenant"></select>
+        <select id="fStatut" aria-label="Statut"></select>
+        <select id="fDevis" aria-label="Devis"></select>
+        <select id="fPhase" aria-label="Phase"></select>
+        <select id="fGroup" aria-label="Regrouper">
+          <option value="piece">Regrouper par pièce</option>
+          <option value="entreprise">Regrouper par intervenant</option>
+          <option value="type">Regrouper par corps d'état</option>
+          <option value="phase">Regrouper par phase</option>
+          <option value="">Sans regroupement</option>
+        </select>
+        <label class="chk"><input type="checkbox" id="fAChiffrer"> À chiffrer seulement</label>
+        <button class="btn sm" type="button" id="fReset">Réinitialiser</button>
+        <span class="count" id="fCount"></span>
+      </div>
+      <div class="tscroll" style="max-height:72vh"><table id="tTrav"></table></div>
+      <p class="note">Cliquez sur une ligne pour la modifier. Le statut se change directement dans la colonne. ⚠ = hors devis sans prix.</p>
+    </div>
+  </section>
+
+  <section class="panel" id="p-planning" role="tabpanel" aria-labelledby="tab-planning" hidden>
+    <div class="card">
+      <div class="card-head">
+        <div><h2>Planning</h2><p>Couleur = intervenant. Plein : fait · moitié : en cours · clair : à initier · pointillé : ligne modifiée. Cliquez sur une barre pour modifier les dates.</p></div>
+        <div class="btns">
+          <div class="seg" role="group" aria-label="Regrouper le planning">
+            <button type="button" data-g="piece" aria-pressed="true">Pièce</button>
+            <button type="button" data-g="type" aria-pressed="false">Corps d'état</button>
+            <button type="button" data-g="entreprise" aria-pressed="false">Intervenant</button>
+          </div>
+          <label class="chk"><input type="checkbox" id="gDone"> Masquer les lignes faites</label>
+        </div>
+      </div>
+      <div class="dstrip" id="dstrip"></div>
+      <div class="gscroll"><div class="gt" id="gantt"></div></div>
+      <div class="legend" id="gLegend"></div>
+      <p class="note" id="gNoDate"></p>
+    </div>
+  </section>
+
+  <section class="panel" id="p-paiements" role="tabpanel" aria-labelledby="tab-paiements" hidden>
+    <div class="card">
+      <div class="card-head"><div><h2>Échéancier</h2><p>Base des pourcentages : total des lignes « Inclus » du devis de l'intervenant (montant signé). Cochez une échéance quand elle est réglée.</p></div>
+        <button class="btn sm" type="button" id="bAddPay">Ajouter une échéance</button></div>
+      <div class="paygrid" id="pays"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-pieces" role="tabpanel" aria-labelledby="tab-pieces" hidden>
+    <div class="card">
+      <div class="card-head"><div><h2>Avancement par pièce</h2><p>Part des lignes faites (en cours = moitié), hors lignes supprimées.</p></div></div>
+      <div class="tscroll"><table id="tPieces"></table></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-historique" role="tabpanel" aria-labelledby="tab-historique" hidden>
+    <div class="card">
+      <div class="card-head"><div><h2>Historique des modifications</h2></div></div>
+      <div class="tscroll"><table class="jr" id="tJournal"></table></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-acces" role="tabpanel" aria-labelledby="tab-acces" hidden>
+    <div class="card">
+      <div class="card-head"><div><h2>Accès au chantier</h2></div></div>
+      <form class="form" id="accesForm" style="margin-bottom:14px">
+        <div class="field"><label for="acEmail">Adresse e-mail *</label><input type="email" id="acEmail" required></div>
+        <div class="field"><label for="acRole">Rôle</label><select id="acRole"><option value="artisan">Artisan</option><option value="client">Client (accès complet)</option></select></div>
+        <div class="field"><label for="acEnt">Entreprise</label><input type="text" id="acEnt" list="lEnts" placeholder="ISO DECO"></div>
+        <div class="field"><label for="acNom">Nom</label><input type="text" id="acNom"></div>
+        <div class="field" style="justify-content:flex-end"><button class="btn primary" type="submit">Donner l'accès</button></div>
+      </form>
+      <div class="tscroll"><table id="tAcces"></table></div>
+    </div>
+  </section>
+
+  </div>
+
+  <div id="viewArtisan" style="display:flex;flex-direction:column;gap:20px" hidden>
+    <section class="card">
+      <div class="card-head" style="margin-bottom:0">
+        <div><h2 id="aTitre">Suivi du devis</h2><p id="aSous">Avancement mesuré sur les montants du devis : une ligne faite compte à 100 %, en cours à 50 %. Les lignes supprimées sortent du calcul.</p></div>
+        <div class="art-bar">
+          <label for="aEnt" class="note">Artisan</label><select id="aEnt"></select>
+          <label for="aDevis" class="note">Devis</label><select id="aDevis"></select>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero" aria-label="Avancement global">
+      <div class="gauge" id="aGauge"></div>
+      <div class="kpis" id="aKpis"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div><h2>Avancement par poste</h2><p>Part de chaque poste dans le devis et avancement pondéré par les montants. Cliquez sur un poste pour n'afficher que ses lignes.</p></div>
+        <div class="seg" role="group" aria-label="Postes">
+          <button type="button" data-poste="type" aria-pressed="true">Corps d'état</button>
+          <button type="button" data-poste="piece" aria-pressed="false">Pièce</button>
+          <button type="button" data-poste="devis_source" aria-pressed="false">Devis</button>
+        </div>
+      </div>
+      <div class="tscroll"><table id="aPostes"></table></div>
+      <div class="legend"><span><i class="sw" style="background:var(--good);border:0"></i>Fait</span><span><i class="sw" style="background:var(--warn);border:0"></i>En cours (compté à 50 %)</span><span><i class="sw" style="background:var(--track);border:0"></i>Reste à réaliser</span></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div><h2>Détail du devis</h2><p id="aDetailSous">Lignes du devis signé regroupées par poste. Le statut se met à jour directement ici.</p></div>
+        <div class="btns"><button class="btn sm" type="button" id="aAll" hidden>Afficher tous les postes</button><button class="btn sm" type="button" id="aCsv">Exporter la situation (CSV)</button></div>
+      </div>
+      <div class="tscroll"><table class="dv" id="aDetail"></table></div>
+    </section>
+
+    <div class="paygrid">
+      <section class="card">
+        <div class="card-head"><div><h2>Moins-values</h2><p>Lignes retirées du devis et réductions obtenues, à déduire de la facture.</p></div></div>
+        <div class="tscroll"><table id="aMoins"></table></div>
+      </section>
+      <section class="card">
+        <div class="card-head"><div><h2>Travaux supplémentaires</h2><p>Hors devis : à chiffrer puis à valider par avenant avant exécution.</p></div></div>
+        <div class="tscroll"><table id="aPlus"></table></div>
+      </section>
+    </div>
+
+    <section class="card">
+      <div class="card-head"><div><h2>Situation de travaux</h2><p>Montant réalisé à date comparé aux sommes déjà versées.</p></div></div>
+      <div class="sit" id="aSit"></div>
+    </section>
+  </div>
+</div>
+
+<section class="shop" id="space-ameublement" hidden>
+  <header class="shop-head">
+    <div>
+      <div class="shop-kicker">Studio 12e · Ameublement</div>
+      <h1>Le panier du logement</h1>
+    </div>
+    <div class="shop-count" id="shopCount"></div>
+  </header>
+  <div class="chips" id="grChips" role="group" aria-label="Filtrer par groupe"></div>
+  <div class="chips chips-st" id="stChips" role="group" aria-label="Filtrer par statut"></div>
+
+
+  <div class="shop-grid">
+    <div class="cart" id="cart"></div>
+    <aside class="recap" id="recap"></aside>
+  </div>
+</section>
+
+<div class="cartbar" id="cartbar"></div>
+<button class="fab" type="button" id="fab" aria-label="Ajouter un article" title="Ajouter un article"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+
+<section class="tech" id="space-conversation" hidden>
+  <header class="tech-head">
+    <div>
+      <div class="eyebrow">Suivi de chantier · échanges</div>
+      <h1>Échanges avec les intervenants</h1>
+      <p>Un fil par entreprise, plus un carnet de notes pour vous. Chaque artisan ne voit que son fil. Une décision écrite ici reste attachée au chantier, contrairement à un groupe de messagerie.</p>
+    </div>
+  </header>
+  <div class="chat">
+    <div class="chat-list" id="chatList" role="tablist" aria-label="Fils de discussion"></div>
+    <div class="thread">
+      <div class="thread-head"><div><h2 id="thTitre">—</h2><p class="note" id="thSous"></p></div>
+        <span class="note" id="thVis"></span></div>
+      <div class="msgs" id="msgs"></div>
+      <form class="composer" id="msgForm">
+        <textarea id="msgTxt" rows="2" placeholder="Écrire un message…" aria-label="Message"></textarea>
+        <div class="btns" style="flex-direction:column">
+          <button class="btn primary" type="submit">Envoyer</button>
+          <button class="btn sm" type="button" id="msgJoin">Joindre</button>
+        </div>
+        <input type="file" id="msgFile" hidden>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="tech" id="space-documents" hidden>
+  <header class="tech-head">
+    <div>
+      <div class="eyebrow">Suivi de chantier · pièces du dossier</div>
+      <h1>Documents utiles</h1>
+      <p>Diagnostics, études, devis signés, plans, attestations, procès-verbaux. Tout est privé par défaut : un document n'est visible par un artisan que si vous le partagez.</p>
+    </div>
+    <div class="btns"><button class="btn primary" type="button" id="docAdd">Ajouter des documents</button></div>
+  </header>
+  <div class="drop" id="docDrop">
+    <p><b>Glissez vos fichiers ici</b> — PDF, photos, tableurs. Ils sont classés par catégorie, avec leur date et leur visibilité.</p>
+    <span class="note" id="docSum"></span>
+  </div>
+  <div class="chips" id="docChips" role="group" aria-label="Filtrer par catégorie"></div>
+  <div class="card" style="padding:0"><div id="docList"></div></div>
+  <p class="note">Cliquez sur un document pour le renommer ou le reclasser. « Partager » ouvre la liste des intervenants.</p>
+  <input type="file" id="docFile" multiple hidden>
+</section>
+</div>
+</div>
+
+<div id="tip" hidden></div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<dialog id="dRow" aria-labelledby="dRowT">
+  <form class="dlg" id="rowForm">
+    <h2 id="dRowT"><button class="xclose" type="button" data-close aria-label="Fermer">&times;</button><span id="dRowTitle">Modifier la ligne</span><span class="mono muted" style="font-size:12px" id="dRowId"></span></h2>
+    <div class="form">
+      <div class="field full"><label for="rTravaux">Travaux *</label><input type="text" id="rTravaux" required></div>
+      <div class="field"><label for="rPiece">Pièce</label><input type="text" id="rPiece" list="lPieces"></div>
+      <div class="field"><label for="rType">Corps d'état</label><input type="text" id="rType" list="lTypes"></div>
+      <div class="field"><label for="rEnt">Intervenant</label><input type="text" id="rEnt" list="lEnts"></div>
+      <div class="field"><label for="rPhase">Phase</label><input type="text" id="rPhase" list="lPhases"></div>
+      <div class="field"><label for="rDevis">Devis</label><select id="rDevis"><option>Inclus</option><option>Non Inclus</option><option>NC</option></select></div>
+      <div class="field"><label for="rStatut">Statut</label><select id="rStatut"></select></div>
+      <div class="field"><label for="rArtisan">Réalisé par un artisan</label><select id="rArtisan"><option value="Oui">Oui</option><option value="Non">Non (moi)</option><option value="">Non précisé</option></select></div>
+      <div class="field"><label for="rSource">Devis concerné</label><input type="text" id="rSource" list="lSources"></div>
+      <div class="field"><label for="rQte">Quantité</label><input type="number" id="rQte" step="any" min="0"></div>
+      <div class="field"><label for="rUnite">Unité</label><input type="text" id="rUnite" list="lUnites"></div>
+      <div class="field"><label for="rPrix">Prix TTC (€)</label><input type="number" id="rPrix" step="0.01" min="0"></div>
+      <div class="field"><label for="rRed">Réduction obtenue (€)</label><input type="number" id="rRed" step="0.01" min="0"></div>
+      <div class="field"><label for="rFour">Coût fourniture (€)</label><input type="number" id="rFour" step="0.01" min="0"></div>
+      <div class="field"><label for="rHeures">Heures estimées</label><input type="number" id="rHeures" step="0.1" min="0"></div>
+      <div class="field"><label for="rDebut">Date début</label><input type="date" id="rDebut"></div>
+      <div class="field"><label for="rFin">Date fin</label><input type="date" id="rFin"></div>
+      <div class="field full"><label class="chk"><input type="checkbox" id="rFReq"> Nécessite une fourniture</label></div>
+      <div class="field full"><label for="rComm">Commentaire</label><textarea id="rComm"></textarea></div>
+    </div>
+    <div id="rErr" class="alert err" hidden></div>
+    <div class="foot">
+      <button class="btn danger" type="button" id="rDel">Supprimer la ligne</button>
+      <div class="btns"><button class="btn" type="button" data-close>Annuler</button><button class="btn primary" type="submit">Enregistrer</button></div>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dMeuble" aria-labelledby="dMeubleT">
+  <form class="dlg" id="meubleForm">
+    <h2 id="dMeubleT"><button class="xclose" type="button" data-close aria-label="Fermer">&times;</button><span id="dMeubleTitle">Modifier l'article</span></h2>
+    <div class="form">
+      <div class="field full"><label for="mNom">Article *</label><input type="text" id="mNom" required placeholder="Lit 160 × 200 avec sommier"></div>
+      <div class="field full"><label for="mStatutI">Statut</label>
+        <div class="stslide full" id="mStatutW"><input type="range" id="mStatutI" min="0" max="4" step="1"><span class="stlab" id="mStatutL"></span></div>
+        <div class="stticks" id="mStatutT"></div>
+        <div class="seg" id="mHors" role="group" aria-label="Hors cycle" style="margin-top:9px">
+          <button type="button" data-hors="" aria-pressed="true">Dans le cycle</button>
+          <button type="button" data-hors="Possédé" aria-pressed="false">Déjà possédé</button>
+          <button type="button" data-hors="Abandonné" aria-pressed="false">Abandonné</button>
+        </div>
+      </div>
+      <div class="field full sugg" id="mSugg" hidden><label>Compléments fréquents</label><div class="sugg-list" id="mSuggL"></div></div>
+      <div class="field full"><label for="mLien">Lien de la boutique</label>
+        <div class="lien-row"><input type="text" id="mLien" inputmode="url" spellcheck="false" placeholder="https://www.laboutique.fr/…"><button class="btn" type="button" id="mFetch">Récupérer</button></div>
+        <div class="fetchst" id="mFetchSt" hidden></div>
+      </div>
+      <div class="field full"><label for="mPhotoUrl">Photo de l'article</label>
+        <div class="photo-zone" id="mPhotoZone">
+          <div class="photo-prev" id="mPhotoPrev">Aucune photo</div>
+          <div class="photo-txt">
+            <p><b>Collez une image</b> (Ctrl ou Cmd + V), glissez un fichier ici, ou <button type="button" class="lnk" id="mPhotoPick">choisissez un fichier</button>.</p>
+            <div class="photo-url"><input type="text" id="mPhotoUrl" inputmode="url" spellcheck="false" placeholder="ou collez le lien de l'image : https://…jpg"><button class="btn sm" type="button" id="mPhotoSet">Utiliser</button></div>
+            <button type="button" class="lnk" id="mPhotoDel" hidden>Retirer la photo</button>
+          </div>
+        </div>
+        <input type="file" id="mPhotoFile" accept="image/*" hidden>
+      </div>
+      <div class="field"><label for="mCatI">Catégorie</label><input type="text" id="mCatI" list="lCats" placeholder="Couchage"></div>
+      <div class="field"><label for="mPieceI">Pièce</label><input type="text" id="mPieceI" list="lPieces"></div>
+      <div class="field full"><label for="mModele">Modèle ou référence</label><input type="text" id="mModele" placeholder="VESTERÖY, SUNNERSTA IKEA…"></div>
+      <div class="field"><label for="mFour">Boutique</label><input type="text" id="mFour" list="lFours"></div>
+      <div class="field"><label for="mDelai">Délai (semaines)</label><input type="number" id="mDelai" min="0" step="1"></div>
+      <div class="field"><label for="mCmd">À commander avant</label><input type="date" id="mCmd"></div>
+      <div class="field"><label for="mPrix">Prix unitaire (€)</label><input type="number" id="mPrix" step="0.01" min="0"></div>
+      <div class="field"><label for="mQte">Quantité</label><input type="number" id="mQte" step="any" min="0" value="1"></div>
+      <div class="field"><label for="mLiv">Livraison prévue</label><input type="date" id="mLiv"></div>
+      <div class="field"><label for="mPose">Pose / montage par</label><input type="text" id="mPose" placeholder="Moi, ISO DECO…"></div>
+      <div class="field full"><label for="mComm">Commentaire</label><textarea id="mComm"></textarea></div>
+    </div>
+    <div id="mErr" class="alert err" hidden></div>
+    <div class="foot">
+      <button class="btn danger" type="button" id="mDel">Supprimer</button>
+      <div class="btns"><button class="btn" type="button" data-close>Annuler</button><button class="btn primary" type="submit">Enregistrer</button></div>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dDoc" aria-labelledby="dDocT">
+  <form class="dlg" id="docForm">
+    <h2 id="dDocT"><button class="xclose" type="button" data-close aria-label="Fermer">&times;</button>Document</h2>
+    <div class="form">
+      <div class="field full"><label for="dNom">Nom du document</label><input type="text" id="dNom" required></div>
+      <div class="field"><label for="dCat">Catégorie</label><input type="text" id="dCat" list="lDocCats"></div>
+      <div class="field"><label for="dDate">Date du document</label><input type="date" id="dDate"></div>
+      <div class="field full"><label for="dNote">Note</label><textarea id="dNote" placeholder="À quoi sert ce document, qui l'a produit…"></textarea></div>
+      <div class="field full"><label>Partagé avec</label><div class="share-list" id="dShare"></div></div>
+    </div>
+    <div class="foot">
+      <button class="btn danger" type="button" id="dDel">Retirer du dossier</button>
+      <div class="btns"><button class="btn" type="button" data-close>Annuler</button><button class="btn primary" type="submit">Enregistrer</button></div>
+    </div>
+  </form>
+</dialog>
+
+<datalist id="lDocCats"></datalist>
+
+<dialog id="dPay" aria-labelledby="dPayT">
+  <form class="dlg" id="payForm">
+    <h2 id="dPayT"><button class="xclose" type="button" data-close aria-label="Fermer">&times;</button>Échéance</h2>
+    <div class="form">
+      <div class="field"><label for="pEnt">Intervenant</label><input type="text" id="pEnt" list="lEnts" required></div>
+      <div class="field"><label for="pLib">Libellé</label><input type="text" id="pLib" required></div>
+      <div class="field"><label for="pMode">Type</label><select id="pMode"><option value="pct">% du devis</option><option value="montant">Montant fixe (€)</option></select></div>
+      <div class="field"><label for="pVal">Valeur</label><input type="number" id="pVal" step="0.01" min="0" required></div>
+      <div class="field"><label for="pDate">Payé le</label><input type="date" id="pDate"></div>
+      <div class="field"><label class="chk" style="margin-top:22px"><input type="checkbox" id="pPaye"> Réglé</label></div>
+    </div>
+    <div class="foot">
+      <button class="btn danger" type="button" id="pDel">Supprimer</button>
+      <div class="btns"><button class="btn" type="button" data-close>Annuler</button><button class="btn primary" type="submit">Enregistrer</button></div>
+    </div>
+  </form>
+</dialog>
+
+<datalist id="lPieces"></datalist><datalist id="lCats"></datalist><datalist id="lFours"></datalist><datalist id="lTypes"></datalist><datalist id="lEnts"></datalist>
+<datalist id="lPhases"></datalist><datalist id="lSources"></datalist><datalist id="lUnites"><option value="u"><option value="f"><option value="m2"><option value="m3"><option value="ml"></datalist>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
+<script>
+(function(){
+"use strict";
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const eur = n => (Math.round((+n||0)*100)/100).toLocaleString("fr-FR",{minimumFractionDigits:0,maximumFractionDigits:0}) + " €";
+const eur2 = n => (+n||0).toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2}) + " €";
+const pct = n => Math.round((n||0)*100) + " %";
+const DAY = 864e5;
+const D = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s||""); return m ? Date.UTC(+m[1],+m[2]-1,+m[3]) : null; };
+const fd = t => t==null ? "—" : new Date(t).toLocaleDateString("fr-FR",{day:"numeric",month:"short",timeZone:"UTC"});
+const todayIso = () => { const n=new Date(); return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0"); };
+const sum = (a,f) => a.reduce((s,x)=>s+(+f(x)||0),0);
+const STATUTS = ["A initier","En cours","Fait","Modifié","Bloqué","Supprimé"];
+const ST_PILL = {"Fait":"good","En cours":"warn","A initier":"neutral","Modifié":"info","Bloqué":"crit","Supprimé":"crit"};
+const DEVIS_LBL = {"Inclus":"Au devis","Non Inclus":"Hors devis","NC":"Perso"};
+const ENT_ORDER = ["ISO DECO","ORANGE-RENOV","RM","Perso","Artisan"];
+const entColor = e => { const i = ENT_ORDER.indexOf(e); if (i >= 0) return `var(--e${i+1})`; const k = [...knownEnts()].filter(x=>!ENT_ORDER.includes(x)).sort().indexOf(e); return k >= 0 && k < 2 ? `var(--e${6+k})` : "var(--e0)"; };
+
+const CFG = window.SUIVI_CONFIG || {};
+let meta = {nom: "Chantier", sous_titre: ""};
+let ME = null;                 // {email, role, entreprise, nom}
+let sb = null, journal = [], acces = [];
+let rows = new Map(), pays = new Map();
+let live = false;           // données de la base partagée
+let meubles = new Map();
+let space = "travaux";
+const F = {q:"",piece:"",ent:"",statut:"",devis:"",phase:"",group:"piece",aChiffrer:false};
+let sort = {k:"ordre",dir:1};
+let gGroup = "piece";
+let tab = "travaux";
+let view = "client";
+const A = {ent:"", devis:"", poste:"type", focus:""};
+try { view = localStorage.getItem("suivi-view") || view; Object.assign(A, JSON.parse(localStorage.getItem("suivi-artisan")||"{}")); A.focus = ""; Object.assign(F, JSON.parse(localStorage.getItem("suivi-filtres")||"{}")); tab = localStorage.getItem("suivi-tab") || tab; gGroup = localStorage.getItem("suivi-ggroup") || gGroup; } catch(e) {}
+
+const isClient = () => !!ME && ME.role === "client";
+const NUM = ["quantite","prix_ttc","fourniture","heures","reduction","valeur","prix","delai","taille"];
+const DAT = ["debut","fin","date_paiement","date_commande","date_livraison","date_doc"];
+const fromDb = r => {
+  const o = {...r};
+  NUM.forEach(k => { if (o[k] != null) o[k] = +o[k]; });
+  DAT.forEach(k => { if (k in o) o[k] = o[k] || ""; });
+  return o;
+};
+const toDb = d => { const o = {...d}; DAT.forEach(k => { if (k in o) o[k] = o[k] || null; }); return o; };
+
+/* ============ Stockage ============ */
+function setSync(s, t){ const el=$("#sync"); el.className="sync "+s; el.lastElementChild.textContent=t; }
+let pending = 0;
+async function write(fn, okMsg){
+  pending++; setSync("busy", "Enregistrement…");
+  let failed = false;
+  try {
+    const res = await fn();
+    if (res && res.error) throw res.error;
+    if (res && Array.isArray(res.data) && res.data.length === 0 && res.expectRow) throw {code: "42501"};
+    if (okMsg) toast(okMsg);
+  } catch(e) { failed = true; fail(e); }
+  finally { pending--; if (!pending && !failed) setSync("ok", "Enregistré · partagé"); }
+  if (failed) reload();
+}
+function fail(e){
+  setSync("err", "Non enregistré");
+  const code = e && e.code;
+  toast(code === "42501" ? "Modification refusée : cette ligne ne fait pas partie de vos droits." :
+        code === "23514" ? "Modification refusée : vérifiez les dates et les valeurs saisies." :
+        /JWT|expired|session/i.test(e && e.message || "") ? "Session expirée : reconnectez-vous." :
+        "Enregistrement impossible pour le moment. La page a été rechargée.");
+}
+const q = (p, expectRow) => p.then(r => (expectRow && !r.error ? {...r, expectRow: true} : r));
+const up = (t, id, data, msg) => write(() => sb.from(t).upsert(toDb({id, ...data})), msg);
+const patch = (t, id, data, msg) => write(() => q(sb.from(t).update(toDb(data)).eq("id", id).select("id"), true), msg);
+const del = (t, id, msg) => write(() => q(sb.from(t).delete().eq("id", id).select("id"), true), msg);
+const saveRow = (id, data, msg) => up("travaux", id, data, msg);
+const patchRow = (id, data, msg) => patch("travaux", id, data, msg);
+const delRow = id => del("travaux", id, "Ligne supprimée.");
+const savePay = (id, data, msg) => up("paiements", id, data, msg);
+const patchPay = (id, data, msg) => patch("paiements", id, data, msg);
+const delPay = id => del("paiements", id, "Échéance supprimée.");
+const patchMeuble = (id, data, msg) => patch("ameublement", id, data, msg);
+const delMeuble = id => del("ameublement", id, "Article retiré du panier.");
+async function saveMeuble(id, data, msg){
+  if (data.image && data.image.startsWith("data:")) {
+    try {
+      const blob = await (await fetch(data.image)).blob();
+      const chemin = `articles/${id}-${Date.now()}.jpg`;
+      const {error} = await sb.storage.from("photos").upload(chemin, blob, {contentType: "image/jpeg", upsert: true});
+      if (error) throw error;
+      data = {...data, image: sb.storage.from("photos").getPublicUrl(chemin).data.publicUrl};
+      const m = meubles.get(id); if (m) m.image = data.image;
+    } catch(e) { toast("Photo non enregistrée : l'article est enregistré sans elle."); data = {...data, image: ""}; }
+  }
+  return up("ameublement", id, data, msg);
+}
+
+let toastT;
+function toast(m){ const t=$("#toast"); t.textContent=m; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>t.hidden=true, 3800); }
+
+/* ============ Calculs ============ */
+const actifs = () => [...rows.values()];
+function knownEnts(){ return new Set(actifs().map(r=>r.entreprise).filter(Boolean)); }
+const isDel = r => r.statut === "Supprimé";
+const prog = r => r.statut === "Fait" ? 1 : r.statut === "En cours" ? .5 : 0;
+function stats(list){
+  const inclus = sum(list.filter(r=>r.devis==="Inclus"), r=>r.prix_ttc);
+  const supp = sum(list.filter(isDel), r=>r.prix_ttc);
+  const red = sum(list.filter(r=>r.statut==="Modifié"), r=>r.reduction);
+  const hors = sum(list.filter(r=>r.devis==="Non Inclus" && !isDel(r)), r=>r.prix_ttc);
+  const aChiffrer = list.filter(r=>r.devis==="Non Inclus" && !isDel(r) && !(+r.prix_ttc)).length;
+  const perso = sum(list.filter(r=>r.devis==="NC" && !isDel(r)), r=>r.prix_ttc);
+  const vivantes = list.filter(r=>!isDel(r));
+  const av = vivantes.length ? sum(vivantes, prog)/vivantes.length : 0;
+  const faits = vivantes.filter(r=>r.statut==="Fait").length;
+  const enCours = vivantes.filter(r=>r.statut==="En cours").length;
+  const bloq = vivantes.filter(r=>r.statut==="Bloqué").length;
+  const engage = inclus - supp - red + hors;
+  return {inclus, supp, red, hors, aChiffrer, perso, engage, total: engage + perso, av, faits, enCours, bloq, n: vivantes.length, nDel: list.length - vivantes.length};
+}
+function payStats(e){
+  const base = sum(actifs().filter(r=>r.entreprise===e && r.devis==="Inclus"), r=>r.prix_ttc);
+  const list = [...pays.values()].filter(p=>p.entreprise===e).sort((a,b)=>(a.ordre||0)-(b.ordre||0));
+  const amt = p => p.mode === "pct" ? base * (+p.valeur||0) / 100 : (+p.valeur||0);
+  return {base, list, amt, paye: sum(list.filter(p=>p.paye), amt), prevu: sum(list, amt)};
+}
+
+/* ============ Rendu ============ */
+function pill(s, t){ return `<span class="pill ${s}">${esc(t)}</span>`; }
+function entTag(e){ return `<span class="ent"><i class="dot" style="background:${entColor(e)}"></i>${esc(e||"—")}</span>`; }
+
+function renderCartouche(){
+  const es = [...knownEnts()].filter(e => e !== "Perso");
+  const cell = (dt, dd) => `<div><dt>${dt}</dt><dd title="${esc(dd)}">${esc(dd)}</dd></div>`;
+  $("#cartouche").innerHTML = cell("Chantier", "51 av. Michel Bizot") + cell("Lot", "53") +
+    cell("Surface", "22,3 m²") + cell("Intervenants", String(es.length)) +
+    cell("Lignes suivies", String(actifs().filter(r => !isDel(r)).length)) + cell("Mise à jour", "16 sept. 2026");
+}
+function renderRail(){
+  const n = [...meubles.values()].filter(m => m.statut === "À choisir").length;
+  const b = $("#railCount"); b.hidden = !n; b.textContent = n;
+  const nu = fils.reduce((t, f) => t + f.nonlus, 0);
+  const c = $("#railChat"); c.hidden = !nu; c.textContent = nu;
+  document.querySelectorAll(".rail-b").forEach(x => x.setAttribute("aria-pressed", x.dataset.sp === space));
+}
+function selectSpace(sp){
+  space = sp;
+  $("#app").dataset.space = sp;
+  ["travaux","ameublement","conversation","documents"].forEach(x => { $("#space-" + x).hidden = sp !== x; });
+  $("#cartbar").hidden = sp !== "ameublement";
+  try { localStorage.setItem("suivi-space", sp); } catch(e) {}
+  render();
+}
+document.querySelectorAll(".rail-b").forEach(b => b.addEventListener("click", () => selectSpace(b.dataset.sp)));
+
+function render(){
+  renderRail();
+  if (space === "ameublement") { renderLists(); renderPanier(); return; }
+  if (space === "conversation") { renderChat(); return; }
+  if (space === "documents") { renderDocs(); return; }
+  renderCartouche();
+  $("#titre").textContent = meta?.nom || "Suivi de chantier";
+  $("#sousTitre").textContent = meta?.sous_titre || "";
+  renderBanner();
+  renderLists();
+  if (view === "artisan") { renderArtisan(); return; }
+  renderKpis();
+  renderEnts();
+  renderFilters();
+  if (tab === "travaux") renderTable();
+  if (tab === "planning") { renderDstrip(); renderGantt(); }
+  if (tab === "paiements") renderPays();
+  if (tab === "pieces") renderPieces();
+  if (tab === "historique") renderJournal("#tJournal", 200);
+  if (tab === "acces") renderAcces();
+  $("#cTrav").textContent = actifs().filter(r=>!isDel(r)).length;
+  renderLists();
+}
+
+function renderBanner(){
+  const b = $("#banner");
+  if (live && rows.size) { b.hidden = true; return; }
+  b.hidden = false;
+  b.textContent = !live ? "Chargement…"
+    : isClient() ? "Aucune ligne de travaux : exécutez le script de reprise des données dans Supabase."
+    : "Aucune ligne ne vous est encore attribuée sur ce chantier.";
+}
+
+function renderKpis(){
+  const s = stats(actifs());
+  const ents = [...knownEnts()].filter(e=>e!=="Perso");
+  const paye = sum(ents, e=>payStats(e).paye);
+  const w = v => (v*100).toFixed(1)+"%";
+  $("#kpis").innerHTML = `
+    <div class="kpi"><div class="lbl">Budget projeté</div><div class="val num">${eur(s.total)}</div><div class="sub">engagé ${eur(s.engage)} + perso ${eur(s.perso)}</div></div>
+    <div class="kpi"><div class="lbl">Signé dans les devis</div><div class="val num">${eur(s.inclus)}</div><div class="sub">lignes « Inclus » des devis</div></div>
+    <div class="kpi"><div class="lbl">Crédits attendus</div><div class="val num">−${eur(s.supp + s.red)}</div><div class="sub">${eur(s.supp)} supprimés · ${eur(s.red)} réductions</div></div>
+    <div class="kpi"><div class="lbl">Hors devis</div><div class="val num">${eur(s.hors)}</div><div class="sub">${s.aChiffrer ? pill("warn", s.aChiffrer + " ligne" + (s.aChiffrer>1?"s":"") + " à chiffrer") : pill("good","tout est chiffré")}</div></div>
+    <div class="kpi"><div class="lbl">Payé</div><div class="val num">${eur(paye)}</div>
+      <div class="meter" role="img" aria-label="Payé ${pct(paye/(s.engage||1))} de l'engagé"><i style="width:${w(Math.min(1,paye/(s.engage||1)))};background:var(--series)"></i></div>
+      <div class="sub">reste ${eur(s.engage - paye)} sur l'engagé</div></div>
+    <div class="kpi"><div class="lbl">Avancement</div><div class="val num">${pct(s.av)}</div>
+      <div class="meter" role="img" aria-label="${s.faits} lignes faites, ${s.enCours} en cours sur ${s.n}"><i style="width:${w(s.faits/(s.n||1))};background:var(--good)"></i><i style="width:${w(s.enCours/(s.n||1))};background:var(--warn)"></i></div>
+      <div class="sub">${s.faits} faites · ${s.enCours} en cours · ${s.n - s.faits - s.enCours} à faire${s.bloq ? " · " + pill("crit", s.bloq + " bloquée" + (s.bloq>1?"s":"")) : ""}</div></div>` + kpisDates();
+}
+
+function renderEnts(){
+  const ents = [...knownEnts()].sort((a,b)=>{ const ia=ENT_ORDER.indexOf(a), ib=ENT_ORDER.indexOf(b); return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b); });
+  let T = {n:0,inclus:0,supp:0,hors:0,perso:0,engage:0,paye:0};
+  const body = ents.map(e => {
+    const list = actifs().filter(r=>r.entreprise===e);
+    const s = stats(list); const p = payStats(e);
+    const paye = e === "Perso" ? 0 : p.paye;
+    const reste = e === "Perso" ? 0 : s.engage - paye;
+    T.n+=s.n; T.inclus+=s.inclus; T.supp+=s.supp+s.red; T.hors+=s.hors; T.perso+=s.perso; T.engage+=s.engage; T.paye+=paye;
+    return `<tr>
+      <td>${entTag(e)}</td>
+      <td class="r num">${s.n}${s.nDel ? ` <span class="muted">(+${s.nDel} suppr.)</span>` : ""}</td>
+      <td class="r num">${s.inclus ? eur(s.inclus) : "—"}</td>
+      <td class="r num">${s.supp + s.red ? "−" + eur(s.supp + s.red) : "—"}</td>
+      <td class="r num">${s.hors ? eur(s.hors) : "—"}${s.aChiffrer ? ` <span class="warnmark" title="${s.aChiffrer} ligne(s) hors devis sans prix">⚠ ${s.aChiffrer}</span>` : ""}</td>
+      <td class="r num">${e === "Perso" ? eur(s.perso) : eur(s.engage)}</td>
+      <td class="r num">${e === "Perso" ? "—" : eur(paye)}</td>
+      <td class="r num">${e === "Perso" ? "—" : eur(reste)}</td>
+      <td style="min-width:130px"><div style="display:flex;gap:8px;align-items:center"><div class="bar" style="flex:1"><i style="width:${(s.av*100).toFixed(0)}%;background:${entColor(e)}"></i></div><span class="num" style="font-size:12px">${pct(s.av)}</span></div></td>
+    </tr>`;
+  }).join("");
+  $("#tEnts").innerHTML = `<thead><tr><th>Intervenant</th><th class="r">Lignes</th><th class="r">Signé</th><th class="r">Crédits</th><th class="r">Hors devis</th><th class="r">Engagé</th><th class="r">Payé</th><th class="r">Reste</th><th>Avancement</th></tr></thead>
+    <tbody>${body}</tbody>
+    <tfoot><tr><td>Total</td><td class="r num">${T.n}</td><td class="r num">${eur(T.inclus)}</td><td class="r num">−${eur(T.supp)}</td><td class="r num">${eur(T.hors)}</td><td class="r num">${eur(T.engage + T.perso)}</td><td class="r num">${eur(T.paye)}</td><td class="r num">${eur(T.engage - T.paye)}</td><td></td></tr></tfoot>`;
+}
+
+function opts(el, label, values, cur){
+  el.innerHTML = `<option value="">${label}</option>` + values.map(v => `<option value="${esc(v)}"${v===cur?" selected":""}>${esc(v)}</option>`).join("");
+}
+function uniq(k){ return [...new Set(actifs().map(r=>r[k]).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),"fr",{numeric:true})); }
+function renderFilters(){
+  opts($("#fPiece"), "Toutes les pièces", uniq("piece"), F.piece);
+  opts($("#fEnt"), "Tous les intervenants", uniq("entreprise"), F.ent);
+  opts($("#fStatut"), "Tous les statuts", STATUTS, F.statut);
+  $("#fDevis").innerHTML = `<option value="">Devis : tous</option>` + Object.entries(DEVIS_LBL).map(([k,v]) => `<option value="${k}"${k===F.devis?" selected":""}>${v}</option>`).join("");
+  opts($("#fPhase"), "Toutes les phases", uniq("phase"), F.phase);
+  $("#fQ").value = F.q; $("#fGroup").value = F.group; $("#fAChiffrer").checked = F.aChiffrer;
+}
+function renderLists(){
+  const fill = (id, vals) => $(id).innerHTML = vals.map(v => `<option value="${esc(v)}">`).join("");
+  fill("#lPieces", uniq("piece")); fill("#lTypes", uniq("type")); fill("#lEnts", uniq("entreprise"));
+  fill("#lPhases", uniq("phase")); fill("#lSources", uniq("devis_source"));
+}
+
+function filtered(){
+  const q = F.q.trim().toLowerCase();
+  return actifs().filter(r =>
+    (!F.piece || r.piece === F.piece) && (!F.ent || r.entreprise === F.ent) && (!F.statut || r.statut === F.statut) &&
+    (!F.devis || r.devis === F.devis) && (!F.phase || r.phase === F.phase) &&
+    (!F.aChiffrer || (r.devis === "Non Inclus" && !isDel(r) && !(+r.prix_ttc))) &&
+    (!q || `${r.travaux} ${r.commentaire} ${r.type} ${r.piece} ${r.entreprise} ${r.devis_source}`.toLowerCase().includes(q)));
+}
+const COLS = [
+  ["phase","Ph."],["piece","Pièce"],["travaux","Travaux"],["entreprise","Intervenant"],["type","Corps d'état"],
+  ["devis","Devis"],["statut","Statut"],["quantite","Qté","r"],["prix_ttc","Prix TTC","r"],["debut","Dates"],["devis_source","Devis concerné"]
+];
+function renderTable(){
+  const list = filtered();
+  const k = sort.k, dir = sort.dir;
+  list.sort((a,b) => { const va=a[k] ?? "", vb=b[k] ?? ""; return (typeof va==="number"||typeof vb==="number" ? (+va||0)-(+vb||0) : String(va).localeCompare(String(vb),"fr",{numeric:true})) * dir || a.ordre-b.ordre; });
+  const g = F.group;
+  const groups = new Map();
+  list.forEach(r => { const key = g ? (r[g] || "—") : ""; if (!groups.has(key)) groups.set(key, []); groups.get(key).push(r); });
+  const keys = [...groups.keys()].sort((a,b)=> g==="entreprise" ? ((ENT_ORDER.indexOf(a)+99)%99)-((ENT_ORDER.indexOf(b)+99)%99) || a.localeCompare(b) : String(a).localeCompare(String(b),"fr",{numeric:true}));
+  const head = `<thead><tr>${COLS.map(([c,l,cl]) => `<th class="sortable ${cl||""}" data-sort="${c}" aria-sort="${sort.k===c?(dir>0?"ascending":"descending"):"none"}">${l}${sort.k===c?(dir>0?" ▲":" ▼"):""}</th>`).join("")}</tr></thead>`;
+  let body = "";
+  keys.forEach(key => {
+    const rs = groups.get(key);
+    if (g) { const s = stats(rs); body += `<tr class="grp"><td colspan="8">${esc(g==="phase" ? "Phase " + key : key)} · ${rs.length} ligne${rs.length>1?"s":""}</td><td class="r num" style="font-family:var(--mono);font-size:12px">${eur(s.engage + s.perso)}</td><td colspan="2" style="font-family:var(--sans);font-size:12px;text-transform:none;letter-spacing:0">${pct(s.av)} fait</td></tr>`; }
+    rs.forEach(r => {
+      const warn = r.devis === "Non Inclus" && !isDel(r) && !(+r.prix_ttc);
+      body += `<tr class="row${isDel(r)?" del":""}" data-id="${esc(r.id)}">
+        <td class="mono">${esc(r.phase)}</td>
+        <td style="white-space:nowrap">${esc(r.piece)}</td>
+        <td class="trav"><span>${esc(r.travaux)}</span>${r.commentaire ? `<small title="${esc(r.commentaire)}">${esc(r.commentaire)}</small>` : ""}</td>
+        <td>${entTag(r.entreprise)}${r.artisan==="Non" && r.entreprise!=="Perso" ? ` <span class="muted" style="font-size:11px">(moi)</span>` : ""}</td>
+        <td>${esc(r.type)}</td>
+        <td>${pill(r.devis==="Inclus"?"neutral":r.devis==="Non Inclus"?"warn":"info", DEVIS_LBL[r.devis]||r.devis||"—")}</td>
+        <td><select class="st" data-st="${esc(r.id)}" aria-label="Statut">${[...new Set([...STATUTS, r.statut])].map(s=>`<option${s===r.statut?" selected":""}>${esc(s)}</option>`).join("")}</select></td>
+        <td class="r num">${r.quantite!=null ? esc(String(r.quantite).replace(".",",")) + " " + esc(r.unite||"") : "—"}</td>
+        <td class="r num">${+r.prix_ttc ? eur2(r.prix_ttc) : warn ? `<span class="warnmark">⚠ à chiffrer</span>` : "—"}${+r.reduction && r.statut==="Modifié" ? `<br><span class="muted" style="font-size:11px">−${eur2(r.reduction)}</span>` : ""}</td>
+        <td class="num" style="white-space:nowrap">${r.debut ? fd(D(r.debut)) + (r.fin && r.fin!==r.debut ? " → " + fd(D(r.fin)) : "") : "—"}</td>
+        <td style="font-size:12px">${esc(r.devis_source||"")}</td>
+      </tr>`;
+    });
+  });
+  const s = stats(list);
+  $("#tTrav").innerHTML = head + `<tbody>${body || `<tr><td colspan="11" class="empty">Aucune ligne ne correspond aux filtres.</td></tr>`}</tbody>` +
+    `<tfoot><tr><td colspan="8">${list.length} ligne${list.length>1?"s":""} affichée${list.length>1?"s":""}</td><td class="r num">${eur(s.engage + s.perso)}</td><td colspan="2">${pct(s.av)} fait</td></tr></tfoot>`;
+  $("#fCount").textContent = `${list.length} / ${rows.size}`;
+}
+
+function renderGantt(){
+  const hideDone = $("#gDone").checked;
+  const list = actifs().filter(r => !isDel(r) && D(r.debut) != null && !(hideDone && r.statut === "Fait"));
+  const noDate = actifs().filter(r => !isDel(r) && D(r.debut) == null);
+  $("#gNoDate").textContent = noDate.length ? `${noDate.length} ligne${noDate.length>1?"s":""} sans date n'apparaissent pas : ${noDate.slice(0,6).map(r=>r.travaux.slice(0,40)).join(" · ")}${noDate.length>6?"…":""}` : "";
+  const today = D(todayIso());
+  if (!list.length) { $("#gantt").innerHTML = `<div class="empty">Aucune ligne datée.</div>`; $("#gantt").style.width = ""; return; }
+  const starts = list.map(r=>D(r.debut)), ends = list.map(r=>D(r.fin) ?? D(r.debut));
+  const t0 = Math.min(...starts, today) - 2*DAY, t1 = Math.max(...ends, today) + 4*DAY;
+  const narrow = window.innerWidth < 600, PX = narrow ? 12 : 18, LAB = narrow ? 170 : 320;
+  const x = t => Math.round((t - t0)/DAY) * PX;
+  const host = $("#gantt");
+  host.style.setProperty("--lab", LAB+"px"); host.style.width = (LAB + x(t1)) + "px";
+  let grid = "", head = "";
+  for (let t = t0; t <= t1; t += DAY) {
+    const d = new Date(t), wd = d.getUTCDay();
+    if (wd === 6) grid += `<i class="gline we" style="left:${x(t)}px;width:${2*PX}px"></i>`;
+    if (d.getUTCDate() === 1) { grid += `<i class="gline mo" style="left:${x(t)}px"></i>`; head += `<span class="m" style="left:${x(t)}px">${d.toLocaleDateString("fr-FR",{month:"long",year:"numeric",timeZone:"UTC"})}</span>`; }
+    if (wd === 1) { grid += `<i class="gline" style="left:${x(t)}px"></i>`; head += `<span class="w" style="left:${x(t)+PX/2}px">${d.getUTCDate()}</span>`; }
+  }
+  const tl = `<div class="today" style="left:${x(today)+PX/2-1}px"></div>`;
+  const groups = new Map();
+  list.sort((a,b)=> (D(a.debut)-D(b.debut)) || a.ordre-b.ordre).forEach(r => { const k = r[gGroup] || "—"; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(r); });
+  const keys = [...groups.keys()].sort((a,b)=> gGroup==="entreprise" ? ((ENT_ORDER.indexOf(a)+99)%99)-((ENT_ORDER.indexOf(b)+99)%99) : String(a).localeCompare(String(b),"fr",{numeric:true}));
+  let h = `<div class="gr"><div class="gl muted" style="font-size:11px">${gGroup==="piece"?"Pièce":gGroup==="type"?"Corps d'état":"Intervenant"} / travaux</div><div class="gk ghead">${grid}${head}<div class="today" style="left:${x(today)+PX/2-1}px"><span>aujourd'hui</span></div></div></div>`;
+  keys.forEach(k => {
+    const rs = groups.get(k);
+    h += `<div class="gr grp"><div class="gl"><span>${esc(k)}</span><span class="mono" style="margin-left:auto;font-size:11px">${rs.length}</span></div><div class="gk">${grid}${tl}</div></div>`;
+    rs.forEach(r => {
+      const s = D(r.debut), e = Math.max(s, D(r.fin) ?? s);
+      const cls = r.statut==="Fait" ? "done" : r.statut==="En cours" ? "run" : "";
+      h += `<div class="gr task" data-id="${esc(r.id)}" data-tip="${esc(r.id)}"><div class="gl"><i class="dot" style="background:${entColor(r.entreprise)}"></i><span title="${esc(r.travaux)}">${esc(r.travaux)}</span></div>
+        <div class="gk">${grid}${tl}<div class="bar2 ${cls}${r.statut==="Modifié"?" mod":""}" style="--c:${entColor(r.entreprise)};left:${x(s)+1}px;width:${x(e+DAY)-x(s)-2}px"></div></div></div>`;
+    });
+  });
+  host.innerHTML = h;
+  document.querySelectorAll(".seg [data-g]").forEach(b => b.setAttribute("aria-pressed", b.dataset.g === gGroup));
+  const ents = [...new Set(list.map(r=>r.entreprise))].sort((a,b)=>((ENT_ORDER.indexOf(a)+99)%99)-((ENT_ORDER.indexOf(b)+99)%99) || a.localeCompare(b));
+  $("#gLegend").innerHTML = ents.map(e => `<span><i class="dot" style="background:${entColor(e)}"></i>${esc(e)}</span>`).join("") +
+    `<span><i class="sw" style="background:var(--e0)"></i>Fait</span><span><i class="sw" style="background:linear-gradient(90deg,var(--e0) 50%,transparent 50%)"></i>En cours</span><span><i class="sw"></i>À initier</span><span><i class="sw" style="border-style:dashed"></i>Modifié</span><span><i class="sw" style="width:2px;height:14px;border:0;background:var(--crit)"></i>Aujourd'hui</span>`;
+}
+
+function renderPays(){
+  const ents = [...new Set([...[...knownEnts()].filter(e=>e!=="Perso" && sum(actifs().filter(r=>r.entreprise===e), r=>r.prix_ttc) > 0), ...[...pays.values()].map(p=>p.entreprise)])]
+    .sort((a,b)=>((ENT_ORDER.indexOf(a)+99)%99)-((ENT_ORDER.indexOf(b)+99)%99) || a.localeCompare(b));
+  $("#pays").innerHTML = ents.map(e => {
+    const p = payStats(e), s = stats(actifs().filter(r=>r.entreprise===e));
+    return `<div class="card payent">
+      <h3><i class="dot" style="background:${entColor(e)}"></i>${esc(e)}</h3>
+      <p class="note" style="margin:2px 0 8px">Signé ${eur(s.inclus)} · engagé ${eur(s.engage)}</p>
+      ${p.list.length ? p.list.map(x => `<div class="payrow">
+        <input type="checkbox" data-paid="${esc(x.id)}" ${x.paye?"checked":""} aria-label="${esc(x.libelle)} réglé">
+        <div>${esc(x.libelle)}<small>${x.mode==="pct" ? `${String(x.valeur).replace(".",",")} % du devis` : "montant fixe"}${x.paye && x.date_paiement ? ` · payé le ${fd(D(x.date_paiement))}` : ""}</small></div>
+        <span class="num">${eur(p.amt(x))}</span>
+        <button class="btn sm" type="button" data-pedit="${esc(x.id)}">Modifier</button></div>`).join("") : `<p class="note">Aucune échéance.</p>`}
+      <div class="paysum"><span>Payé <b class="num">${eur(p.paye)}</b></span><span>Reste sur l'engagé <b class="num">${eur(s.engage - p.paye)}</b></span>${Math.abs(p.prevu - s.engage) > 1 ? `<span class="warnmark">Échéancier ${eur(p.prevu)} ≠ engagé</span>` : ""}</div>
+    </div>`;
+  }).join("") || `<div class="empty">Aucun intervenant chiffré.</div>`;
+}
+
+function renderPieces(){
+  const ps = uniq("piece");
+  $("#tPieces").innerHTML = `<thead><tr><th>Pièce</th><th class="r">Lignes</th><th class="r">Faites</th><th class="r">En cours</th><th class="r">Budget</th><th class="r">À chiffrer</th><th>Avancement</th><th>Intervenants</th></tr></thead><tbody>` +
+    ps.map(p => { const l = actifs().filter(r=>r.piece===p); const s = stats(l); const es = [...new Set(l.filter(r=>!isDel(r)).map(r=>r.entreprise))];
+      return `<tr><td><button class="btn sm" type="button" data-piece="${esc(p)}">${esc(p)}</button></td><td class="r num">${s.n}</td><td class="r num">${s.faits}</td><td class="r num">${s.enCours}</td><td class="r num">${eur(s.engage + s.perso)}</td><td class="r num">${s.aChiffrer ? `<span class="warnmark">⚠ ${s.aChiffrer}</span>` : "—"}</td>
+      <td style="min-width:160px"><div style="display:flex;gap:8px;align-items:center"><div class="meter" style="flex:1;margin:0"><i style="width:${(s.faits/(s.n||1)*100).toFixed(1)}%;background:var(--good)"></i><i style="width:${(s.enCours/(s.n||1)*100).toFixed(1)}%;background:var(--warn)"></i></div><span class="num" style="font-size:12px">${pct(s.av)}</span></div></td>
+      <td>${es.map(entTag).join(" ")}</td></tr>`; }).join("") + `</tbody>`;
+}
+
+/* ============ Vue artisan ============ */
+const saveA = () => { try { localStorage.setItem("suivi-artisan", JSON.stringify({ent:A.ent, devis:A.devis, poste:A.poste})); } catch(e) {} };
+const net = r => Math.max(0, (+r.prix_ttc||0) - (r.statut === "Modifié" ? (+r.reduction||0) : 0));
+function artisans(){
+  return [...new Set(actifs().filter(r => r.entreprise && r.entreprise !== "Perso" && r.artisan !== "Non").map(r => r.entreprise))]
+    .sort((a,b)=>((ENT_ORDER.indexOf(a)+99)%99)-((ENT_ORDER.indexOf(b)+99)%99) || a.localeCompare(b));
+}
+function avStats(list){
+  const L = list.filter(r => !isDel(r));
+  const M = sum(L, net);
+  const fait = sum(L.filter(r=>r.statut==="Fait"), net);
+  const cours = sum(L.filter(r=>r.statut==="En cours"), net);
+  const realise = fait + cours * .5;
+  const nF = L.filter(r=>r.statut==="Fait").length, nC = L.filter(r=>r.statut==="En cours").length, nB = L.filter(r=>r.statut==="Bloqué").length;
+  return {M, fait, cours, realise, taux: M ? realise / M : (L.length ? (nF + nC*.5) / L.length : 0), n: L.length, nF, nC, nB, parMontant: M > 0};
+}
+function stackBar(s, cls){
+  const w = v => (s.M ? v / s.M * 100 : 0).toFixed(1) + "%";
+  return `<div class="stack ${cls||""}" role="img" aria-label="${pct(s.taux)} réalisé"><i style="width:${w(s.fait)};background:var(--good)"></i><i style="width:${w(s.cours)};background:var(--warn)"></i></div>`;
+}
+function renderArtisan(){
+  const ents = artisans();
+  if (!ents.includes(A.ent)) A.ent = ents[0] || "";
+  $("#aEnt").innerHTML = ents.map(e => `<option${e===A.ent?" selected":""}>${esc(e)}</option>`).join("");
+  const all = actifs().filter(r => r.entreprise === A.ent);
+  const sources = [...new Set(all.filter(r=>r.devis==="Inclus").map(r => r.devis_source || "Sans référence"))].sort();
+  if (A.devis && !sources.includes(A.devis)) A.devis = "";
+  $("#aDevis").innerHTML = `<option value="">Tous les devis</option>` + sources.map(s => `<option${s===A.devis?" selected":""}>${esc(s)}</option>`).join("");
+  $("#eyebrowView").textContent = "Suivi de chantier · vue artisan";
+  $("#aTitre").innerHTML = `<span class="ent"><i class="dot" style="background:${entColor(A.ent)};width:14px;height:14px"></i>${esc(A.ent || "Aucun artisan")}</span>`;
+  document.querySelectorAll("[data-poste]").forEach(b => b.setAttribute("aria-pressed", b.dataset.poste === A.poste));
+
+  const inDevis = all.filter(r => r.devis === "Inclus" && (!A.devis || (r.devis_source || "Sans référence") === A.devis));
+  const signe = sum(inDevis, r => r.prix_ttc);
+  const moins = inDevis.filter(r => isDel(r) || (r.statut === "Modifié" && +r.reduction));
+  const mv = sum(moins, r => isDel(r) ? (+r.prix_ttc||0) : (+r.reduction||0));
+  const plus = all.filter(r => r.devis === "Non Inclus" && !isDel(r));
+  const plusM = sum(plus, r => r.prix_ttc), plusN = plus.filter(r => !(+r.prix_ttc)).length;
+  const s = avStats(inDevis);
+  const sPlus = avStats(plus.filter(r => +r.prix_ttc));
+  const ps = payStats(A.ent);
+  const realiseTot = s.realise + sPlus.realise;
+  const aFacturer = realiseTot - ps.paye;
+
+  $("#aGauge").innerHTML = `<div class="note" style="font-weight:500;color:var(--ink-2)">Avancement global du devis</div>
+    <div class="big num">${pct(s.taux)}</div>
+    ${stackBar(s)}
+    <div class="note">${eur(s.realise)} réalisés sur ${eur(s.M)} · ${s.nF} ligne${s.nF>1?"s":""} faite${s.nF>1?"s":""}, ${s.nC} en cours, ${s.n - s.nF - s.nC} à faire${s.nB ? ` · ${pill("crit", s.nB + " bloquée" + (s.nB>1?"s":""))}` : ""}</div>
+    ${s.n ? `<div class="note">En nombre de lignes : ${pct(s.n ? (s.nF + s.nC*.5)/s.n : 0)}</div>` : ""}`;
+
+  $("#aKpis").innerHTML = `
+    <div class="kpi"><div class="lbl">Devis signé</div><div class="val num">${eur(signe)}</div><div class="sub">${inDevis.length} ligne${inDevis.length>1?"s":""}${A.devis ? " · " + esc(A.devis) : sources.length > 1 ? ` · ${sources.length} devis` : ""}</div></div>
+    <div class="kpi"><div class="lbl">Devis révisé</div><div class="val num">${eur(s.M)}</div><div class="sub">${mv ? `−${eur(mv)} de moins-values` : "aucune moins-value"}</div></div>
+    <div class="kpi"><div class="lbl">Réalisé à date</div><div class="val num">${eur(realiseTot)}</div><div class="sub">devis ${eur(s.realise)}${sPlus.realise ? ` + supplémentaires ${eur(sPlus.realise)}` : ""}</div></div>
+    <div class="kpi"><div class="lbl">Déjà payé</div><div class="val num">${eur(ps.paye)}</div><div class="sub">${aFacturer >= 0 ? `${pill("info", "à facturer " + eur(aFacturer))}` : `${pill("warn", "avance de " + eur(-aFacturer))}`}</div></div>
+    <div class="kpi"><div class="lbl">Travaux supplémentaires</div><div class="val num">${eur(plusM)}</div><div class="sub">${plus.length} ligne${plus.length>1?"s":""}${plusN ? " · " + pill("warn", plusN + " à chiffrer") : ""}</div></div>
+    <div class="kpi"><div class="lbl">Reste à réaliser</div><div class="val num">${eur(s.M - s.realise)}</div><div class="sub">sur le devis révisé</div></div>`;
+
+  // Postes
+  const key = r => (A.poste === "devis_source" ? (r.devis_source || "Sans référence") : r[A.poste]) || "—";
+  const groups = new Map();
+  inDevis.forEach(r => { const k = key(r); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(r); });
+  const postes = [...groups.entries()].map(([k, rs]) => ({k, rs, s: avStats(rs), signe: sum(rs, r=>r.prix_ttc)}))
+    .sort((a,b) => b.s.M - a.s.M || a.k.localeCompare(b.k, "fr", {numeric:true}));
+  if (A.focus && !groups.has(A.focus)) A.focus = "";
+  $("#aPostes").innerHTML = `<thead><tr><th>Poste</th><th class="r">Lignes</th><th class="r">Montant révisé</th><th class="r">Part du devis</th><th class="r">Réalisé</th><th>Avancement</th><th class="r">Reste</th></tr></thead><tbody>` +
+    (postes.map(p => `<tr class="poste-row${A.focus===p.k?" on":""}" data-focus="${esc(p.k)}" tabindex="0">
+      <td><b style="font-weight:600">${esc(A.poste==="piece" ? p.k : p.k)}</b></td>
+      <td class="r num">${p.s.nF}/${p.s.n}${p.rs.length > p.s.n ? ` <span class="muted">(+${p.rs.length - p.s.n} suppr.)</span>` : ""}</td>
+      <td class="r num">${eur(p.s.M)}</td>
+      <td class="r num">${s.M ? pct(p.s.M / s.M) : "—"}</td>
+      <td class="r num">${eur(p.s.realise)}</td>
+      <td style="min-width:200px"><div class="mini">${stackBar(p.s)}<b class="num" style="min-width:40px;text-align:right">${p.s.n ? pct(p.s.taux) : "—"}</b></div>${!p.s.parMontant && p.s.n ? `<span class="note">non chiffré : compté en lignes</span>` : ""}</td>
+      <td class="r num">${eur(p.s.M - p.s.realise)}</td></tr>`).join("") || `<tr><td colspan="7" class="empty">Aucune ligne de devis pour cet artisan.</td></tr>`) +
+    `</tbody><tfoot><tr><td>Total</td><td class="r num">${s.nF}/${s.n}</td><td class="r num">${eur(s.M)}</td><td class="r num">100 %</td><td class="r num">${eur(s.realise)}</td><td><div class="mini">${stackBar(s)}<b class="num" style="min-width:40px;text-align:right">${pct(s.taux)}</b></div></td><td class="r num">${eur(s.M - s.realise)}</td></tr></tfoot>`;
+
+  // Détail
+  $("#aAll").hidden = !A.focus;
+  $("#aDetailSous").textContent = A.focus ? `Poste « ${A.focus} » uniquement.` : "Lignes du devis signé regroupées par poste. Le statut se met à jour directement ici.";
+  let det = `<thead><tr><th>Désignation</th><th class="r">Qté</th><th>U</th><th class="r">PU TTC</th><th class="r">Montant</th><th>Statut</th><th class="r">Avanc.</th><th class="r">Réalisé</th></tr></thead><tbody>`;
+  postes.filter(p => !A.focus || p.k === A.focus).forEach(p => {
+    det += `<tr class="grp"><td colspan="8">${esc(p.k)} <span class="note" style="font-family:var(--sans);text-transform:none;letter-spacing:0">· ${pct(p.s.taux)} réalisé</span></td></tr>`;
+    [...p.rs].sort((a,b)=>a.ordre-b.ordre).forEach(r => {
+      const q = +r.quantite || 0, pu = q ? (+r.prix_ttc||0)/q : null, pr = isDel(r) ? 0 : prog(r);
+      det += `<tr class="row${isDel(r)?" del":""}" data-id="${esc(r.id)}">
+        <td class="des" style="min-width:260px"><span>${esc(r.travaux)}</span><small>${esc(A.poste==="piece" ? r.type : r.piece)}${r.commentaire ? " · " + esc(r.commentaire) : ""}</small></td>
+        <td class="r num">${r.quantite!=null ? String(r.quantite).replace(".",",") : "—"}</td>
+        <td>${esc(r.unite||"")}</td>
+        <td class="r num">${pu!=null && +r.prix_ttc ? eur2(pu) : "—"}</td>
+        <td class="r num">${+r.prix_ttc ? eur2(r.prix_ttc) : "—"}${r.statut==="Modifié" && +r.reduction ? `<br><span class="muted" style="font-size:11px">−${eur2(r.reduction)}</span>` : ""}</td>
+        <td><select class="st" data-st="${esc(r.id)}" aria-label="Statut">${[...new Set([...STATUTS, r.statut])].map(x=>`<option${x===r.statut?" selected":""}>${esc(x)}</option>`).join("")}</select></td>
+        <td class="r num">${isDel(r) ? "—" : Math.round(pr*100) + " %"}</td>
+        <td class="r num">${isDel(r) ? "—" : eur2(net(r) * pr)}</td></tr>`;
+    });
+    det += `<tr class="sub"><td colspan="4">Sous-total ${esc(p.k)}</td><td class="r num">${eur2(p.s.M)}</td><td></td><td class="r num">${pct(p.s.taux)}</td><td class="r num">${eur2(p.s.realise)}</td></tr>`;
+  });
+  $("#aDetail").innerHTML = det + `</tbody>` + (postes.length ? `<tfoot><tr><td colspan="4">Total devis révisé</td><td class="r num">${eur2(s.M)}</td><td></td><td class="r num">${pct(s.taux)}</td><td class="r num">${eur2(s.realise)}</td></tr></tfoot>` : "");
+
+  // Moins-values / supplémentaires
+  $("#aMoins").innerHTML = `<thead><tr><th>Ligne</th><th>Motif</th><th class="r">Montant</th></tr></thead><tbody>` +
+    (moins.map(r => `<tr class="row" data-id="${esc(r.id)}"><td>${esc(r.travaux)}<br><span class="note">${esc(r.piece)}</span></td><td>${isDel(r) ? "Ligne supprimée" : "Réduction"}</td><td class="r num">−${eur2(isDel(r) ? r.prix_ttc : r.reduction)}</td></tr>`).join("") || `<tr><td colspan="3" class="muted">Aucune moins-value.</td></tr>`) +
+    `</tbody><tfoot><tr><td colspan="2">Total</td><td class="r num">−${eur2(mv)}</td></tr></tfoot>`;
+  $("#aPlus").innerHTML = `<thead><tr><th>Ligne</th><th>Statut</th><th class="r">Montant</th></tr></thead><tbody>` +
+    (plus.map(r => `<tr class="row" data-id="${esc(r.id)}"><td>${esc(r.travaux)}<br><span class="note">${esc(r.piece)}</span></td><td>${pill(ST_PILL[r.statut]||"neutral", r.statut)}</td><td class="r num">${+r.prix_ttc ? eur2(r.prix_ttc) : `<span class="warnmark">⚠ à chiffrer</span>`}</td></tr>`).join("") || `<tr><td colspan="3" class="muted">Aucun travail supplémentaire.</td></tr>`) +
+    `</tbody><tfoot><tr><td colspan="2">Total chiffré</td><td class="r num">${eur2(plusM)}</td></tr></tfoot>`;
+
+  // Situation
+  $("#aSit").innerHTML = `
+    <span>Devis signé${A.devis ? " (" + esc(A.devis) + ")" : ""}</span><span class="num">${eur2(signe)}</span>
+    <span>Moins-values</span><span class="num">−${eur2(mv)}</span>
+    <span>Devis révisé</span><span class="num">${eur2(s.M)}</span>
+    <span>Réalisé sur le devis (${pct(s.taux)})</span><span class="num">${eur2(s.realise)}</span>
+    <span>Réalisé sur travaux supplémentaires chiffrés</span><span class="num">${eur2(sPlus.realise)}</span>
+    <span class="tot">Total réalisé à date</span><span class="tot num">${eur2(realiseTot)}</span>
+    <span>Déjà versé (${ps.list.filter(p=>p.paye).map(p=>esc(p.libelle)).join(", ") || "aucun versement"})</span><span class="num">−${eur2(ps.paye)}</span>
+    <span class="tot">${aFacturer >= 0 ? "Reste à facturer à date" : "Versé en avance sur l'avancement"}</span><span class="tot num">${eur2(Math.abs(aFacturer))}</span>
+    ${A.devis ? `<span class="note" style="grid-column:1/-1">Les versements sont comptés pour l'ensemble des devis de l'artisan.</span>` : ""}`;
+}
+$("#aEnt").addEventListener("change", e => { A.ent = e.target.value; A.devis = ""; A.focus = ""; saveA(); renderArtisan(); });
+$("#aDevis").addEventListener("change", e => { A.devis = e.target.value; A.focus = ""; saveA(); renderArtisan(); });
+document.querySelectorAll("[data-poste]").forEach(b => b.addEventListener("click", () => { A.poste = b.dataset.poste; A.focus = ""; saveA(); renderArtisan(); }));
+$("#aPostes").addEventListener("click", e => { const tr = e.target.closest("[data-focus]"); if (!tr) return; A.focus = A.focus === tr.dataset.focus ? "" : tr.dataset.focus; renderArtisan(); $("#aDetail").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"}); });
+$("#aPostes").addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.closest("[data-focus]")) { e.preventDefault(); e.target.click(); } });
+$("#aAll").addEventListener("click", () => { A.focus = ""; renderArtisan(); });
+["#aDetail","#aMoins","#aPlus"].forEach(sel => $(sel).addEventListener("click", e => { if (e.target.closest("select")) return; const tr = e.target.closest("tr.row"); if (tr) openRow(tr.dataset.id); }));
+$("#aDetail").addEventListener("change", e => {
+  const sEl = e.target.closest("select[data-st]"); if (!sEl) return;
+  const id = sEl.dataset.st, r = rows.get(id);
+  if (live) r.statut = sEl.value;
+  render();
+  patchRow(id, {statut: sEl.value}, `Statut : ${sEl.value} — ${r.travaux.slice(0,50)}`);
+});
+$("#aCsv").addEventListener("click", async () => {
+  const list = actifs().filter(r => r.entreprise === A.ent && (r.devis === "Inclus" && (!A.devis || (r.devis_source || "Sans référence") === A.devis) || (r.devis === "Non Inclus" && !isDel(r))));
+  const c = v => { const t = String(v ?? ""); return /[;"\n]/.test(t) ? `"${t.replace(/"/g,'""')}"` : t; };
+  const n = v => v == null || v === "" ? "" : String(Math.round(v*100)/100).replace(".", ",");
+  const head = ["Poste","Pièce","Désignation","Devis","Devis concerné","Quantité","Unité","Montant TTC","Réduction","Statut","Avancement %","Réalisé TTC"];
+  const lines = list.sort((a,b)=>String(a.type).localeCompare(String(b.type),"fr")||a.ordre-b.ordre).map(r => [c(r.type),c(r.piece),c(r.travaux),c(DEVIS_LBL[r.devis]||r.devis),c(r.devis_source),n(r.quantite),c(r.unite),n(r.prix_ttc),n(r.statut==="Modifié"?r.reduction:null),c(r.statut),isDel(r)?"":Math.round(prog(r)*100),isDel(r)?"":n(net(r)*prog(r))].join(";"));
+  saveFile(`situation-${A.ent.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${todayIso()}.csv`,
+           "﻿" + head.join(";") + "\n" + lines.join("\n"));
+});
+function selectView(v){
+  view = v;
+  try { localStorage.setItem("suivi-view", v); } catch(e) {}
+  document.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", b.dataset.view === v));
+  $("#viewClient").hidden = v !== "client";
+  $("#viewArtisan").hidden = v !== "artisan";
+  $("#bCsv").style.display = v === "client" ? "" : "none";
+  if (v === "client") { $("#eyebrowView").textContent = "Suivi de chantier · vue client"; selectTab(tab); } else render();
+}
+document.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => selectView(b.dataset.view)));
+
+/* ============ Dialogue ligne ============ */
+let editing = null;
+function openRow(id){
+  const r = id ? rows.get(id) : null;
+  editing = id;
+  $("#dRowTitle").textContent = r ? "Modifier la ligne" : "Nouvelle ligne";
+  $("#dRowId").textContent = r ? `ligne Excel ${r.ordre}` : "";
+  $("#rStatut").innerHTML = STATUTS.map(s=>`<option>${s}</option>`).join("");
+  const v = r || {travaux:"",piece:F.piece||"",type:"",entreprise:F.ent||"",phase:"2",devis:"Non Inclus",statut:"A initier",artisan:"Oui",devis_source:"",quantite:null,unite:"",prix_ttc:null,reduction:null,fourniture:null,heures:null,debut:"",fin:"",fourniture_requise:false,commentaire:""};
+  const set = (sel, val) => $(sel).value = val ?? "";
+  set("#rTravaux",v.travaux); set("#rPiece",v.piece); set("#rType",v.type); set("#rEnt",v.entreprise); set("#rPhase",v.phase);
+  set("#rDevis",v.devis); set("#rStatut",v.statut); set("#rArtisan",v.artisan); set("#rSource",v.devis_source);
+  set("#rQte",v.quantite); set("#rUnite",v.unite); set("#rPrix",v.prix_ttc); set("#rRed",v.reduction); set("#rFour",v.fourniture);
+  set("#rHeures",v.heures); set("#rDebut",v.debut); set("#rFin",v.fin); set("#rComm",v.commentaire);
+  $("#rFReq").checked = !!v.fourniture_requise;
+  $("#rDel").hidden = !r; $("#rErr").hidden = true;
+  $("#dRow").showModal();
+}
+const numOrNull = sel => { const s = $(sel).value.trim(); return s === "" ? null : Math.round(parseFloat(s)*100)/100; };
+$("#rowForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const err = m => { $("#rErr").textContent = m; $("#rErr").hidden = false; };
+  const trav = $("#rTravaux").value.trim();
+  if (!trav) return err("Décrivez les travaux.");
+  const deb = $("#rDebut").value, fin = $("#rFin").value;
+  if (deb && fin && fin < deb) return err("La date de fin doit être le même jour ou après la date de début.");
+  const prev = editing ? rows.get(editing) : null;
+  const ordre = prev ? prev.ordre : Math.max(0, ...actifs().map(r=>r.ordre||0)) + 1;
+  const data = {
+    ordre, phase: $("#rPhase").value.trim() || "2", entreprise: $("#rEnt").value.trim(), piece: $("#rPiece").value.trim(), type: $("#rType").value.trim(),
+    travaux: trav, devis: $("#rDevis").value, statut: $("#rStatut").value, artisan: $("#rArtisan").value,
+    quantite: numOrNull("#rQte"), unite: $("#rUnite").value.trim(), prix_ttc: numOrNull("#rPrix"),
+    fourniture_requise: $("#rFReq").checked, fourniture: numOrNull("#rFour"), commentaire: $("#rComm").value.trim(),
+    heures: numOrNull("#rHeures"), reduction: numOrNull("#rRed"), debut: deb || (fin || ""), fin: fin || deb || "", devis_source: $("#rSource").value.trim()
+  };
+  const id = editing || ("N" + Date.now().toString(36));
+  if (live) rows.set(id, {id, ...data});
+  $("#dRow").close();
+  render();
+  saveRow(id, data, prev ? "Ligne enregistrée." : "Ligne ajoutée.");
+});
+$("#rDel").addEventListener("click", () => {
+  if (!editing) return;
+  const r = rows.get(editing);
+  if (!confirm(`Supprimer définitivement « ${r.travaux} » ?\n\nPour garder la trace d'une ligne retirée du devis, choisissez plutôt le statut « Supprimé ».`)) return;
+  const id = editing; $("#dRow").close();
+  if (live) rows.delete(id);
+  render(); delRow(id);
+});
+
+/* ============ Dates projetées d'après le planning ============ */
+const fdl = t => t == null ? "—" : new Date(t).toLocaleDateString("fr-FR",
+  {day:"numeric", month:"short", year: new Date(t).getUTCFullYear() !== new Date().getFullYear() ? "numeric" : undefined, timeZone:"UTC"});
+const jrs = n => n == null ? "—" : n === 0 ? "dans les temps" : n > 0 ? n + " j de retard" : (-n) + " j d'avance";
+function planning(){
+  const tous = actifs().filter(r => !isDel(r));
+  const L = tous.filter(r => D(r.debut) != null);
+  if (!L.length) return null;
+  const W = sum(L, net);
+  const Wt = W || L.length;                          // à défaut de montants, on pondère à la ligne
+  const poids = r => W ? net(r) : 1;
+  const d0 = Math.min(...L.map(r => D(r.debut)));
+  const d1 = Math.max(...L.map(r => D(r.fin || r.debut)));
+  const part = d => sum(L, r => {                    // part des montants planifiée à la date d
+    const a = D(r.debut), b = D(r.fin || r.debut) + DAY;
+    return poids(r) * (d <= a ? 0 : d >= b ? 1 : (d - a) / (b - a));
+  }) / Wt;
+  const atteint = q => {                             // 1re date où le planning atteint q
+    if (q <= 0) return d0;
+    if (q >= 1) return d1 + DAY;
+    let lo = d0, hi = d1 + DAY;
+    while (hi - lo > DAY) {
+      const mid = lo + Math.round((hi - lo) / 2 / DAY) * DAY;
+      if (mid <= lo || mid >= hi) break;
+      if (part(mid) >= q) hi = mid; else lo = mid;
+    }
+    return hi;
+  };
+  const today = D(todayIso());
+  const demarre = today >= d0;
+  const prevu = Math.min(1, Math.max(0, part(today)));
+  const reel = Math.min(1, sum(L, r => poids(r) * prog(r)) / Wt);
+  const mi = atteint(.5);
+  // date à laquelle le planning prévoyait l'avancement produit → retard en jours
+  const acquis = atteint(reel);
+  const retard = demarre ? Math.round((today - acquis) / DAY) : 0;
+  const fini = reel >= 1;
+  const finProj = fini ? today : Math.max(today, d1 + retard * DAY);
+  const miProj = reel >= .5 ? null : Math.max(today, mi + retard * DAY);
+  return {d0, d1, mi, prevu, reel, retard, finProj, miProj, fini, demarre, today,
+          spi: prevu > 0 ? reel / prevu : null,
+          duree: Math.round((d1 - d0) / DAY) + 1,
+          resteJours: Math.max(0, Math.round((finProj - today) / DAY)),
+          nonDates: tous.length - L.length};
+}
+const etatRetard = g => g == null ? "neutral" : g <= 0 ? "good" : g <= 14 ? "warn" : "crit";
+function kpisDates(){
+  const p = planning();
+  if (!p) return `<div class="kpi"><div class="lbl">Dates projetées</div><div class="val num">—</div><div class="sub">Aucune ligne datée : renseignez des dates dans le planning.</div></div>`;
+  const mi = p.miProj == null
+    ? `<div class="kpi"><div class="lbl">Mi-chantier</div><div class="val num">${fdl(p.mi)}</div>
+        <div class="sub">${pill("good","moitié des montants produite")} · date du planning</div></div>`
+    : `<div class="kpi"><div class="lbl">Mi-chantier projeté</div><div class="val num">${fdl(p.miProj)}</div>
+        <div class="sub">planning ${fdl(p.mi)} · ${pill(etatRetard(p.retard), jrs(p.retard))}</div></div>`;
+  const fin = p.fini
+    ? `<div class="kpi"><div class="lbl">Fin de chantier</div><div class="val num">${fdl(p.today)}</div>
+        <div class="sub">${pill("good","toutes les lignes faites")} · planning ${fdl(p.d1)}</div></div>`
+    : `<div class="kpi"><div class="lbl">Fin projetée</div><div class="val num">${fdl(p.finProj)}</div>
+        <div class="sub">planning ${fdl(p.d1)} · ${pill(etatRetard(p.retard), jrs(p.retard))}</div></div>`;
+  return mi + fin;
+}
+function renderDstrip(){
+  const el = $("#dstrip"); if (!el) return;
+  const p = planning();
+  if (!p) { el.innerHTML = `<div><dt>Planning</dt><dd>—</dd><small>Aucune ligne datée : la projection a besoin d'au moins une date de début.</small></div>`; return; }
+  const cel = (dt, dd, sm, cl) => `<div class="${cl || ""}"><dt>${dt}</dt><dd>${dd}</dd><small>${sm}</small></div>`;
+  el.innerHTML =
+    cel("Ouverture", fdl(p.d0), p.demarre ? `${Math.round((p.today - p.d0)/DAY)} jours écoulés sur ${p.duree}` : "chantier non démarré") +
+    cel("Mi-chantier planning", fdl(p.mi), "date à laquelle la moitié des montants doit être produite") +
+    cel("Mi-chantier projeté", p.miProj == null ? "atteint" : fdl(p.miProj),
+        p.miProj == null ? "la moitié des montants est produite" : `report du retard constaté : ${jrs(p.retard)}`, "proj") +
+    cel("Fin planning", fdl(p.d1), `${p.duree} jours calendaires depuis l'ouverture`) +
+    cel("Fin projetée", p.fini ? "terminé" : fdl(p.finProj),
+        p.fini ? "toutes les lignes datées sont faites"
+               : `${pct(p.reel)} produit là où le planning prévoyait ${pct(p.prevu)} · reste ${p.resteJours} jours`, "proj") +
+    (p.nonDates ? cel("Sans date", String(p.nonDates), "lignes hors planning, exclues de la projection") : "");
+}
+
+/* ============ Journal & accès ============ */
+const CH_LBL = {statut:"statut", prix_ttc:"prix", quantite:"quantité", debut:"début", fin:"fin", travaux:"désignation",
+  commentaire:"commentaire", reduction:"réduction", devis:"devis", piece:"pièce", type:"corps d'état", paye:"réglé",
+  valeur:"valeur", libelle:"libellé", entreprise:"entreprise", unite:"unité", devis_source:"devis concerné", phase:"phase",
+  artisan:"artisan", heures:"heures", fourniture:"fourniture", fourniture_requise:"fourniture requise",
+  date_paiement:"date de paiement", mode:"type", ordre:"ordre", nom:"article", lien:"lien", categorie:"catégorie",
+  fournisseur:"boutique", prix:"prix", pose:"pose", date_livraison:"livraison", date_commande:"à commander avant",
+  modele:"modèle", delai:"délai", image:"photo", cat:"catégorie", partage:"partage", note:"note", chemin:"fichier", date_doc:"date"};
+const fv = v => v == null || v === "" ? "—" : typeof v === "boolean" ? (v ? "oui" : "non") : Array.isArray(v) ? (v.join(", ") || "—") : String(v);
+function renderJournal(sel, max){
+  const el = $(sel); if (!el) return;
+  el.innerHTML = `<thead><tr><th>Quand</th><th>Qui</th><th>Ligne</th><th>Action</th><th>Détail</th></tr></thead><tbody>` +
+    (journal.slice(0, max).map(j => {
+      const ch = j.action === "modification" ? Object.entries(j.changements || {}).map(([k,v]) => `${CH_LBL[k] || k} : ${esc(fv(v.avant))} → ${esc(fv(v.apres))}`).join("<br>") : "";
+      return `<tr><td class="num" style="white-space:nowrap">${new Date(j.at).toLocaleString("fr-FR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</td><td>${esc(j.email || "système")}</td><td>${esc(j.libelle || j.ligne_id)}${j.entreprise ? `<br><span class="note">${esc(j.entreprise)}</span>` : ""}</td><td>${pill(j.action === "suppression" ? "crit" : j.action === "création" ? "good" : "neutral", j.action)}</td><td class="chg">${ch}</td></tr>`;
+    }).join("") || `<tr><td colspan="5" class="note">Aucune modification enregistrée.</td></tr>`) + `</tbody>`;
+}
+function renderAcces(){
+  const el = $("#tAcces"); if (!el) return;
+  el.innerHTML = `<thead><tr><th>E-mail</th><th>Rôle</th><th>Entreprise</th><th>Nom</th><th></th></tr></thead><tbody>` +
+    (acces.map(a => `<tr><td>${esc(a.email)}</td><td>${pill(a.role === "client" ? "info" : "neutral", a.role)}</td><td>${a.entreprise ? entTag(a.entreprise) : "—"}</td><td>${esc(a.nom || "")}</td><td class="r">${ME && a.email === ME.email ? `<span class="note">vous</span>` : `<button class="btn sm danger" type="button" data-rmacces="${esc(a.email)}">Retirer</button>`}</td></tr>`).join("") || `<tr><td colspan="5" class="note">Aucun accès.</td></tr>`) + `</tbody>`;
+}
+$("#accesForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const row = {email: $("#acEmail").value.trim().toLowerCase(), role: $("#acRole").value,
+               entreprise: $("#acEnt").value.trim() || null, nom: $("#acNom").value.trim() || null};
+  if (row.role === "artisan" && !row.entreprise) { toast("Indiquez l'entreprise de l'artisan, écrite comme dans le tableau."); return; }
+  if (row.role === "artisan" && !knownEnts().has(row.entreprise) && !confirm(`Aucune ligne n'est attribuée à « ${row.entreprise} ». Continuer ?`)) return;
+  const {error} = await sb.from("acces").upsert(row);
+  if (error) { toast("Accès non enregistré : " + error.message); return; }
+  if (row.role === "artisan" && !fils.some(f => f.ent === row.entreprise)) {
+    const id = "F" + Date.now().toString(36);
+    await sb.from("fils").insert({id, ordre: fils.length, nom: row.entreprise, entreprise: row.entreprise, prive: false});
+  }
+  toast(`${row.email} peut se connecter.`); e.target.reset(); await reload();
+});
+$("#tAcces").addEventListener("click", async e => {
+  const b = e.target.closest("[data-rmacces]"); if (!b) return;
+  if (!confirm(`Retirer l'accès de ${b.dataset.rmacces} ?`)) return;
+  const {error} = await sb.from("acces").delete().eq("email", b.dataset.rmacces);
+  if (error) { toast("Retrait impossible : " + error.message); return; }
+  await reload();
+});
+
+/* ============ Chargement depuis Supabase ============ */
+async function reload(){
+  const vide = {data: []};
+  const [t, p, c, m, f, msg, doc] = await Promise.all([
+    sb.from("travaux").select("*").order("ordre"),
+    sb.from("paiements").select("*").order("ordre"),
+    sb.from("config").select("data").eq("id", "chantier").maybeSingle(),
+    isClient() ? sb.from("ameublement").select("*").order("ordre") : Promise.resolve(vide),
+    sb.from("fils").select("*").order("ordre"),
+    sb.from("messages").select("*").order("at").limit(500),
+    sb.from("documents").select("*").order("date_doc", {ascending: false}),
+  ]);
+  if (t.error || p.error) { setSync("err", "Chargement impossible"); toast("Chargement impossible : " + (t.error || p.error).message); return; }
+  rows = new Map((t.data || []).map(r => [r.id, fromDb(r)]));
+  pays = new Map((p.data || []).map(r => [r.id, fromDb(r)]));
+  meubles = new Map((m.data || []).map(r => [r.id, fromDb(r)]));
+  docs = (doc.data || []).map(fromDb);
+  if (c.data && c.data.data) meta = c.data.data;
+  const col = isClient() ? "lu_client" : "lu_artisan";
+  fils = (f.data || []).map(x => {
+    const ms = (msg.data || []).filter(z => z.fil === x.id);
+    return {id: x.id, nom: x.nom, ent: x.entreprise, prive: x.prive,
+            nonlus: ms.filter(z => z.email !== ME.email && !z[col]).length,
+            msgs: ms.map(z => ({at: z.at, qui: z.email === ME.email ? "Vous" : (z.auteur || z.email),
+                                txt: z.texte, ref: z.ref || "", att: z.piece_jointe || ""}))};
+  });
+  if (!fils.some(f => f.id === filCur)) {
+    const att = fils.find(f => f.nonlus) || fils[0];
+    filCur = att ? att.id : "";
+  }
+  await Promise.all([loadJournal(), loadAcces()]);
+  live = true;
+  if (!pending) setSync("ok", "À jour · partagé");
+  render();
+}
+async function loadJournal(){ const {data} = await sb.from("journal").select("*").order("at", {ascending: false}).limit(200); journal = data || []; }
+async function loadAcces(){ if (!isClient()) { acces = []; return; } const {data} = await sb.from("acces").select("*").order("role").order("email"); acces = data || []; }
+let jT;
+function refreshSoon(){ clearTimeout(jT); jT = setTimeout(() => { if (!document.querySelector("dialog[open]")) render(); else refreshSoon(); }, 250); }
+function subscribe(){
+  const ch = sb.channel("chantier");
+  const tbl = (nom, appliquer) => ch.on("postgres_changes", {event: "*", schema: "public", table: nom}, ev => { appliquer(ev); refreshSoon(); });
+  tbl("travaux", ev => ev.eventType === "DELETE" ? rows.delete(ev.old.id) : rows.set(ev.new.id, fromDb(ev.new)));
+  tbl("paiements", ev => ev.eventType === "DELETE" ? pays.delete(ev.old.id) : pays.set(ev.new.id, fromDb(ev.new)));
+  tbl("ameublement", ev => ev.eventType === "DELETE" ? meubles.delete(ev.old.id) : meubles.set(ev.new.id, fromDb(ev.new)));
+  tbl("documents", ev => {
+    if (ev.eventType === "DELETE") docs = docs.filter(d => d.id !== ev.old.id);
+    else { const d = fromDb(ev.new); const i = docs.findIndex(x => x.id === d.id); i < 0 ? docs.unshift(d) : docs[i] = d; }
+  });
+  tbl("messages", ev => {
+    if (ev.eventType !== "INSERT") return;
+    const z = ev.new, f = fils.find(x => x.id === z.fil);
+    if (!f || z.email === ME.email) return;
+    f.msgs.push({at: z.at, qui: z.auteur || z.email, txt: z.texte, ref: z.ref || "", att: z.piece_jointe || ""});
+    if (space !== "conversation" || filCur !== f.id) f.nonlus++;
+  });
+  ch.on("postgres_changes", {event: "INSERT", schema: "public", table: "journal"}, ev => { journal.unshift(ev.new); journal = journal.slice(0, 200); refreshSoon(); })
+    .subscribe(st => { if (st === "CHANNEL_ERROR" || st === "TIMED_OUT") setSync("err", "Temps réel interrompu : rechargez la page"); });
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && live) reload(); });
+
+/* ============ Entrée : compte & connexion ============ */
+const GVUES = ["inscription","connexion","code","invitation","refus","bienvenue","compte"];
+let gRole = "client";
+function gate(v){
+  GVUES.forEach(x => { $("#g-" + x).hidden = x !== v; });
+  if (v === "code") {
+    const m = ($("#gMail").value || $("#gMail2").value || $("#gMail3").value || "").trim();
+    $("#gDest").textContent = m || "vous@exemple.fr";
+    const f = $("#gOtp").firstElementChild; if (f) setTimeout(() => f.focus(), 30);
+  }
+  $("#gate").scrollTop = 0;
+}
+document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => {
+  if (b.dataset.go === "code") {
+    const src = b.closest(".gate-card");
+    const inp = src && src.querySelector("input[type=email]");
+    if (inp) { envoiLien(inp.value.trim().toLowerCase()); return; }
+  }
+  gate(b.dataset.go);
+}));
+$("#gOtp").addEventListener("keydown", async e => {
+  if (e.key !== "Enter") return;
+  e.preventDefault();
+  valider();
+});
+async function valider(){
+  const code = [...$("#gOtp").children].map(x => x.value).join("");
+  if (code.length < 6) { gateMsg("Saisissez les six chiffres reçus."); return; }
+  const {error} = await sb.auth.verifyOtp({email: mailCourant, token: code, type: "email"});
+  if (error) gateMsg(/expired|invalid/i.test(error.message) ? "Code expiré ou incorrect. Demandez un nouveau lien." : error.message);
+}
+document.querySelectorAll(".role").forEach(b => b.addEventListener("click", () => {
+  gRole = b.dataset.role;
+  document.querySelectorAll(".role").forEach(x => x.setAttribute("aria-pressed", x === b));
+  $("#gCodeInv").hidden = gRole !== "artisan";
+}));
+document.querySelectorAll("[data-goog]").forEach(b => {
+  if (!CFG.google) { b.hidden = true; return; }
+  b.addEventListener("click", async () => {
+    const {error} = await sb.auth.signInWithOAuth({provider: "google", options: {redirectTo: location.origin + location.pathname}});
+    if (error) gateMsg("Connexion Google impossible : " + error.message);
+  });
+});
+if (!CFG.google) document.querySelectorAll(".sep").forEach(x => x.hidden = true);
+function gateMsg(t, ok){
+  let el = $("#gateMsg");
+  if (!el) { el = document.createElement("div"); el.id = "gateMsg"; el.className = "alert"; $("#g-code").prepend(el); }
+  el.className = "alert " + (ok ? "ok" : "err");
+  el.textContent = t; el.hidden = !t;
+  document.querySelectorAll(".gate-card:not([hidden]) #gateMsg").length || $("#g-" + vueCourante()).prepend(el);
+}
+const vueCourante = () => GVUES.find(v => !$("#g-" + v).hidden) || "connexion";
+async function envoiLien(email){
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { gateMsg("Saisissez une adresse e-mail valide."); return; }
+  const btns = document.querySelectorAll("[data-go='code']"); btns.forEach(b => b.disabled = true);
+  const {error} = await sb.auth.signInWithOtp({email, options: {emailRedirectTo: location.origin + location.pathname}});
+  btns.forEach(b => b.disabled = false);
+  if (error) {
+    const m = error.message || "";
+    gateMsg(/Database error|non autoris|Signups not allowed/i.test(m) ? "Cette adresse n'a pas accès à ce chantier. Demandez au client de vous inviter."
+      : /rate|security purposes/i.test(m) ? "Trop de demandes rapprochées. Patientez une minute."
+      : "Envoi impossible : " + m);
+    return;
+  }
+  mailCourant = email;
+  gate("code"); gateMsg("E-mail envoyé à " + email + ".", true);
+}
+let mailCourant = "";
+$("#gOtp").addEventListener("input", e => {
+  const i = e.target; i.value = i.value.replace(/\D/g, "").slice(0,1);
+  if (i.value && i.nextElementSibling) i.nextElementSibling.focus();
+});
+$("#gOtp").addEventListener("keydown", e => {
+  if (e.key === "Backspace" && !e.target.value && e.target.previousElementSibling) e.target.previousElementSibling.focus();
+});
+$("#gOtp").addEventListener("paste", e => {
+  const t = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0,6);
+  if (!t) return;
+  e.preventDefault();
+  [...$("#gOtp").children].forEach((x, k) => x.value = t[k] || "");
+});
+$("#gValider").addEventListener("click", valider);
+document.querySelectorAll("[data-resend]").forEach(b => b.addEventListener("click", () => envoiLien(mailCourant)));
+function enterApp(){ if (!ME) return; $("#gate").hidden = true; document.body.style.overflow = ""; }
+document.querySelectorAll("[data-enter]").forEach(b => b.addEventListener("click", enterApp));
+$("#railCompte").addEventListener("click", () => {
+  $("#cpMail").textContent = ME ? (ME.nom ? `${ME.nom} · ${ME.email}` : ME.email) : "—";
+  $("#cpRole").textContent = ME ? (isClient() ? "Accès client : tout le chantier" : `Artisan · ${ME.entreprise}`) : "";
+  $("#gate").hidden = false; gate("compte");
+});
+$("#cpOut").addEventListener("click", async () => { await sb.auth.signOut(); location.reload(); });
+
+/* ============ Échanges ============ */
+let fils = [];
+let filCur = "";
+const dtf = (iso, long) => new Date(iso).toLocaleString("fr-FR", long ? {weekday:"long",day:"numeric",month:"long"} : {hour:"2-digit",minute:"2-digit"});
+const dayKey = iso => iso.slice(0,10);
+const refLbl = id => {
+  const r = rows.get(id); if (r) return {t:`Ligne ${id} · ${r.travaux}`, c: entColor(r.entreprise)};
+  const m = meubles.get(id); if (m) return {t:`Panier · ${m.nom}`, c:"var(--accent)"};
+  return {t:`Référence ${id}`, c:"var(--muted)"};
+};
+function renderChat(){
+  if (!fils.length) { $("#chatList").innerHTML = ""; $("#msgs").innerHTML = `<div class="empty">Aucun fil de discussion.</div>`; $("#thTitre").textContent = "—"; return; }
+  const f = fils.find(x => x.id === filCur) || fils[0];
+  filCur = f.id;
+  $("#chatList").innerHTML = fils.map(x => {
+    const last = x.msgs[x.msgs.length - 1];
+    return `<button class="chat-i" type="button" role="tab" data-fil="${x.id}" aria-current="${x.id === f.id}" style="--c:${x.ent ? entColor(x.ent) : "var(--ink-2)"}">
+      <i></i>
+      <span><b>${esc(x.nom)}</b><small>${last ? esc((last.qui === "Vous" ? "Vous : " : "") + last.txt) : "Aucun message"}</small></span>
+      <span style="text-align:right"><em>${last ? new Date(last.at).toLocaleDateString("fr-FR",{day:"numeric",month:"short"}) : ""}</em>${x.nonlus ? `<br><span class="nu">${x.nonlus}</span>` : ""}</span>
+    </button>`;
+  }).join("");
+  $("#thTitre").textContent = f.nom;
+  $("#thSous").textContent = f.ent ? `${f.msgs.length} message${f.msgs.length>1?"s":""} · l'entreprise voit ce fil et peut répondre` : `${f.msgs.length} note${f.msgs.length>1?"s":""} · visible par vous seul`;
+  $("#thVis").innerHTML = f.prive ? pill("neutral","Privé") : pill("info", f.ent);
+  let h = "", day = "";
+  f.msgs.forEach(m => {
+    if (dayKey(m.at) !== day) { day = dayKey(m.at); h += `<div class="day">${dtf(m.at, true)}</div>`; }
+    const me = m.qui === "Vous";
+    const r = m.ref ? refLbl(m.ref) : null;
+    h += `<div class="msg${me ? " me" : ""}">
+      <div class="who"><span>${esc(m.qui)}</span><span>${dtf(m.at)}</span></div>
+      <p>${esc(m.txt)}</p>
+      ${r ? `<button class="ref" type="button" data-goto="${esc(m.ref)}" style="--c:${r.c}"><span>${esc(r.t)}</span></button>` : ""}
+      ${m.att ? `<button class="att" type="button" data-att="${esc(m.att)}">📎 ${esc(m.att.split("/").pop().replace(/^[^-]*-\d+-/, ""))}</button>` : ""}
+    </div>`;
+  });
+  $("#msgs").innerHTML = h || `<div class="empty">Aucun message dans ce fil.</div>`;
+  $("#msgs").scrollTop = $("#msgs").scrollHeight;
+  if (f.nonlus) {
+    const col = isClient() ? "lu_client" : "lu_artisan";
+    f.nonlus = 0; renderRail();
+    sb.from("messages").update({[col]: true}).eq("fil", f.id).eq(col, false).then(() => {});
+  }
+}
+$("#chatList").addEventListener("click", e => { const b = e.target.closest("[data-fil]"); if (b) { filCur = b.dataset.fil; renderChat(); } });
+$("#msgs").addEventListener("click", e => {
+  const b = e.target.closest("[data-goto]"); if (!b) return;
+  const id = b.dataset.goto;
+  if (rows.has(id)) { selectSpace("travaux"); selectTab("travaux"); openRow(id); }
+  else if (meubles.has(id)) { selectSpace("ameublement"); openMeuble(id); }
+});
+function envoyer(txt, att){
+  const f = fils.find(x => x.id === filCur); if (!f) return;
+  const row = {fil: f.id, email: ME.email, auteur: isClient() ? (ME.nom || "Client") : ME.entreprise,
+               texte: txt, ref: refCur || null, piece_jointe: att || "",
+               lu_client: isClient(), lu_artisan: !isClient()};
+  f.msgs.push({at: new Date().toISOString(), qui: "Vous", txt, ref: refCur, att});
+  refCur = ""; $("#msgTxt").value = ""; renderChat();
+  write(() => sb.from("messages").insert(row));
+}
+let refCur = "";
+$("#msgForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const t = $("#msgTxt").value.trim(); if (!t) return;
+  envoyer(t, "");
+});
+$("#msgJoin").addEventListener("click", () => $("#msgFile").click());
+$("#msgFile").addEventListener("change", async e => {
+  const file = e.target.files[0]; e.target.value = "";
+  if (!file) return;
+  if (!isClient()) { toast("Seul le client peut joindre un fichier pour le moment."); return; }
+  setSync("busy", "Envoi de la pièce jointe…");
+  const chemin = `fils/${filCur}-${Date.now()}-${file.name.replace(/[^\w.\-]/g, "_")}`;
+  const {error} = await sb.storage.from("documents").upload(chemin, file);
+  if (error) { setSync("err", "Envoi impossible"); toast("Pièce jointe non envoyée : " + error.message); return; }
+  envoyer($("#msgTxt").value.trim() || file.name, chemin);
+});
+$("#msgs").addEventListener("click", async e => {
+  const a = e.target.closest("[data-att]"); if (!a) return;
+  const {data, error} = await sb.storage.from("documents").createSignedUrl(a.dataset.att, 90);
+  if (error) { toast("Fichier introuvable."); return; }
+  window.open(data.signedUrl, "_blank", "noopener");
+});
+
+/* ============ Documents utiles ============ */
+const DCATS = ["Diagnostics", "Études techniques", "Devis & factures", "Plans", "Assurances", "Administratif", "Réception"];
+let docs = [];
+let docFiltre = "";
+const EXT_C = {pdf:"#d03b3b", jpg:"#1baf7a", jpeg:"#1baf7a", png:"#1baf7a", zip:"#8a6a3a", xlsx:"#0f7b45", xls:"#0f7b45", csv:"#0f7b45", docx:"#1c5cab", doc:"#1c5cab"};
+const ext = n => (n.split(".").pop() || "").toLowerCase().slice(0,4);
+const ko = t => t >= 1e6 ? (t/1e6).toFixed(1).replace(".", ",") + " Mo" : Math.max(1, Math.round(t/1000)) + " Ko";
+function renderDocs(){
+  const cats = [...new Set([...DCATS, ...docs.map(d => d.cat)])].filter(c => docs.some(d => d.cat === c));
+  $("#lDocCats").innerHTML = [...new Set([...DCATS, ...docs.map(d => d.cat)])].map(c => `<option value="${esc(c)}">`).join("");
+  $("#docChips").innerHTML = [`<button class="chip" type="button" data-dc="" aria-pressed="${!docFiltre}">Tout (${docs.length})</button>`]
+    .concat(cats.map(c => `<button class="chip" type="button" data-dc="${esc(c)}" aria-pressed="${docFiltre === c}">${esc(c)} (${docs.filter(d => d.cat === c).length})</button>`)).join("");
+  const part = docs.filter(d => d.partage.length).length;
+  $("#docSum").innerHTML = `${docs.length} documents · ${ko(sum(docs, d => d.taille))} · ${part ? `${part} partagé${part>1?"s":""}` : "aucun partage"}`;
+  const list = docs.filter(d => !docFiltre || d.cat === docFiltre);
+  const groups = new Map();
+  list.forEach(d => { if (!groups.has(d.cat)) groups.set(d.cat, []); groups.get(d.cat).push(d); });
+  let h = "";
+  [...groups.keys()].sort((a,b) => DCATS.indexOf(a) - DCATS.indexOf(b) || a.localeCompare(b)).forEach(c => {
+    const ds = groups.get(c).sort((a,b) => (b.date_doc || "").localeCompare(a.date_doc || ""));
+    h += `<div class="dl-grp">${esc(c)}<span>${ds.length} document${ds.length>1?"s":""} · ${ko(sum(ds, d => d.taille))}</span></div>`;
+    ds.forEach(d => {
+      const e = ext(d.nom);
+      h += `<div class="dl-row" data-did="${esc(d.id)}">
+        <span class="ftype" style="--c:${EXT_C[e] || "var(--muted)"}">${esc(e.toUpperCase())}</span>
+        <span><b title="${esc(d.nom)}">${esc(d.nom)}</b><small>${d.note ? esc(d.note) : "Aucune note"}</small></span>
+        <span class="num">${d.date_doc ? fd(D(d.date_doc)) : "—"}<br><span class="muted">${ko(d.taille)}</span></span>
+        <span>${d.partage.length ? pill("info", d.partage.join(", ")) : pill("neutral", "Privé")}</span>
+        <span class="btns">${d.chemin ? `<button class="btn sm" type="button" data-dopen="${esc(d.id)}">Ouvrir</button>` : ""}${isClient() ? `<button class="btn sm" type="button" data-dedit="${esc(d.id)}">Fiche</button>` : ""}</span>
+      </div>`;
+    });
+  });
+  $("#docList").innerHTML = h || `<div class="empty">Aucun document dans cette catégorie.</div>`;
+}
+$("#docChips").addEventListener("click", e => { const b = e.target.closest("[data-dc]"); if (b) { docFiltre = b.dataset.dc; renderDocs(); } });
+$("#docList").addEventListener("click", async e => {
+  const o = e.target.closest("[data-dopen]");
+  if (o) {
+    const d = docs.find(x => x.id === o.dataset.dopen);
+    if (!d || !d.chemin) { toast("Aucun fichier attaché à cette ligne."); return; }
+    const {data, error} = await sb.storage.from("documents").createSignedUrl(d.chemin, 90);
+    if (error) { toast("Fichier introuvable : " + error.message); return; }
+    window.open(data.signedUrl, "_blank", "noopener");
+    return;
+  }
+  const r = e.target.closest("[data-did]"); if (r) openDoc(r.dataset.did);
+});
+$("#docAdd").addEventListener("click", () => $("#docFile").click());
+$("#docFile").addEventListener("change", e => { addDocs(e.target.files); e.target.value = ""; });
+["dragenter","dragover"].forEach(ev => $("#docDrop").addEventListener(ev, e => { e.preventDefault(); $("#docDrop").classList.add("over"); }));
+["dragleave","drop"].forEach(ev => $("#docDrop").addEventListener(ev, e => { e.preventDefault(); $("#docDrop").classList.remove("over"); }));
+$("#docDrop").addEventListener("drop", e => addDocs(e.dataTransfer && e.dataTransfer.files));
+function devine(nom){
+  const n = nom.toLowerCase();
+  if (/dpe|amiante|plomb|diagnostic|carrez/.test(n)) return "Diagnostics";
+  if (/bet|structure|thermique|acoustique|note de calcul|etude|étude/.test(n)) return "Études techniques";
+  if (/devis|facture|situation|acompte/.test(n)) return "Devis & factures";
+  if (/plan|coupe|implantation|cotes|côté/.test(n)) return "Plans";
+  if (/assurance|decennale|décennale|attestation|rc pro/.test(n)) return "Assurances";
+  if (/pv|reception|réception|reserve|réserve|photo/.test(n)) return "Réception";
+  return "Administratif";
+}
+async function addDocs(files){
+  const fs = [...(files || [])]; if (!fs.length) return;
+  if (!isClient()) { toast("Seul le client dépose des documents."); return; }
+  setSync("busy", `Envoi de ${fs.length} fichier${fs.length>1?"s":""}…`);
+  let ok = 0;
+  for (const f of fs) {
+    const id = "D" + Date.now().toString(36) + Math.floor(Math.random()*90 + 10);
+    const chemin = `docs/${id}-${f.name.replace(/[^\w.\-]/g, "_")}`;
+    const {error} = await sb.storage.from("documents").upload(chemin, f);
+    if (error) { toast(`${f.name} : ${error.message}`); continue; }
+    const row = {id, nom: f.name, cat: devine(f.name), date_doc: todayIso(), taille: f.size || 0, note: "", chemin, partage: []};
+    const {error: e2} = await sb.from("documents").insert(toDb(row));
+    if (e2) { toast(`${f.name} : ${e2.message}`); continue; }
+    docs.unshift(fromDb(row)); ok++;
+  }
+  renderDocs();
+  setSync("ok", "Enregistré · partagé");
+  if (ok) toast(`${ok} document${ok>1?"s":""} déposé${ok>1?"s":""} et classé${ok>1?"s":""}.`);
+}
+let docEditing = null;
+function openDoc(id){
+  const d = docs.find(x => x.id === id); if (!d) return;
+  docEditing = id;
+  $("#dNom").value = d.nom; $("#dCat").value = d.cat; $("#dDate").value = d.date_doc || ""; $("#dNote").value = d.note || "";
+  const ents = [...knownEnts()].filter(e => e !== "Perso");
+  $("#dShare").innerHTML = ents.map(e => `<label><input type="checkbox" value="${esc(e)}"${d.partage.includes(e) ? " checked" : ""}> Visible par ${esc(e)}</label>`).join("")
+    || `<p class="note">Aucun intervenant enregistré.</p>`;
+  $("#dDoc").showModal();
+}
+$("#docForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const d = docs.find(x => x.id === docEditing); if (!d) return;
+  d.nom = $("#dNom").value.trim() || d.nom;
+  d.cat = $("#dCat").value.trim() || "Administratif";
+  d.date_doc = $("#dDate").value || "";
+  d.note = $("#dNote").value.trim();
+  d.partage = [...$("#dShare").querySelectorAll("input:checked")].map(x => x.value);
+  $("#dDoc").close(); renderDocs();
+  patch("documents", d.id, {nom: d.nom, cat: d.cat, date_doc: d.date_doc, note: d.note, partage: d.partage},
+        d.partage.length ? `Document visible par ${d.partage.join(", ")}.` : "Document privé.");
+});
+$("#dDel").addEventListener("click", () => {
+  const d = docs.find(x => x.id === docEditing); if (!d) return;
+  if (!confirm(`Retirer « ${d.nom} » du dossier ?`)) return;
+  docs = docs.filter(x => x.id !== d.id);
+  $("#dDoc").close(); renderDocs();
+  if (d.chemin) sb.storage.from("documents").remove([d.chemin]).then(() => {});
+  del("documents", d.id, "Document retiré du dossier.");
+});
+
+/* ============ Panier ameublement ============ */
+const STEPS = ["À initier","Décidé","Commandé","Reçu"];
+const ABANDON = "Abandonné", POSSEDE = "Possédé";
+const HORS = [POSSEDE, ABANDON];
+const MSTATUTS = [...STEPS, ...HORS];
+const M_ENGAGE = ["Commandé","Reçu"];
+const ST_C = {"À initier":"var(--muted)", "Décidé":"var(--accent)", "Commandé":"var(--warn-text)",
+              "Reçu":"var(--good-text)", "Possédé":"var(--ink-2)", "Abandonné":"var(--crit-text)"};
+const GORDER = ["Électroménager","Cuisine","Robinetterie","Sanitaires","Literie","Lits","Assises","Tables",
+                "Luminaires","Chauffage","Rangement","Revêtements & finitions","Menuiserie","Textile","Multimédia","Divers"];
+const MCATS = GORDER;
+const MF = {cat:"", st:""};
+const stIdx = st => Math.max(0, STEPS.indexOf(st));
+const stMax = STEPS.length - 1;
+const stPct = i => (i / stMax * 100).toFixed(0);
+function curseur(m){
+  if (HORS.includes(m.statut))
+    return `<span class="stoff${m.statut === POSSEDE ? " own" : ""}">${esc(m.statut === POSSEDE ? "Déjà possédé" : "Abandonné")} <button class="btn sm" type="button" data-mrep="${esc(m.id)}">Remettre</button></span>`;
+  const i = stIdx(m.statut);
+  return `<span class="stslide" style="--c:${ST_C[m.statut]};--p:${stPct(i)}">
+    <input type="range" min="0" max="${stMax}" step="1" value="${i}" data-mst="${esc(m.id)}"
+      aria-label="Avancement de ${esc(m.nom)}" aria-valuetext="${esc(m.statut)}"
+      title="Glissez : à initier → décidé → commandé → reçu">
+    <span class="stlab">${esc(m.statut)}</span></span>`;
+}
+const VIG = {
+  "Électroménager": {c:"#eb6834", d:'<rect x="4.5" y="3.5" width="15" height="17" rx="2"/><circle cx="12" cy="13" r="3.6"/><path d="M8 7h3"/>'},
+  "Cuisine":        {c:"#1baf7a", d:'<path d="M4 9h13a3 3 0 0 1 0 6H4Z"/><path d="M17 12h3"/><path d="M6 15v4h9v-4"/>'},
+  "Robinetterie":   {c:"#0090b0", d:'<path d="M7 20h10"/><path d="M12 20v-6"/><path d="M6 10h8a4 4 0 0 1 4 4"/><path d="M6 7.5h4v5H6z"/>'},
+  "Sanitaires":     {c:"#008fa8", d:'<path d="M6 4h6v7H6z"/><path d="M5 11h14v3a5 5 0 0 1-5 5h-4a5 5 0 0 1-5-5Z"/>'},
+  "Literie":        {c:"#4a3aa7", d:'<path d="M3 17v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/><path d="M2 17h20"/><rect x="5.5" y="6.5" width="6" height="4.5" rx="1.2"/>'},
+  "Lits":           {c:"#2a78d6", d:'<path d="M3 18v-6h18v6"/><path d="M2 18h20"/><path d="M3 12V7h7v5"/>'},
+  "Assises":        {c:"#7a4fbd", d:'<path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/><path d="M4 11h16v5H3v-4a1 1 0 0 1 1-1Z"/><path d="M6 16v3M18 16v3"/>'},
+  "Tables":         {c:"#eda100", d:'<path d="M3 10h18"/><path d="M6 10v9M18 10v9"/><path d="M8 10 9 6h6l1 4"/>'},
+  "Luminaires":     {c:"#e0a500", d:'<path d="M12 3v3"/><path d="M6 13 12 6l6 7Z"/><path d="M9.5 13a2.5 2.5 0 0 0 5 0"/><path d="M12 15.5V21"/>'},
+  "Chauffage":      {c:"#d0533b", d:'<rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 5v14M12 5v14M15 5v14"/>'},
+  "Rangement":      {c:"#8a6a3a", d:'<rect x="4" y="3.5" width="16" height="17" rx="1.5"/><path d="M12 3.5v17"/><path d="M9.5 10h1M13.5 10h1"/>'},
+  "Revêtements & finitions": {c:"#6b7280", d:'<path d="M3 8h18M3 14h18"/><path d="M8 4v4M15 8v6M10 14v6"/>'},
+  "Menuiserie":     {c:"#9a6b2f", d:'<rect x="5" y="3.5" width="14" height="17" rx="1"/><path d="M15 12h.01"/><path d="M12 3.5v17"/>'},
+  "Textile":        {c:"#e87ba4", d:'<path d="M4 4h16"/><path d="M7 4c0 6 2 9 2 16M17 4c0 6-2 9-2 16"/><path d="M12 4v16"/>'},
+  "Multimédia":     {c:"#4b5055", d:'<rect x="3" y="5" width="18" height="11" rx="1.5"/><path d="M9 20h6M12 16v4"/>'},
+  "Divers":         {c:"#80858a", d:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/>'},
+  "_":              {c:"#80858a", d:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/>'}
+};
+const mList = () => [...meubles.values()];
+const mQte = m => m.quantite == null ? 1 : (+m.quantite || 0);
+const mTotal = m => (+m.prix || 0) * mQte(m);
+const muniq = k => [...new Set(mList().map(m => m[k]).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),"fr",{numeric:true}));
+const mHost = u => { try { return new URL(u).hostname.replace(/^www\./,""); } catch(e) { return "voir l'article"; } };
+const glyph = cat => { const v = VIG[cat] || VIG._; return `<svg viewBox="0 0 24 24" aria-hidden="true">${v.d}</svg>`; };
+const vig = m => {
+  const v = VIG[m.categorie] || VIG._;
+  return `<span class="ci-vig${m.image ? "" : " empty"}" style="--c:${v.c}" title="${m.image ? "Photo de l'article" : "Ajouter une photo"}">` +
+    (m.image ? `<img src="${esc(m.image)}" alt="" loading="lazy" onerror="this.closest('.ci-vig').classList.add('bad')">` : "") +
+    glyph(m.categorie) + `<span class="add">+ photo</span></span>`;
+};
+const pieceLbl = p => (p || "Sans pièce").replace(/^\d+\s*-\s*/, "");
+function mStats(list){
+  const vivants = list.filter(m => !HORS.includes(m.statut));
+  const eng = vivants.filter(m => M_ENGAGE.includes(m.statut));
+  const rec = vivants.filter(m => m.statut === "Reçu");
+  return {n: vivants.length, articles: sum(vivants, mQte), budget: sum(vivants, mTotal),
+          engage: sum(eng, mTotal), nEng: eng.length, livre: sum(rec, mTotal), nLiv: rec.length,
+          choisi: sum(vivants.filter(m => m.statut === "Décidé"), mTotal),
+          aChoisir: vivants.filter(m => m.statut === STEPS[0]).length,
+          sansPrix: vivants.filter(m => m.prix == null).length,
+          nPoss: list.filter(m => m.statut === POSSEDE).length,
+          nAband: list.filter(m => m.statut === ABANDON).length};
+}
+function renderPanier(){
+  const all = mList();
+  const s = mStats(all);
+  $("#lCats").innerHTML = [...new Set([...MCATS, ...muniq("categorie")])].map(v => `<option value="${esc(v)}">`).join("");
+  $("#lFours").innerHTML = muniq("fournisseur").map(v => `<option value="${esc(v)}">`).join("");
+  $("#shopCount").innerHTML = `<b>${all.length}</b>article${all.length>1?"s":""} · ${eur(s.budget)}`;
+  const cats = GORDER.filter(c => all.some(m => m.categorie === c))
+    .concat([...new Set(all.map(m => m.categorie))].filter(c => !GORDER.includes(c)).sort());
+  $("#grChips").innerHTML = [`<button class="chip" type="button" data-gr="" aria-pressed="${!MF.cat}">Tout (${all.length})</button>`]
+    .concat(cats.map(c => `<button class="chip" type="button" data-gr="${esc(c)}" aria-pressed="${MF.cat === c}">${esc(c)} (${all.filter(m => m.categorie === c).length})</button>`)).join("");
+  const nSt = st => all.filter(m => m.statut === st).length;
+  $("#stChips").innerHTML = [`<button class="chip" type="button" data-st="" aria-pressed="${!MF.st}">Tous les statuts</button>`]
+    .concat(MSTATUTS.filter(st => nSt(st)).map(st => `<button class="chip" type="button" data-st="${esc(st)}" aria-pressed="${MF.st === st}" style="--c:${ST_C[st]}"><i></i>${esc(st === POSSEDE ? "Déjà possédé" : st)} (${nSt(st)})</button>`)).join("");
+
+  const groups = new Map();
+  cats.forEach(c => {
+    const ms = all.filter(m => m.categorie === c && (!MF.cat || MF.cat === c) && (!MF.st || m.statut === MF.st)).sort((a,b) => (a.ordre||0)-(b.ordre||0));
+    if (ms.length) groups.set(c, ms);
+  });
+  let h = "";
+  groups.forEach((ms, k) => {
+    const g = mStats(ms);
+    h += `<section class="cart-grp"><h3>${esc(k)}<span>${ms.length} article${ms.length>1?"s":""} · ${eur(g.budget)}${g.sansPrix ? ` · ${g.sansPrix} sans prix` : ""}</span></h3>`;
+    ms.forEach(m => {
+      const off = m.statut === "Abandonné";
+      h += `<article class="ci${off?" off":""}" data-mid="${esc(m.id)}">
+        ${vig(m)}
+        <div class="ci-main">
+          <div class="ci-top">
+            <h4>${esc(m.nom)}</h4>
+            ${curseur(m)}
+          </div>
+          ${m.modele ? `<p class="ci-mod">${esc(m.modele)}</p>` : ""}
+          <div class="ci-meta">
+            <span>${esc(pieceLbl(m.piece))}</span>
+            ${m.lien ? `<a href="${esc(m.lien)}" target="_blank" rel="noopener noreferrer nofollow">${esc(m.fournisseur || mHost(m.lien))} ↗</a>`
+                     : m.fournisseur ? `<span>${esc(m.fournisseur)}</span>` : ""}
+            ${m.pose ? `<span>Pose : ${esc(m.pose)}</span>` : ""}
+            ${+m.delai ? `<span>Délai ${+m.delai} sem.</span>` : ""}
+            ${m.date_commande && !M_ENGAGE.includes(m.statut) && !HORS.includes(m.statut) ? `<span class="ci-warn">À commander avant le ${fd(D(m.date_commande))}</span>` : ""}
+            ${m.date_livraison ? `<span>Livraison ${fd(D(m.date_livraison))}</span>` : ""}
+          </div>
+          ${m.commentaire ? `<p class="ci-note">${esc(m.commentaire)}</p>` : ""}
+          <div class="ci-acts">
+            <button class="lnk" type="button" data-medit="${esc(m.id)}">Détails</button>
+            ${HORS.includes(m.statut) ? "" : `<button class="lnk" type="button" data-mab="${esc(m.id)}">Abandonner</button>`}
+            <button class="lnk" type="button" data-mdel="${esc(m.id)}">Retirer</button>
+          </div>
+        </div>
+        <div class="ci-right">
+          ${HORS.includes(m.statut) ? "" : m.prix == null ? `<div class="ci-tochiffrer">Prix à trouver</div>` : mQte(m) > 1 ? `<div class="ci-unit">${eur2(m.prix)} l'unité</div>` : ""}
+          <div class="step"><button type="button" data-mq="-" data-mid="${esc(m.id)}" aria-label="Retirer une unité">−</button><span class="num">${mQte(m)}</span><button type="button" data-mq="+" data-mid="${esc(m.id)}" aria-label="Ajouter une unité">+</button></div>
+          <div class="ci-tot">${mTotal(m) ? eur(mTotal(m)) : ""}</div>
+        </div>
+      </article>`;
+    });
+    h += `</section>`;
+  });
+  $("#cart").innerHTML = h || `<div class="empty">Aucun article ne correspond${MF.st ? " au statut « " + esc(MF.st) + " »" : ""}${MF.cat ? (MF.st ? " dans " : " dans le groupe ") + esc(MF.cat) : ""}.</div>`;
+
+  const w = v => (s.budget ? v / s.budget * 100 : 0).toFixed(1) + "%";
+  const pieces = [...new Set(all.map(m => pieceLbl(m.piece)))]
+    .map(k => [k, mStats(all.filter(m => pieceLbl(m.piece) === k)).budget]).filter(x => x[1] > 0).sort((a,b) => b[1]-a[1]);
+  $("#recap").innerHTML = `<div class="recap-card">
+    <h3>Récapitulatif</h3>
+    <div class="rl"><span>Décidé, pas commandé</span><b>${eur(s.choisi)}</b></div>
+    <div class="rl"><span>Commandé</span><b>${eur(s.engage - s.livre)}</b></div>
+    <div class="rl"><span>Reçu</span><b>${eur(s.livre)}</b></div>
+    <div class="rl${s.aChoisir?"":" mut"}"><span>Reste à décider</span><b>${s.aChoisir} article${s.aChoisir>1?"s":""}</b></div>
+    <div class="rbar" role="img" aria-label="${pct(s.budget ? s.engage/s.budget : 0)} du panier commandé">
+      <i style="width:${w(s.livre)};background:var(--good)"></i><i style="width:${w(s.engage - s.livre)};background:var(--warn)"></i><i style="width:${w(s.choisi)};background:var(--accent)"></i></div>
+    <div class="rleg"><span><i style="background:var(--good)"></i>Reçu</span><span><i style="background:var(--warn)"></i>Commandé</span><span><i style="background:var(--accent)"></i>Décidé</span><span><i style="background:var(--surface-2)"></i>À initier</span></div>
+    <div class="rtot"><span>Total estimé</span><b>${eur(s.budget)}</b></div>
+    <p class="rnote">TTC, hors livraison.${s.sansPrix ? ` ${s.sansPrix} article${s.sansPrix>1?"s":""} sans prix.` : ""}${s.nPoss ? ` ${s.nPoss} déjà possédé${s.nPoss>1?"s":""}.` : ""}${s.nAband ? ` ${s.nAband} abandonné${s.nAband>1?"s":""}.` : ""}</p>
+  </div>
+  ${pieces.length ? `<div class="recap-card"><h3>Par pièce</h3>${pieces.map(([k,v]) => `<div class="rpiece"><span>${esc(k)}</span><b>${eur(v)}</b></div>`).join("")}</div>` : ""}`;
+
+  $("#cartbar").innerHTML = `<span>${s.articles} article${s.articles>1?"s":""} · ${s.aChoisir} à décider</span><b>${eur(s.budget)}</b>`;
+}
+
+/* ---- Interactions du panier ---- */
+function meubleSet(id, data, msg){
+  const m = meubles.get(id); if (!m) return;
+  Object.assign(m, data);
+  renderPanier(); renderRail();
+  patchMeuble(id, data, msg);
+}
+/* glissement : l'étiquette suit le doigt, l'enregistrement attend le relâchement */
+$("#cart").addEventListener("input", e => {
+  const r = e.target.closest("input[data-mst]"); if (!r) return;
+  const st = STEPS[+r.value] || STEPS[0];
+  const w = r.closest(".stslide");
+  w.style.setProperty("--c", ST_C[st]); w.style.setProperty("--p", stPct(+r.value));
+  w.querySelector(".stlab").textContent = st;
+  r.setAttribute("aria-valuetext", st);
+});
+$("#cart").addEventListener("change", e => {
+  const r = e.target.closest("input[data-mst]"); if (!r) return;
+  const id = r.dataset.mst, st = STEPS[+r.value] || STEPS[0];
+  if (meubles.get(id).statut === st) return;
+  meubleSet(id, {statut: st}, `${meubles.get(id).nom.slice(0,40)} : ${st}`);
+  const again = $(`#cart input[data-mst="${id}"]`); if (again) again.focus();
+});
+$("#cart").addEventListener("click", e => {
+  const q = e.target.closest("[data-mq]");
+  if (q) { const m = meubles.get(q.dataset.mid); const n = Math.max(1, mQte(m) + (q.dataset.mq === "+" ? 1 : -1)); if (n !== mQte(m)) meubleSet(m.id, {quantite: n}); return; }
+  const ed = e.target.closest("[data-medit]"); if (ed) { openMeuble(ed.dataset.medit); return; }
+  const ab = e.target.closest("[data-mab]");
+  if (ab) { meubleSet(ab.dataset.mab, {statut: ABANDON}, "Article abandonné : il sort des totaux."); return; }
+  const rp = e.target.closest("[data-mrep]");
+  if (rp) { meubleSet(rp.dataset.mrep, {statut: STEPS[0]}, "Article remis dans le cycle."); return; }
+  const dl = e.target.closest("[data-mdel]");
+  if (dl) {
+    const m = meubles.get(dl.dataset.mdel);
+    if (!confirm(`Retirer « ${m.nom} » du panier ?\n\nPour garder la trace d'un article écarté, choisissez plutôt le statut « Abandonné ».`)) return;
+    meubles.delete(m.id); renderPanier(); renderRail(); delMeuble(m.id);
+    return;
+  }
+  const card = e.target.closest(".ci"); if (card && !e.target.closest("a")) openMeuble(card.dataset.mid);
+});
+$("#fab").addEventListener("click", () => openMeuble(null));
+$("#grChips").addEventListener("click", e => { const b = e.target.closest("[data-gr]"); if (b) { MF.cat = b.dataset.gr; renderPanier(); } });
+$("#stChips").addEventListener("click", e => { const b = e.target.closest("[data-st]"); if (b) { MF.st = b.dataset.st; renderPanier(); } });
+
+/* ---- Compléments fréquents ----
+   Aujourd'hui : table de règles par type d'article.
+   Plus tard : co-occurrence réelle (« les listes qui contiennent X contiennent aussi Y »). */
+const SUGG = [
+  [/toilette|cuvette|\bwc\b|reservoir|chasse/, [["Brosse WC","Sanitaires"],["Abattant","Sanitaires"],["Dérouleur papier","Sanitaires"],["Raccord souple d'alimentation","Robinetterie"]]],
+  [/receveur|paroi douche|douche/,            [["Siphon de douche","Sanitaires"],["Colonne de douche","Robinetterie"],["Tapis antidérapant","Textile"],["Barre d'appui","Sanitaires"]]],
+  [/vasque|lave main|meuble sdb/,             [["Robinet de lavabo","Robinetterie"],["Siphon de lavabo","Robinetterie"],["Miroir","Sanitaires"],["Distributeur savon","Sanitaires"]]],
+  [/matelas/,                                 [["Protège-matelas","Literie"],["Drap housse","Literie"],["Couette","Literie"],["Oreillers","Literie"]]],
+  [/murphy|lit|sommier/,                      [["Matelas","Literie"],["Tête de lit","Lits"],["Chevet","Rangement"],["Lampe de chevet","Luminaires"]]],
+  [/canape|fauteuil/,                         [["Coussins","Textile"],["Plaid","Textile"],["Tapis de séjour","Textile"]]],
+  [/\btable\b/,                               [["Chaises","Assises"],["Suspension au-dessus de table","Luminaires"],["Sets de table","Textile"]]],
+  [/plaque|cuisson/,                          [["Hotte aspirante","Électroménager"],["Prise dédiée 32 A","Cuisine"],["Crédence derrière plaque","Cuisine"]]],
+  [/evier/,                                   [["Robinet de cuisine","Robinetterie"],["Siphon d'évier","Robinetterie"],["Égouttoir","Cuisine"]]],
+  [/lave.linge|lave.vaiselle|lave.vaisselle/, [["Tuyau d'alimentation","Robinetterie"],["Siphon de machine","Robinetterie"],["Tapis anti-vibration","Divers"]]],
+  [/parquet|sol souple/,                      [["Plinthes","Revêtements & finitions"],["Barre de seuil","Revêtements & finitions"],["Sous-couche","Revêtements & finitions"]]],
+  [/carrelage|carelage|faience/,              [["Colle à carrelage","Revêtements & finitions"],["Joint","Revêtements & finitions"],["Croisillons","Revêtements & finitions"],["Profilé de finition","Revêtements & finitions"]]],
+  [/enduit|peinture/,                         [["Sous-couche","Revêtements & finitions"],["Ruban de masquage","Revêtements & finitions"],["Bâches de protection","Revêtements & finitions"],["Rouleaux et pinceaux","Revêtements & finitions"]]],
+  [/rideau|voilage|store/,                    [["Tringle ou rail","Menuiserie"],["Embrasses","Textile"]]],
+  [/radiateur|seche.serviette/,               [["Thermostat","Chauffage"],["Kit de fixation","Chauffage"]]],
+  [/lumiere|suspension|applique|plafonnier|spot/, [["Ampoules","Luminaires"],["Douille DCL","Luminaires"],["Variateur","Luminaires"]]],
+  [/porte|galandage/,                         [["Poignée","Menuiserie"],["Butée de porte","Menuiserie"],["Joint de porte","Menuiserie"]]],
+  [/machine a cafe/,                          [["Détartrant","Divers"],["Filtre à eau","Divers"]]],
+  [/miroir/,                                  [["Fixations murales","Divers"],["Éclairage de miroir","Luminaires"]]],
+];
+const sansAcc = t => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+function suggFor(nom, modele){
+  const t = sansAcc(`${nom} ${modele || ""}`);
+  const out = [], vus = new Set();
+  SUGG.forEach(([re, items]) => {
+    if (!re.test(t)) return;
+    items.forEach(([lbl, grp]) => {
+      const k = sansAcc(lbl);
+      if (vus.has(k) || sansAcc(nom) === k) return;
+      vus.add(k); out.push({lbl, grp});
+    });
+  });
+  return out.slice(0, 6);
+}
+function renderSugg(){
+  const nom = $("#mNom").value.trim();
+  const list = suggFor(nom, $("#mModele").value.trim());
+  const box = $("#mSugg");
+  if (!nom || !list.length) { box.hidden = true; return; }
+  const deja = new Set([...meubles.values()].map(m => sansAcc(m.nom)));
+  box.hidden = false;
+  $("#mSuggL").innerHTML = list.map(x => {
+    const dedans = deja.has(sansAcc(x.lbl));
+    return `<button class="sgchip" type="button" data-sg="${esc(x.lbl)}" data-sgg="${esc(x.grp)}"${dedans ? " disabled" : ""}>
+      <i>${dedans ? "✓" : "+"}</i>${esc(x.lbl)}</button>`;
+  }).join("");
+}
+$("#mSuggL").addEventListener("click", e => {
+  const b = e.target.closest("[data-sg]"); if (!b || b.disabled) return;
+  const id = "M" + Date.now().toString(36);
+  const data = {ordre: Math.max(0, ...mList().map(x => x.ordre||0)) + 1, nom: b.dataset.sg, modele: "", lien: "",
+    categorie: b.dataset.sgg, piece: $("#mPieceI").value.trim(), fournisseur: "", prix: null, quantite: 1,
+    statut: STEPS[0], pose: "", delai: null, date_commande: "", date_livraison: "", commentaire: "", image: ""};
+  meubles.set(id, {id, ...data});
+  renderSugg(); renderPanier(); renderRail();
+  saveMeuble(id, data, `${b.dataset.sg} ajouté à la liste.`);
+});
+$("#mNom").addEventListener("input", renderSugg);
+
+/* ---- Photo de l'article ---- */
+let mImg = "";
+function shrink(blob, max){
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onerror = rej;
+    fr.onload = () => {
+      const im = new Image();
+      im.onerror = rej;
+      im.onload = () => {
+        const r = Math.min(1, (max || 640) / Math.max(im.width, im.height));
+        const c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(im.width * r)); c.height = Math.max(1, Math.round(im.height * r));
+        c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+        res(c.toDataURL("image/jpeg", 0.72));
+      };
+      im.src = fr.result;
+    };
+    fr.readAsDataURL(blob);
+  });
+}
+function setPhoto(src){
+  mImg = src || "";
+  const p = $("#mPhotoPrev");
+  p.innerHTML = mImg ? `<img src="${esc(mImg)}" alt="" onerror="this.parentNode.textContent='Image non affichée ici'">` : "Aucune photo";
+  $("#mPhotoDel").hidden = !mImg;
+}
+async function photoFromFile(f){
+  if (!f || !/^image\//.test(f.type)) { toast("Ce fichier n'est pas une image."); return; }
+  try { setPhoto(await shrink(f, 640)); toast("Photo ajoutée à la fiche."); }
+  catch(e) { toast("Image illisible : essayez un JPEG ou un PNG."); }
+}
+$("#mPhotoPick").addEventListener("click", () => $("#mPhotoFile").click());
+$("#mPhotoFile").addEventListener("change", e => { const f = e.target.files[0]; e.target.value = ""; photoFromFile(f); });
+$("#mPhotoSet").addEventListener("click", () => {
+  let u = $("#mPhotoUrl").value.trim();
+  if (!u) { toast("Collez d'abord le lien de l'image."); return; }
+  if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+  setPhoto(u); $("#mPhotoUrl").value = "";
+  toast("Lien d'image retenu.");
+});
+$("#mPhotoDel").addEventListener("click", () => setPhoto(""));
+$("#dMeuble").addEventListener("paste", async e => {
+  const it = [...(e.clipboardData && e.clipboardData.items || [])].find(x => /^image\//.test(x.type));
+  if (it) { e.preventDefault(); photoFromFile(it.getAsFile()); return; }
+  const t = ((e.clipboardData && e.clipboardData.getData("text")) || "").trim();
+  if (e.target.id !== "mLien" && /^https?:\/\/\S+\.(jpe?g|png|webp|avif|gif)(\?|#|$)/i.test(t)) {
+    e.preventDefault(); setPhoto(t);
+    toast("Lien d'image retenu.");
+  }
+});
+["dragenter","dragover"].forEach(ev => $("#mPhotoZone").addEventListener(ev, e => { e.preventDefault(); $("#mPhotoZone").classList.add("over"); }));
+["dragleave","drop"].forEach(ev => $("#mPhotoZone").addEventListener(ev, e => { e.preventDefault(); $("#mPhotoZone").classList.remove("over"); }));
+$("#mPhotoZone").addEventListener("drop", e => {
+  const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) { photoFromFile(f); return; }
+  const u = (e.dataTransfer && e.dataTransfer.getData("text/uri-list") || "").trim();
+  if (u) setPhoto(u);
+});
+
+/* ---- Pré-remplissage depuis le lien de la boutique ---- */
+const EX_IMG = "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 200 200\"><rect width=\"200\" height=\"200\" fill=\"%23efe9e0\"/><ellipse cx=\"100\" cy=\"86\" rx=\"62\" ry=\"20\" fill=\"%23c9a97c\"/><ellipse cx=\"100\" cy=\"82\" rx=\"62\" ry=\"20\" fill=\"%23dcc09a\"/><rect x=\"94\" y=\"96\" width=\"12\" height=\"52\" fill=\"%23a8896a\"/><path d=\"M70 152h60l-6 8H76z\" fill=\"%238d7458\"/></svg>";
+/* En ligne : appel à la fonction serveur qui lit la page (og:image, JSON-LD Product…).
+   Ici : la tentative échoue toujours (une page claude.ai ne peut pas lire un autre site),
+   donc on atterrit sur la saisie manuelle — c'est le repli à valider. */
+const UNFURL = (window.SUIVI_CONFIG && window.SUIVI_CONFIG.unfurl) || "";
+function fetchSt(cl, html){
+  const el = $("#mFetchSt");
+  el.hidden = false;
+  el.className = "fetchst " + cl;
+  el.innerHTML = (cl === "wait" ? `<span class="spin" aria-hidden="true"></span>` : "") + `<span>${html}</span>`;
+}
+function flash(sel){ const e = $(sel); e.classList.remove("filled"); void e.offsetWidth; e.classList.add("filled"); }
+async function lirePage(url){
+  if (!UNFURL) throw new Error("hors-ligne");
+  const c = new AbortController();
+  const t = setTimeout(() => c.abort(), 12000);
+  try {
+    const {data} = await sb.auth.getSession();
+    const jeton = data && data.session && data.session.access_token;
+    const r = await fetch(UNFURL + "?u=" + encodeURIComponent(url),
+                          {signal: c.signal, headers: jeton ? {Authorization: "Bearer " + jeton} : {}});
+    if (!r.ok) throw new Error("http " + r.status);
+    return await r.json();          // {nom, prix, image, boutique}
+  } finally { clearTimeout(t); }
+}
+function appliquer(d, host){
+  let manque = [];
+  if (d.nom && !$("#mNom").value.trim()) { $("#mNom").value = d.nom; flash("#mNom"); } else if (!d.nom) manque.push("le nom");
+  if (d.boutique && !$("#mFour").value.trim()) { $("#mFour").value = d.boutique; flash("#mFour"); }
+  if (d.prix != null) { $("#mPrix").value = d.prix; flash("#mPrix"); } else manque.push("le prix");
+  if (d.image) setPhoto(d.image); else manque.push("la photo");
+  if (!manque.length) fetchSt("ok", `Nom, prix et photo lus sur <b>${esc(host)}</b>. Vérifiez et corrigez si besoin : rien n'est figé.`);
+  else fetchSt("part", `Lu sur <b>${esc(host)}</b>, mais ${manque.join(" et ")} ${manque.length > 1 ? "manquent" : "manque"}. À compléter à la main.`);
+  const cible = d.prix == null ? "#mPrix" : !d.nom ? "#mNom" : null;
+  if (cible) $(cible).focus();
+}
+function echecManuel(host, horsLigne){
+  fetchSt("no", horsLigne
+    ? `La lecture automatique du lien n'est pas encore branchée. Remplissez la fiche à la main : collez la photo dans le cadre ci-dessous, tapez le nom et le prix. Le lien est conservé.`
+    : `<b>${esc(host || "Ce site")}</b> ne se laisse pas lire automatiquement (protection anti-robot, ou prix affiché seulement dans le navigateur). Remplissez la fiche à la main : collez la photo dans le cadre ci-dessous, tapez le nom et le prix. Le lien, lui, est conservé.`);
+  if (!$("#mNom").value.trim()) $("#mNom").focus();
+}
+async function recupLien(){
+  let u = $("#mLien").value.trim();
+  if (!u) { fetchSt("no", "Collez d'abord le lien de la page produit."); return; }
+  if (!/^https?:\/\//i.test(u)) { u = "https://" + u; $("#mLien").value = u; }
+  const host = mHost(u);
+  $("#mFetch").disabled = true;
+  fetchSt("wait", `Lecture de <b>${esc(host)}</b>…`);
+  try { appliquer(await lirePage(u), host); }
+  catch(e) { echecManuel(host, !UNFURL || (e && e.message === "hors-ligne")); }
+  finally { $("#mFetch").disabled = false; }
+}
+$("#mFetch").addEventListener("click", recupLien);
+$("#mLien").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); recupLien(); } });
+let mHorsVal = "";
+function ficheStatut(st){
+  mHorsVal = HORS.includes(st) ? st : "";
+  const i = stIdx(mHorsVal ? STEPS[0] : st);
+  $("#mStatutI").value = i;
+  $("#mStatutI").disabled = !!mHorsVal;
+  document.querySelectorAll("#mHors [data-hors]").forEach(b => b.setAttribute("aria-pressed", b.dataset.hors === mHorsVal));
+  const w = $("#mStatutW");
+  w.style.setProperty("--c", mHorsVal ? ST_C[mHorsVal] : ST_C[STEPS[i]]);
+  w.style.setProperty("--p", stPct(i));
+  w.style.opacity = mHorsVal ? .4 : 1;
+  $("#mStatutL").textContent = mHorsVal === POSSEDE ? "Déjà possédé" : mHorsVal || STEPS[i];
+}
+$("#mStatutI").addEventListener("input", () => ficheStatut(STEPS[+$("#mStatutI").value]));
+document.querySelectorAll("#mHors [data-hors]").forEach(b =>
+  b.addEventListener("click", () => ficheStatut(b.dataset.hors || STEPS[+$("#mStatutI").value])));
+
+let mEditing = null;
+function openMeuble(id){
+  const m = id ? meubles.get(id) : null;
+  mEditing = id;
+  $("#dMeubleTitle").textContent = m ? "Fiche article" : "Nouvel article";
+  $("#mStatutT").innerHTML = STEPS.map(x => `<span>${esc(x)}</span>`).join("");
+  const v = m || {nom:"",lien:"",categorie:"",piece:"",fournisseur:"",prix:null,quantite:1,statut:STEPS[0],date_livraison:"",pose:"",commentaire:"",modele:"",delai:null,date_commande:""};
+  const set = (sel, val) => $(sel).value = val ?? "";
+  set("#mNom",v.nom); set("#mLien",v.lien); set("#mCatI",v.categorie); set("#mPieceI",v.piece); set("#mFour",v.fournisseur);
+  set("#mModele",v.modele); set("#mDelai",v.delai); set("#mCmd",v.date_commande);
+  set("#mPrix",v.prix); set("#mQte", v.quantite == null ? 1 : v.quantite); ficheStatut(v.statut);
+  set("#mLiv",v.date_livraison); set("#mPose",v.pose); set("#mComm",v.commentaire);
+  $("#mPhotoUrl").value = ""; setPhoto(v.image || "");
+  renderSugg();
+  $("#mFetchSt").hidden = true;
+  $("#mDel").hidden = !m; $("#mErr").hidden = true;
+  $("#dMeuble").showModal();
+}
+$("#meubleForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const err = t => { $("#mErr").textContent = t; $("#mErr").hidden = false; };
+  const nom = $("#mNom").value.trim();
+  if (!nom) return err("Donnez un nom à l'article.");
+  let lien = $("#mLien").value.trim();
+  if (lien && !/^https?:\/\//i.test(lien)) lien = "https://" + lien;
+  if (lien && !/^https?:\/\/[^\s.]+\.[^\s]{2,}/i.test(lien)) return err("Le lien doit être une adresse web complète, par exemple https://www.laboutique.fr/lit-160.");
+  const prev = mEditing ? meubles.get(mEditing) : null;
+  const data = {
+    ordre: prev ? prev.ordre : Math.max(0, ...mList().map(x => x.ordre||0)) + 1,
+    nom, lien, categorie: $("#mCatI").value.trim() || "Autre", piece: $("#mPieceI").value.trim(),
+    fournisseur: $("#mFour").value.trim(), prix: numOrNull("#mPrix"),
+    quantite: Math.max(1, +$("#mQte").value || 1), statut: mHorsVal || (STEPS[+$("#mStatutI").value] || STEPS[0]),
+    date_livraison: $("#mLiv").value || "", pose: $("#mPose").value.trim(), commentaire: $("#mComm").value.trim(),
+    modele: $("#mModele").value.trim(), delai: numOrNull("#mDelai"), date_commande: $("#mCmd").value || "",
+    image: mImg
+  };
+  const id = mEditing || ("M" + Date.now().toString(36));
+  meubles.set(id, {id, ...data});
+  $("#dMeuble").close(); renderPanier(); renderRail();
+  saveMeuble(id, data, prev ? "Article enregistré." : "Article ajouté au panier.");
+});
+$("#mDel").addEventListener("click", () => {
+  if (!mEditing) return;
+  const m = meubles.get(mEditing);
+  if (!confirm(`Retirer « ${m.nom} » du panier ?`)) return;
+  const id = mEditing; $("#dMeuble").close();
+  meubles.delete(id); renderPanier(); renderRail(); delMeuble(id);
+});
+
+/* ============ Dialogue échéance ============ */
+let payEditing = null;
+function openPay(id){
+  const p = id ? pays.get(id) : {entreprise:"",libelle:"",mode:"pct",valeur:"",paye:false,date_paiement:""};
+  payEditing = id;
+  $("#pEnt").value = p.entreprise; $("#pLib").value = p.libelle; $("#pMode").value = p.mode; $("#pVal").value = p.valeur;
+  $("#pDate").value = p.date_paiement || ""; $("#pPaye").checked = !!p.paye; $("#pDel").hidden = !id;
+  $("#dPay").showModal();
+}
+$("#payForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const prev = payEditing ? pays.get(payEditing) : null;
+  const paye = $("#pPaye").checked;
+  const data = {ordre: prev ? prev.ordre : Math.max(0, ...[...pays.values()].map(p=>p.ordre||0)) + 1, entreprise: $("#pEnt").value.trim(), libelle: $("#pLib").value.trim(),
+    mode: $("#pMode").value, valeur: Math.max(0, +$("#pVal").value || 0), paye, date_paiement: paye ? ($("#pDate").value || todayIso()) : ""};
+  const id = payEditing || ("Q" + Date.now().toString(36));
+  if (live) pays.set(id, {id, ...data});
+  $("#dPay").close(); render();
+  savePay(id, data, "Échéance enregistrée.");
+});
+$("#pDel").addEventListener("click", () => {
+  if (!payEditing || !confirm("Supprimer cette échéance ?")) return;
+  const id = payEditing; $("#dPay").close();
+  if (live) pays.delete(id);
+  render(); delPay(id);
+});
+
+function saveFile(name, text){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], {type: "text/csv;charset=utf-8"}));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+/* ============ Export CSV ============ */
+$("#bCsv").addEventListener("click", async () => {
+  const cols = [["phase","Phase"],["entreprise","Entreprise"],["piece","Pièce"],["type","Type"],["travaux","Travaux"],["devis","Devis"],["statut","Statut"],["artisan","Artisan"],["quantite","Quantité"],["unite","Unité"],["prix_ttc","Prix TTC"],["fourniture_requise","Nécessite fourniture"],["fourniture","Fourniture"],["commentaire","Commentaire"],["heures","Heure estimé"],["reduction","Réduction"],["debut","Date début"],["fin","Date fin"],["devis_source","Devis concerné"]];
+  const cell = v => { if (v == null) return ""; if (typeof v === "boolean") return v ? "X" : ""; if (typeof v === "number") return String(v).replace(".", ","); const s = String(v); return /[;"\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s; };
+  const list = actifs().sort((a,b)=>a.ordre-b.ordre);
+  const csv = "﻿" + cols.map(c=>c[1]).join(";") + "\n" + list.map(r => cols.map(([k]) => cell(r[k])).join(";")).join("\n");
+  saveFile(`travaux-${todayIso()}.csv`, csv);
+});
+
+/* ============ Interactions ============ */
+const saveF = () => { try { localStorage.setItem("suivi-filtres", JSON.stringify(F)); } catch(e) {} };
+[["#fPiece","piece"],["#fEnt","ent"],["#fStatut","statut"],["#fDevis","devis"],["#fPhase","phase"],["#fGroup","group"]].forEach(([s,k]) =>
+  $(s).addEventListener("change", e => { F[k] = e.target.value; saveF(); renderTable(); }));
+let qT; $("#fQ").addEventListener("input", e => { clearTimeout(qT); qT = setTimeout(() => { F.q = e.target.value; saveF(); renderTable(); }, 150); });
+$("#fAChiffrer").addEventListener("change", e => { F.aChiffrer = e.target.checked; saveF(); renderTable(); });
+$("#fReset").addEventListener("click", () => { Object.assign(F, {q:"",piece:"",ent:"",statut:"",devis:"",phase:"",aChiffrer:false}); saveF(); renderFilters(); renderTable(); });
+$("#tTrav").addEventListener("click", e => {
+  const th = e.target.closest("th[data-sort]");
+  if (th) { const k = th.dataset.sort; sort = {k, dir: sort.k === k ? -sort.dir : 1}; renderTable(); return; }
+  if (e.target.closest("select")) return;
+  const tr = e.target.closest("tr.row"); if (tr) openRow(tr.dataset.id);
+});
+$("#tTrav").addEventListener("change", e => {
+  const s = e.target.closest("select[data-st]"); if (!s) return;
+  const id = s.dataset.st, r = rows.get(id);
+  if (live) r.statut = s.value;
+  render();
+  patchRow(id, {statut: s.value}, `Statut : ${s.value} — ${r.travaux.slice(0,50)}`);
+});
+$("#gantt").addEventListener("click", e => { const t = e.target.closest(".gr.task"); if (t) { $("#tip").hidden = true; openRow(t.dataset.id); } });
+document.querySelectorAll(".seg [data-g]").forEach(b => b.addEventListener("click", () => { gGroup = b.dataset.g; try { localStorage.setItem("suivi-ggroup", gGroup); } catch(e) {} renderGantt(); }));
+$("#gDone").addEventListener("change", renderGantt);
+$("#pays").addEventListener("change", e => {
+  const c = e.target.closest("input[data-paid]"); if (!c) return;
+  const id = c.dataset.paid, p = pays.get(id);
+  const data = {paye: c.checked, date_paiement: c.checked ? (p.date_paiement || todayIso()) : ""};
+  if (live) Object.assign(p, data);
+  render(); patchPay(id, data);
+});
+$("#pays").addEventListener("click", e => { const b = e.target.closest("[data-pedit]"); if (b) openPay(b.dataset.pedit); });
+$("#tPieces").addEventListener("click", e => { const b = e.target.closest("[data-piece]"); if (!b) return; F.piece = b.dataset.piece; saveF(); selectTab("travaux"); });
+$("#bAdd").addEventListener("click", () => openRow(null));
+$("#bAddPay").addEventListener("click", () => openPay(null));
+document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => b.closest("dialog").close()));
+function selectTab(t){
+  tab = t;
+  document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", x.dataset.p === t));
+  document.querySelectorAll(".panel").forEach(p => p.hidden = p.id !== "p-" + t);
+  try { localStorage.setItem("suivi-tab", t); } catch(e) {}
+  render();
+}
+document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => selectTab(b.dataset.p)));
+
+const tip = $("#tip");
+document.addEventListener("pointermove", ev => {
+  if (ev.pointerType === "touch") return;
+  const el = ev.target.closest && ev.target.closest("[data-tip]");
+  if (!el) { tip.hidden = true; return; }
+  const r = rows.get(el.dataset.tip); if (!r) return;
+  const row = (k,v) => `<div class="row"><span>${k}</span><span>${esc(v)}</span></div>`;
+  tip.innerHTML = `<b>${esc(r.travaux)}</b>` + row("Pièce", r.piece) + row("Intervenant", r.entreprise) + row("Statut", r.statut) +
+    row("Dates", `${fd(D(r.debut))} → ${fd(D(r.fin || r.debut))}`) + row("Prix TTC", +r.prix_ttc ? eur2(r.prix_ttc) : "—") + (r.commentaire ? `<div style="margin-top:4px;opacity:.8">${esc(r.commentaire.slice(0,160))}</div>` : "");
+  tip.hidden = false;
+  const b = tip.getBoundingClientRect();
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + b.width > innerWidth - 8) x = ev.clientX - b.width - 14;
+  if (y + b.height > innerHeight - 8) y = ev.clientY - b.height - 14;
+  tip.style.left = Math.max(8,x) + "px"; tip.style.top = Math.max(8,y) + "px";
+});
+let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { if (tab === "planning") { renderDstrip(); renderGantt(); } }, 150); });
+
+
+
+/* ============ Démarrage ============ */
+let started = false;
+async function start(session){
+  if (started) return;
+  const email = (session.user.email || "").toLowerCase();
+  const {data, error} = await sb.from("acces").select("*").eq("email", email).maybeSingle();
+  if (error || !data) { await sb.auth.signOut(); gate("refus"); return; }
+  started = true;
+  ME = data;
+  document.body.classList.toggle("artisan", !isClient());
+  tab = ["travaux","planning","paiements","pieces","historique","acces"].includes(tab) ? tab : "travaux";
+  if (!isClient()) { view = "artisan"; A.ent = ME.entreprise; A.devis = ""; }
+  setSync("busy", "Chargement…");
+  await reload();
+  selectView(isClient() ? (view === "artisan" ? "artisan" : "client") : "artisan");
+  let sp = "travaux";
+  try { const x = localStorage.getItem("suivi-space"); if (["ameublement","conversation","documents"].includes(x)) sp = x; } catch(e) {}
+  if (!isClient() && (sp === "ameublement" || sp === "documents")) sp = "travaux";
+  selectSpace(sp);
+  subscribe();
+  enterApp();
+}
+if (!CFG.supabaseUrl || !CFG.supabaseAnonKey || /VOTRE|xxxx/i.test(CFG.supabaseUrl + CFG.supabaseAnonKey) || !window.supabase) {
+  $("#gate").hidden = true;
+  $("#cfgErr").hidden = false;
+} else {
+  sb = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey,
+    {auth: {flowType: "implicit", persistSession: true, detectSessionInUrl: true}});
+  gate("connexion");
+  sb.auth.onAuthStateChange((ev, session) => {
+    if (session) start(session);
+    else if (ev === "SIGNED_OUT" || ev === "INITIAL_SESSION") { if (!started) gate("connexion"); }
+  });
+}
+})();
+</script>
+</body>
+</html>
