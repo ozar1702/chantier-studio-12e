@@ -1276,8 +1276,8 @@ const isDel = r => r.statut === "Supprimé";
 const prog = r => r.statut === "Fait" ? 1 : r.statut === "En cours" ? .5 : 0;
 function stats(list){
   const inclus = sum(list.filter(r=>r.devis==="Inclus"), r=>r.prix_ttc);
-  const supp = sum(list.filter(isDel), r=>r.prix_ttc);
-  const red = sum(list.filter(r=>r.statut==="Modifié"), r=>r.reduction);
+  const supp = sum(list.filter(r=>r.devis==="Inclus" && isDel(r)), r=>r.prix_ttc);
+  const red = sum(list.filter(r=>r.devis==="Inclus" && r.statut==="Modifié"), r=>r.reduction);
   const hors = sum(list.filter(r=>r.devis==="Non Inclus" && !isDel(r)), r=>r.prix_ttc);
   const aChiffrer = list.filter(r=>r.devis==="Non Inclus" && !isDel(r) && !(+r.prix_ttc)).length;
   const perso = sum(list.filter(r=>r.devis==="NC" && !isDel(r)), r=>r.prix_ttc);
@@ -1291,9 +1291,17 @@ function stats(list){
 }
 function payStats(e, d){
   const memeDevis = r => d === undefined || (r.devis_source || "") === d;
-  const base = sum(actifs().filter(r=>r.entreprise===e && r.devis==="Inclus" && memeDevis(r)), r=>r.prix_ttc);
+  const baseCache = new Map();
+  const baseFor = src => {
+    if (!baseCache.has(src)) {
+      baseCache.set(src, sum(actifs().filter(r=>r.entreprise===e && r.devis==="Inclus" && (r.devis_source||"")===src), r=>r.prix_ttc));
+    }
+    return baseCache.get(src);
+  };
+  const base = baseFor(d === undefined ? "" : d);
   const list = [...pays.values()].filter(p=>p.entreprise===e && memeDevis(p)).sort((a,b)=>(a.ordre||0)-(b.ordre||0));
-  const amt = p => p.mode === "pct" ? base * (+p.valeur||0) / 100 : (+p.valeur||0);
+  // Chaque échéance est un % de SON PROPRE devis, jamais du total de l'entreprise (qui peut couvrir plusieurs devis).
+  const amt = p => p.mode === "pct" ? baseFor(p.devis_source || "") * (+p.valeur||0) / 100 : (+p.valeur||0);
   return {base, list, amt, paye: sum(list.filter(p=>p.paye), amt), prevu: sum(list, amt)};
 }
 
