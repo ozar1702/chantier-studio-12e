@@ -959,6 +959,9 @@ body.artisan .fab{display:none!important}
     </div>
     <div class="shop-count" id="shopCount"></div>
   </header>
+  <div class="filters" id="mFilters">
+    <input type="search" id="mQ" placeholder="Rechercher un article, un modèle, un fournisseur…" aria-label="Rechercher un article">
+  </div>
   <div class="chips" id="grChips" role="group" aria-label="Filtrer par groupe"></div>
   <div class="chips chips-st" id="stChips" role="group" aria-label="Filtrer par statut"></div>
 
@@ -2284,7 +2287,7 @@ const ST_C = {"À initier":"var(--muted)", "Décidé":"var(--accent)", "Command�
 const GORDER = ["Électroménager","Cuisine","Robinetterie","Sanitaires","Literie","Lits","Assises","Tables",
                 "Luminaires","Chauffage","Rangement","Revêtements & finitions","Menuiserie","Textile","Multimédia","Divers"];
 const MCATS = GORDER;
-const MF = {cat:"", st:""};
+const MF = {cat:"", st:"", q:""};
 const stIdx = st => Math.max(0, STEPS.indexOf(st));
 const stMax = STEPS.length - 1;
 const stPct = i => (i / stMax * 100).toFixed(0);
@@ -2348,6 +2351,9 @@ function renderPanier(){
   $("#lCats").innerHTML = [...new Set([...MCATS, ...muniq("categorie")])].map(v => `<option value="${esc(v)}">`).join("");
   $("#lFours").innerHTML = muniq("fournisseur").map(v => `<option value="${esc(v)}">`).join("");
   $("#shopCount").innerHTML = `<b>${all.length}</b>article${all.length>1?"s":""} · ${eur(s.budget)}`;
+  $("#mQ").value = MF.q;
+  const q = MF.q.trim().toLowerCase();
+  const matchQ = m => !q || `${m.nom||""} ${m.modele||""} ${m.commentaire||""} ${m.fournisseur||""} ${m.categorie||""} ${pieceLbl(m.piece)||""}`.toLowerCase().includes(q);
   const cats = GORDER.filter(c => all.some(m => m.categorie === c))
     .concat([...new Set(all.map(m => m.categorie))].filter(c => !GORDER.includes(c)).sort());
   $("#grChips").innerHTML = [`<button class="chip" type="button" data-gr="" aria-pressed="${!MF.cat}">Tout (${all.length})</button>`]
@@ -2358,7 +2364,7 @@ function renderPanier(){
 
   const groups = new Map();
   cats.forEach(c => {
-    const ms = all.filter(m => m.categorie === c && (!MF.cat || MF.cat === c) && (!MF.st || m.statut === MF.st)).sort((a,b) => (a.ordre||0)-(b.ordre||0));
+    const ms = all.filter(m => m.categorie === c && (!MF.cat || MF.cat === c) && (!MF.st || m.statut === MF.st) && matchQ(m)).sort((a,b) => (a.ordre||0)-(b.ordre||0));
     if (ms.length) groups.set(c, ms);
   });
   let h = "";
@@ -2400,7 +2406,10 @@ function renderPanier(){
     });
     h += `</section>`;
   });
-  $("#cart").innerHTML = h || `<div class="empty">Aucun article ne correspond${MF.st ? " au statut « " + esc(MF.st) + " »" : ""}${MF.cat ? (MF.st ? " dans " : " dans le groupe ") + esc(MF.cat) : ""}.</div>`;
+  const noMatchBits = [];
+  if (MF.q) noMatchBits.push(`à « ${esc(MF.q)} »`);
+  if (MF.st) noMatchBits.push(`au statut « ${esc(MF.st)} »`);
+  $("#cart").innerHTML = h || `<div class="empty">Aucun article ne correspond${noMatchBits.length ? " " + noMatchBits.join(" et ") : ""}${MF.cat ? (noMatchBits.length ? " dans " : " dans le groupe ") + esc(MF.cat) : ""}.</div>`;
 
   const w = v => (s.budget ? v / s.budget * 100 : 0).toFixed(1) + "%";
   const pieces = [...new Set(all.map(m => pieceLbl(m.piece)))]
@@ -2465,6 +2474,7 @@ $("#cart").addEventListener("click", e => {
 $("#fab").addEventListener("click", () => openMeuble(null));
 $("#grChips").addEventListener("click", e => { const b = e.target.closest("[data-gr]"); if (b) { MF.cat = b.dataset.gr; renderPanier(); } });
 $("#stChips").addEventListener("click", e => { const b = e.target.closest("[data-st]"); if (b) { MF.st = b.dataset.st; renderPanier(); } });
+let mqT; $("#mQ").addEventListener("input", e => { clearTimeout(mqT); mqT = setTimeout(() => { MF.q = e.target.value; renderPanier(); }, 150); });
 
 /* ---- Compléments fréquents ----
    Aujourd'hui : table de règles par type d'article.
