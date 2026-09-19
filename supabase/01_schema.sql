@@ -99,10 +99,12 @@ create table if not exists public.travaux (
   debut               date,
   fin                 date,
   devis_source        text not null default '',
+  photo               text not null default '',  -- chemin dans le seau « photos », mis en pièce jointe au message auto de fin de tâche
   updated_at          timestamptz not null default now(),
   updated_by          text,
   constraint dates_ordonnees check (debut is null or fin is null or fin >= debut)
 );
+alter table public.travaux add column if not exists photo text not null default '';
 create index if not exists travaux_entreprise_idx on public.travaux (entreprise);
 
 alter table public.travaux enable row level security;
@@ -124,6 +126,7 @@ create table if not exists public.paiements (
   id             text primary key,
   ordre          integer not null default 0,
   entreprise     text not null,
+  devis_source   text not null default '',  -- vide = devis principal ; sinon doit reprendre une valeur de travaux.devis_source
   libelle        text not null,
   mode           text not null default 'pct' check (mode in ('pct', 'montant')),
   valeur         numeric not null default 0,
@@ -132,6 +135,7 @@ create table if not exists public.paiements (
   updated_at     timestamptz not null default now(),
   updated_by     text
 );
+alter table public.paiements add column if not exists devis_source text not null default '';
 alter table public.paiements enable row level security;
 drop policy if exists paiements_lecture on public.paiements;
 create policy paiements_lecture on public.paiements for select to authenticated
@@ -176,12 +180,16 @@ create table if not exists public.fils (
   nom         text not null,
   entreprise  text not null default '',
   prive       boolean not null default false,
+  general     boolean not null default false,  -- vu par le client ET tous les artisans à la fois
   created_at  timestamptz not null default now()
 );
+alter table public.fils add column if not exists general boolean not null default false;
 alter table public.fils enable row level security;
 drop policy if exists fils_lecture on public.fils;
 create policy fils_lecture on public.fils for select to authenticated
-  using (case when prive then public.est_client() else public.peut_voir(entreprise) end);
+  using (case when prive then public.est_client()
+              when general then public.role_courant() is not null
+              else public.peut_voir(entreprise) end);
 drop policy if exists fils_gestion on public.fils;
 create policy fils_gestion on public.fils for all to authenticated
   using (public.est_client()) with check (public.est_client());
@@ -207,7 +215,9 @@ as $$
   select exists (
     select 1 from public.fils x
      where x.id = f
-       and (case when x.prive then public.est_client() else public.peut_voir(x.entreprise) end))
+       and (case when x.prive then public.est_client()
+                 when x.general then public.role_courant() is not null
+                 else public.peut_voir(x.entreprise) end))
 $$;
 grant execute on function public.fil_visible(text) to authenticated;
 
@@ -222,6 +232,34 @@ drop policy if exists messages_maj on public.messages;
 create policy messages_maj on public.messages for update to authenticated
   using (public.fil_visible(fil)) with check (public.fil_visible(fil));
 -- pas de suppression : un message envoyé reste au dossier
+
+-- ---------- Message automatique de fin de tâche ----------
+-- Quand une ligne de travaux passe au statut « Fait », un message est posté
+-- automatiquement dans le fil marqué « general » (voir table fils), avec la
+-- photo de la ligne en pièce jointe si elle existe.
+create or replace function public.annoncer_fin_travaux()
+returns trigger language plpgsql security definer set search_path = public
+as $$
+declare
+  fil_general text;
+  nom_auteur  text;
+begin
+  if new.statut = 'Fait' and coalesce(old.statut, '') is distinct from 'Fait' then
+    select id into fil_general from public.fils where general limit 1;
+    if fil_general is not null then
+      select a.nom into nom_auteur from public.acces a where a.email = public.email_courant();
+      insert into public.messages (fil, email, auteur, texte, ref, piece_jointe)
+      values (fil_general, nullif(public.email_courant(), ''),
+              coalesce(nom_auteur, public.entreprise_courante(), 'Système'),
+              new.travaux || ' réalisé', new.id, coalesce(new.photo, ''));
+    end if;
+  end if;
+  return new;
+end;
+$$;
+drop trigger if exists travaux_annonce on public.travaux;
+create trigger travaux_annonce after update on public.travaux
+  for each row execute function public.annoncer_fin_travaux();
 
 -- ---------- Espace 4 · Documents ----------
 create table if not exists public.documents (
@@ -360,7 +398,7 @@ create policy photos_lecture on storage.objects for select to public
   using (bucket_id = 'photos');
 drop policy if exists photos_ecriture on storage.objects;
 create policy photos_ecriture on storage.objects for insert to authenticated
-  with check (bucket_id = 'photos' and public.est_client());
+  with check (bucket_id = 'photos' and public.role_courant() is not null);
 drop policy if exists photos_suppression on storage.objects;
 create policy photos_suppression on storage.objects for delete to authenticated
   using (bucket_id = 'photos' and public.est_client());

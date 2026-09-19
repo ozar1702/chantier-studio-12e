@@ -179,6 +179,8 @@ select.st{font:inherit;font-size:12px;border:1px solid var(--line-strong);border
 .payrow:first-of-type{border-top:0}
 .payrow small{display:block;color:var(--muted);font-size:11.5px}
 .paysum{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-2);padding-top:8px;border-top:1px solid var(--line-strong);margin-top:4px;gap:10px;flex-wrap:wrap}
+.paydevis + .paydevis{margin-top:16px;padding-top:12px;border-top:1px dashed var(--line-strong)}
+.paydevis-lbl{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin:0 0 2px}
 
 /* Dialogues */
 dialog{border:1px solid var(--line-strong);border-radius:4px;background:var(--surface);color:var(--ink);padding:0;width:min(760px,calc(100vw - 32px))}
@@ -1043,6 +1045,18 @@ body.artisan .fab{display:none!important}
       <div class="field"><label for="rFin">Date fin</label><input type="date" id="rFin"></div>
       <div class="field full"><label class="chk"><input type="checkbox" id="rFReq"> Nécessite une fourniture</label></div>
       <div class="field full"><label for="rComm">Commentaire</label><textarea id="rComm"></textarea></div>
+      <div class="field full"><label for="rPhotoUrl">Photo de la réalisation</label>
+        <div class="photo-zone" id="rPhotoZone">
+          <div class="photo-prev" id="rPhotoPrev">Aucune photo</div>
+          <div class="photo-txt">
+            <p><b>Collez une image</b> (Ctrl ou Cmd + V), glissez un fichier ici, ou <button type="button" class="lnk" id="rPhotoPick">choisissez un fichier</button>.</p>
+            <div class="photo-url"><input type="text" id="rPhotoUrl" inputmode="url" spellcheck="false" placeholder="ou collez le lien de l'image : https://…jpg"><button class="btn sm" type="button" id="rPhotoSet">Utiliser</button></div>
+            <button type="button" class="lnk" id="rPhotoDel" hidden>Retirer la photo</button>
+          </div>
+        </div>
+        <input type="file" id="rPhotoFile" accept="image/*" hidden>
+        <p class="muted" style="font-size:12px;margin-top:6px">Si une photo est présente quand le statut passe à « Fait », elle est jointe automatiquement au message dans le fil « Général ».</p>
+      </div>
     </div>
     <div id="rErr" class="alert err" hidden></div>
     <div class="foot">
@@ -1126,6 +1140,7 @@ body.artisan .fab{display:none!important}
     <h2 id="dPayT"><button class="xclose" type="button" data-close aria-label="Fermer">&times;</button>Échéance</h2>
     <div class="form">
       <div class="field"><label for="pEnt">Intervenant</label><input type="text" id="pEnt" list="lEnts" required></div>
+      <div class="field"><label for="pSource">Devis concerné</label><input type="text" id="pSource" list="lSources" placeholder="Laisser vide = devis principal"></div>
       <div class="field"><label for="pLib">Libellé</label><input type="text" id="pLib" required></div>
       <div class="field"><label for="pMode">Type</label><select id="pMode"><option value="pct">% du devis</option><option value="montant">Montant fixe (€)</option></select></div>
       <div class="field"><label for="pVal">Valeur</label><input type="number" id="pVal" step="0.01" min="0" required></div>
@@ -1217,7 +1232,19 @@ const q = (p, expectRow) => p.then(r => (expectRow && !r.error ? {...r, expectRo
 const up = (t, id, data, msg) => write(() => sb.from(t).upsert(toDb({id, ...data})), msg);
 const patch = (t, id, data, msg) => write(() => q(sb.from(t).update(toDb(data)).eq("id", id).select("id"), true), msg);
 const del = (t, id, msg) => write(() => q(sb.from(t).delete().eq("id", id).select("id"), true), msg);
-const saveRow = (id, data, msg) => up("travaux", id, data, msg);
+async function saveRow(id, data, msg){
+  if (data.photo && data.photo.startsWith("data:")) {
+    try {
+      const blob = await (await fetch(data.photo)).blob();
+      const chemin = `travaux/${id}-${Date.now()}.jpg`;
+      const {error} = await sb.storage.from("photos").upload(chemin, blob, {contentType: "image/jpeg", upsert: true});
+      if (error) throw error;
+      data = {...data, photo: sb.storage.from("photos").getPublicUrl(chemin).data.publicUrl};
+      const r = rows.get(id); if (r) r.photo = data.photo;
+    } catch(e) { toast("Photo non enregistrée : la ligne est enregistrée sans elle."); data = {...data, photo: ""}; }
+  }
+  return up("travaux", id, data, msg);
+}
 const patchRow = (id, data, msg) => patch("travaux", id, data, msg);
 const delRow = id => del("travaux", id, "Ligne supprimée.");
 const savePay = (id, data, msg) => up("paiements", id, data, msg);
@@ -1262,9 +1289,10 @@ function stats(list){
   const engage = inclus - supp - red + hors;
   return {inclus, supp, red, hors, aChiffrer, perso, engage, total: engage + perso, av, faits, enCours, bloq, n: vivantes.length, nDel: list.length - vivantes.length};
 }
-function payStats(e){
-  const base = sum(actifs().filter(r=>r.entreprise===e && r.devis==="Inclus"), r=>r.prix_ttc);
-  const list = [...pays.values()].filter(p=>p.entreprise===e).sort((a,b)=>(a.ordre||0)-(b.ordre||0));
+function payStats(e, d){
+  const memeDevis = r => d === undefined || (r.devis_source || "") === d;
+  const base = sum(actifs().filter(r=>r.entreprise===e && r.devis==="Inclus" && memeDevis(r)), r=>r.prix_ttc);
+  const list = [...pays.values()].filter(p=>p.entreprise===e && memeDevis(p)).sort((a,b)=>(a.ordre||0)-(b.ordre||0));
   const amt = p => p.mode === "pct" ? base * (+p.valeur||0) / 100 : (+p.valeur||0);
   return {base, list, amt, paye: sum(list.filter(p=>p.paye), amt), prevu: sum(list, amt)};
 }
@@ -1486,16 +1514,27 @@ function renderPays(){
   const ents = [...new Set([...[...knownEnts()].filter(e=>e!=="Perso" && sum(actifs().filter(r=>r.entreprise===e), r=>r.prix_ttc) > 0), ...[...pays.values()].map(p=>p.entreprise)])]
     .sort((a,b)=>((ENT_ORDER.indexOf(a)+99)%99)-((ENT_ORDER.indexOf(b)+99)%99) || a.localeCompare(b));
   $("#pays").innerHTML = ents.map(e => {
-    const p = payStats(e), s = stats(actifs().filter(r=>r.entreprise===e));
+    const devisEnt = [...new Set([
+      ...actifs().filter(r=>r.entreprise===e && r.devis==="Inclus").map(r=>r.devis_source || ""),
+      ...[...pays.values()].filter(p=>p.entreprise===e).map(p=>p.devis_source || "")
+    ])].sort((a,b)=>a.localeCompare(b, "fr", {numeric:true}));
+    const groupes = devisEnt.length ? devisEnt : [""];
+    const blocs = groupes.map(d => {
+      const p = payStats(e, d), s = stats(actifs().filter(r=>r.entreprise===e && (r.devis_source||"")===d));
+      return `<div class="paydevis">
+        ${groupes.length > 1 ? `<p class="paydevis-lbl">${esc(d || "Devis principal")}</p>` : ""}
+        <p class="note" style="margin:2px 0 8px">Signé ${eur(s.inclus)} · engagé ${eur(s.engage)}</p>
+        ${p.list.length ? p.list.map(x => `<div class="payrow">
+          <input type="checkbox" data-paid="${esc(x.id)}" ${x.paye?"checked":""} aria-label="${esc(x.libelle)} réglé">
+          <div>${esc(x.libelle)}<small>${x.mode==="pct" ? `${String(x.valeur).replace(".",",")} % du devis` : "montant fixe"}${x.paye && x.date_paiement ? ` · payé le ${fd(D(x.date_paiement))}` : ""}</small></div>
+          <span class="num">${eur(p.amt(x))}</span>
+          <button class="btn sm" type="button" data-pedit="${esc(x.id)}">Modifier</button></div>`).join("") : `<p class="note">Aucune échéance.</p>`}
+        <div class="paysum"><span>Payé <b class="num">${eur(p.paye)}</b></span><span>Reste sur l'engagé <b class="num">${eur(s.engage - p.paye)}</b></span>${Math.abs(p.prevu - s.engage) > 1 ? `<span class="warnmark">Échéancier ${eur(p.prevu)} ≠ engagé</span>` : ""}</div>
+      </div>`;
+    }).join("");
     return `<div class="card payent">
       <h3><i class="dot" style="background:${entColor(e)}"></i>${esc(e)}</h3>
-      <p class="note" style="margin:2px 0 8px">Signé ${eur(s.inclus)} · engagé ${eur(s.engage)}</p>
-      ${p.list.length ? p.list.map(x => `<div class="payrow">
-        <input type="checkbox" data-paid="${esc(x.id)}" ${x.paye?"checked":""} aria-label="${esc(x.libelle)} réglé">
-        <div>${esc(x.libelle)}<small>${x.mode==="pct" ? `${String(x.valeur).replace(".",",")} % du devis` : "montant fixe"}${x.paye && x.date_paiement ? ` · payé le ${fd(D(x.date_paiement))}` : ""}</small></div>
-        <span class="num">${eur(p.amt(x))}</span>
-        <button class="btn sm" type="button" data-pedit="${esc(x.id)}">Modifier</button></div>`).join("") : `<p class="note">Aucune échéance.</p>`}
-      <div class="paysum"><span>Payé <b class="num">${eur(p.paye)}</b></span><span>Reste sur l'engagé <b class="num">${eur(s.engage - p.paye)}</b></span>${Math.abs(p.prevu - s.engage) > 1 ? `<span class="warnmark">Échéancier ${eur(p.prevu)} ≠ engagé</span>` : ""}</div>
+      ${blocs}
     </div>`;
   }).join("") || `<div class="empty">Aucun intervenant chiffré.</div>`;
 }
@@ -1669,13 +1708,14 @@ function openRow(id){
   $("#dRowTitle").textContent = r ? "Modifier la ligne" : "Nouvelle ligne";
   $("#dRowId").textContent = r ? `ligne Excel ${r.ordre}` : "";
   $("#rStatut").innerHTML = STATUTS.map(s=>`<option>${s}</option>`).join("");
-  const v = r || {travaux:"",piece:F.piece||"",type:"",entreprise:F.ent||"",phase:"2",devis:"Non Inclus",statut:"A initier",artisan:"Oui",devis_source:"",quantite:null,unite:"",prix_ttc:null,reduction:null,fourniture:null,heures:null,debut:"",fin:"",fourniture_requise:false,commentaire:""};
+  const v = r || {travaux:"",piece:F.piece||"",type:"",entreprise:F.ent||"",phase:"2",devis:"Non Inclus",statut:"A initier",artisan:"Oui",devis_source:"",quantite:null,unite:"",prix_ttc:null,reduction:null,fourniture:null,heures:null,debut:"",fin:"",fourniture_requise:false,commentaire:"",photo:""};
   const set = (sel, val) => $(sel).value = val ?? "";
   set("#rTravaux",v.travaux); set("#rPiece",v.piece); set("#rType",v.type); set("#rEnt",v.entreprise); set("#rPhase",v.phase);
   set("#rDevis",v.devis); set("#rStatut",v.statut); set("#rArtisan",v.artisan); set("#rSource",v.devis_source);
   set("#rQte",v.quantite); set("#rUnite",v.unite); set("#rPrix",v.prix_ttc); set("#rRed",v.reduction); set("#rFour",v.fourniture);
   set("#rHeures",v.heures); set("#rDebut",v.debut); set("#rFin",v.fin); set("#rComm",v.commentaire);
   $("#rFReq").checked = !!v.fourniture_requise;
+  setRPhoto(v.photo);
   $("#rDel").hidden = !r; $("#rErr").hidden = true;
   $("#dRow").showModal();
 }
@@ -1694,7 +1734,8 @@ $("#rowForm").addEventListener("submit", e => {
     travaux: trav, devis: $("#rDevis").value, statut: $("#rStatut").value, artisan: $("#rArtisan").value,
     quantite: numOrNull("#rQte"), unite: $("#rUnite").value.trim(), prix_ttc: numOrNull("#rPrix"),
     fourniture_requise: $("#rFReq").checked, fourniture: numOrNull("#rFour"), commentaire: $("#rComm").value.trim(),
-    heures: numOrNull("#rHeures"), reduction: numOrNull("#rRed"), debut: deb || (fin || ""), fin: fin || deb || "", devis_source: $("#rSource").value.trim()
+    heures: numOrNull("#rHeures"), reduction: numOrNull("#rRed"), debut: deb || (fin || ""), fin: fin || deb || "", devis_source: $("#rSource").value.trim(),
+    photo: rImg
   };
   const id = editing || ("N" + Date.now().toString(36));
   if (live) rows.set(id, {id, ...data});
@@ -1709,6 +1750,47 @@ $("#rDel").addEventListener("click", () => {
   const id = editing; $("#dRow").close();
   if (live) rows.delete(id);
   render(); delRow(id);
+});
+
+/* ---- Photo de la ligne de travaux ---- */
+let rImg = "";
+function setRPhoto(src){
+  rImg = src || "";
+  const p = $("#rPhotoPrev");
+  p.innerHTML = rImg ? `<img src="${esc(rImg)}" alt="" onerror="this.parentNode.textContent='Image non affichée ici'">` : "Aucune photo";
+  $("#rPhotoDel").hidden = !rImg;
+}
+async function rPhotoFromFile(f){
+  if (!f || !/^image\//.test(f.type)) { toast("Ce fichier n'est pas une image."); return; }
+  try { setRPhoto(await shrink(f, 640)); toast("Photo ajoutée à la ligne."); }
+  catch(e) { toast("Image illisible : essayez un JPEG ou un PNG."); }
+}
+$("#rPhotoPick").addEventListener("click", () => $("#rPhotoFile").click());
+$("#rPhotoFile").addEventListener("change", e => { const f = e.target.files[0]; e.target.value = ""; rPhotoFromFile(f); });
+$("#rPhotoSet").addEventListener("click", () => {
+  let u = $("#rPhotoUrl").value.trim();
+  if (!u) { toast("Collez d'abord le lien de l'image."); return; }
+  if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+  setRPhoto(u); $("#rPhotoUrl").value = "";
+  toast("Lien d'image retenu.");
+});
+$("#rPhotoDel").addEventListener("click", () => setRPhoto(""));
+$("#dRow").addEventListener("paste", async e => {
+  const it = [...(e.clipboardData && e.clipboardData.items || [])].find(x => /^image\//.test(x.type));
+  if (it) { e.preventDefault(); rPhotoFromFile(it.getAsFile()); return; }
+  const t = ((e.clipboardData && e.clipboardData.getData("text")) || "").trim();
+  if (e.target.id !== "rPhotoUrl" && /^https?:\/\/\S+\.(jpe?g|png|webp|avif|gif)(\?|#|$)/i.test(t)) {
+    e.preventDefault(); setRPhoto(t);
+    toast("Lien d'image retenu.");
+  }
+});
+["dragenter","dragover"].forEach(ev => $("#rPhotoZone").addEventListener(ev, e => { e.preventDefault(); $("#rPhotoZone").classList.add("over"); }));
+["dragleave","drop"].forEach(ev => $("#rPhotoZone").addEventListener(ev, e => { e.preventDefault(); $("#rPhotoZone").classList.remove("over"); }));
+$("#rPhotoZone").addEventListener("drop", e => {
+  const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) { rPhotoFromFile(f); return; }
+  const u = (e.dataTransfer && e.dataTransfer.getData("text/uri-list") || "").trim();
+  if (u) setRPhoto(u);
 });
 
 /* ============ Dates projetées d'après le planning ============ */
@@ -2624,9 +2706,9 @@ $("#mDel").addEventListener("click", () => {
 /* ============ Dialogue échéance ============ */
 let payEditing = null;
 function openPay(id){
-  const p = id ? pays.get(id) : {entreprise:"",libelle:"",mode:"pct",valeur:"",paye:false,date_paiement:""};
+  const p = id ? pays.get(id) : {entreprise:"",devis_source:"",libelle:"",mode:"pct",valeur:"",paye:false,date_paiement:""};
   payEditing = id;
-  $("#pEnt").value = p.entreprise; $("#pLib").value = p.libelle; $("#pMode").value = p.mode; $("#pVal").value = p.valeur;
+  $("#pEnt").value = p.entreprise; $("#pSource").value = p.devis_source || ""; $("#pLib").value = p.libelle; $("#pMode").value = p.mode; $("#pVal").value = p.valeur;
   $("#pDate").value = p.date_paiement || ""; $("#pPaye").checked = !!p.paye; $("#pDel").hidden = !id;
   $("#dPay").showModal();
 }
@@ -2634,7 +2716,7 @@ $("#payForm").addEventListener("submit", e => {
   e.preventDefault();
   const prev = payEditing ? pays.get(payEditing) : null;
   const paye = $("#pPaye").checked;
-  const data = {ordre: prev ? prev.ordre : Math.max(0, ...[...pays.values()].map(p=>p.ordre||0)) + 1, entreprise: $("#pEnt").value.trim(), libelle: $("#pLib").value.trim(),
+  const data = {ordre: prev ? prev.ordre : Math.max(0, ...[...pays.values()].map(p=>p.ordre||0)) + 1, entreprise: $("#pEnt").value.trim(), devis_source: $("#pSource").value.trim(), libelle: $("#pLib").value.trim(),
     mode: $("#pMode").value, valeur: Math.max(0, +$("#pVal").value || 0), paye, date_paiement: paye ? ($("#pDate").value || todayIso()) : ""};
   const id = payEditing || ("Q" + Date.now().toString(36));
   if (live) pays.set(id, {id, ...data});

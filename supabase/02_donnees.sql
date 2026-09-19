@@ -112,16 +112,16 @@ on conflict (id) do update set ordre = excluded.ordre, phase = excluded.phase, e
 
 
 -- ---------- Échéancier (8 lignes) ----------
-insert into public.paiements (id, ordre, entreprise, libelle, mode, valeur, paye, date_paiement) values
-  ('P01', 1, 'ISO DECO', 'Acompte à la signature', 'pct', 50, true, '2026-07-24'),
-  ('P02', 2, 'ISO DECO', 'Mi-chantier', 'pct', 30, false, null),
-  ('P03', 3, 'ISO DECO', 'Fin de chantier', 'pct', 20, false, null),
-  ('P04', 4, 'ORANGE-RENOV', 'Acompte à la commande', 'pct', 50, true, null),
-  ('P05', 5, 'ORANGE-RENOV', 'Mi-chantier', 'pct', 30, false, null),
-  ('P06', 6, 'ORANGE-RENOV', 'Fin de chantier', 'pct', 20, false, null),
-  ('P07', 7, 'RM', 'Frais RM', 'montant', 1384, true, null),
-  ('P08', 8, 'RM', 'Étude BET', 'montant', 1080, false, null)
-on conflict (id) do update set ordre = excluded.ordre, entreprise = excluded.entreprise, libelle = excluded.libelle, mode = excluded.mode, valeur = excluded.valeur, paye = excluded.paye, date_paiement = excluded.date_paiement;
+insert into public.paiements (id, ordre, entreprise, devis_source, libelle, mode, valeur, paye, date_paiement) values
+  ('P01', 1, 'ISO DECO', '', 'Acompte à la signature', 'pct', 50, true, '2026-07-24'),
+  ('P02', 2, 'ISO DECO', '', 'Mi-chantier', 'pct', 30, false, null),
+  ('P03', 3, 'ISO DECO', '', 'Fin de chantier', 'pct', 20, false, null),
+  ('P04', 4, 'ORANGE-RENOV', '', 'Acompte à la commande', 'pct', 50, true, null),
+  ('P05', 5, 'ORANGE-RENOV', '', 'Mi-chantier', 'pct', 30, false, null),
+  ('P06', 6, 'ORANGE-RENOV', '', 'Fin de chantier', 'pct', 20, false, null),
+  ('P07', 7, 'RM', '', 'Frais RM', 'montant', 1384, true, null),
+  ('P08', 8, 'RM', '', 'Étude BET', 'montant', 1080, false, null)
+on conflict (id) do update set ordre = excluded.ordre, entreprise = excluded.entreprise, devis_source = excluded.devis_source, libelle = excluded.libelle, mode = excluded.mode, valeur = excluded.valeur, paye = excluded.paye, date_paiement = excluded.date_paiement;
 
 
 -- ---------- Panier d'ameublement (76 articles, fichier Meubles) ----------
@@ -206,13 +206,14 @@ on conflict (id) do update set ordre = excluded.ordre, categorie = excluded.cate
 
 
 -- ---------- Fils de discussion ----------
-insert into public.fils (id, ordre, nom, entreprise, prive) values
-  ('F0', 0, 'Carnet de chantier', '', true),
-  ('F1', 1, 'Artisan', 'Artisan', false),
-  ('F2', 2, 'ISO DECO', 'ISO DECO', false),
-  ('F3', 3, 'ORANGE-RENOV', 'ORANGE-RENOV', false),
-  ('F4', 4, 'RM', 'RM', false)
-on conflict (id) do update set nom = excluded.nom, entreprise = excluded.entreprise, prive = excluded.prive;
+insert into public.fils (id, ordre, nom, entreprise, prive, general) values
+  ('F0', 0, 'Carnet de chantier', '', true, false),
+  ('F1', 1, 'Artisan', 'Artisan', false, false),
+  ('F2', 2, 'ISO DECO', 'ISO DECO', false, false),
+  ('F3', 3, 'ORANGE-RENOV', 'ORANGE-RENOV', false, false),
+  ('F4', 4, 'RM', 'RM', false, false),
+  ('F5', 5, 'Général', '', false, true)
+on conflict (id) do update set nom = excluded.nom, entreprise = excluded.entreprise, prive = excluded.prive, general = excluded.general;
 
 
 -- ---------- Qui peut se connecter ----------
