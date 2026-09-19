@@ -1515,7 +1515,7 @@ function renderPays(){
     .sort((a,b)=>((ENT_ORDER.indexOf(a)+99)%99)-((ENT_ORDER.indexOf(b)+99)%99) || a.localeCompare(b));
   $("#pays").innerHTML = ents.map(e => {
     const devisEnt = [...new Set([
-      ...actifs().filter(r=>r.entreprise===e && r.devis==="Inclus").map(r=>r.devis_source || ""),
+      ...actifs().filter(r=>r.entreprise===e && (r.devis==="Inclus" || (r.devis==="Non Inclus" && !isDel(r)))).map(r=>r.devis_source || ""),
       ...[...pays.values()].filter(p=>p.entreprise===e).map(p=>p.devis_source || "")
     ])].sort((a,b)=>a.localeCompare(b, "fr", {numeric:true}));
     const groupes = devisEnt.length ? devisEnt : [""];
