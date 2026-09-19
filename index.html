@@ -407,6 +407,13 @@ body{padding-block:0 0}
 .tech-head p{margin:5px 0 0;color:var(--ink-2);max-width:70ch}
 .tech .card,.tech .tscroll,.tech .btn,.tech .empty{border-radius:0}
 
+/* Page générale (dashboard d'accueil) */
+.general{max-width:1180px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.lnk-h2{background:none;border:0;padding:0;cursor:pointer;display:flex;align-items:baseline;gap:10px}
+.lnk-h2:hover{text-decoration:underline}
+.h2-sub{font-size:12.5px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--ink-2)}
+.general-recap{max-width:420px}
+
 /* Fils de discussion */
 .chat{display:grid;grid-template-columns:268px minmax(0,1fr);background:var(--surface);border:1px solid var(--line-strong);min-height:0}
 .chat-list{display:flex;flex-direction:column;border-right:1px solid var(--line);overflow:auto;max-height:68vh}
@@ -759,11 +766,12 @@ body.artisan .fab{display:none!important}
   </div>
 </div>
 
-<div class="app" id="app" data-space="travaux">
+<div class="app" id="app" data-space="general">
 
 <nav class="rail" aria-label="Espaces">
   <div class="rail-mark" aria-hidden="true">12<sup>e</sup></div>
-  <button class="rail-b" type="button" data-sp="travaux" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-4 7 4v13"/><path d="M10 21v-6h4v6"/></svg><span>Travaux</span></button>
+  <button class="rail-b client-only" type="button" data-sp="general" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="5" rx="1"/><rect x="13" y="10" width="8" height="11" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/></svg><span>Général</span></button>
+  <button class="rail-b" type="button" data-sp="travaux" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-4 7 4v13"/><path d="M10 21v-6h4v6"/></svg><span>Travaux</span></button>
   <button class="rail-b client-only" type="button" data-sp="ameublement" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18l-1.4 9.2a2 2 0 0 1-2 1.8H6.4a2 2 0 0 1-2-1.8Z"/><path d="M8.5 7V5.5a3.5 3.5 0 0 1 7 0V7"/><circle cx="9" cy="21" r="1"/><circle cx="15" cy="21" r="1"/></svg><span>Panier</span><em class="rail-badge" id="railCount" hidden></em></button>
   <button class="rail-b" type="button" data-sp="conversation" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.5a2.5 2.5 0 0 1-2.5 2.5H8l-4 3V6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5Z"/><path d="M8.5 9h7M8.5 13h4"/></svg><span>Échanges</span><em class="rail-badge" id="railChat" hidden></em></button>
   <button class="rail-b client-only" type="button" data-sp="documents" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><span>Documents</span></button>
@@ -771,7 +779,27 @@ body.artisan .fab{display:none!important}
 </nav>
 
 <div class="stage">
-<div class="wrap" id="space-travaux">
+<section class="general" id="space-general">
+  <header class="tech-head">
+    <div>
+      <div class="eyebrow">Suivi de chantier · vue générale</div>
+      <h1>Vue d'ensemble</h1>
+      <p>Le chantier et le panier, en un coup d'œil. Cliquez sur un titre pour en voir le détail.</p>
+    </div>
+  </header>
+
+  <section class="card">
+    <div class="card-head"><div><h2><button class="lnk-h2" type="button" onclick="selectSpace('travaux')">Travaux →</button></h2></div></div>
+    <section class="kpis" id="genKpis" aria-label="Indicateurs travaux"></section>
+  </section>
+
+  <section class="card">
+    <div class="card-head"><div><h2><button class="lnk-h2" type="button" onclick="selectSpace('ameublement')" id="genPanierTitle">Panier →</button></h2></div></div>
+    <div id="genRecap" class="general-recap"></div>
+  </section>
+</section>
+
+<div class="wrap" id="space-travaux" hidden>
   <header class="head">
     <div class="hazard" aria-hidden="true"></div>
     <div class="head-in">
@@ -1329,7 +1357,7 @@ function renderRail(){
 function selectSpace(sp){
   space = sp;
   $("#app").dataset.space = sp;
-  ["travaux","ameublement","conversation","documents"].forEach(x => { $("#space-" + x).hidden = sp !== x; });
+  ["general","travaux","ameublement","conversation","documents"].forEach(x => { $("#space-" + x).hidden = sp !== x; });
   $("#cartbar").hidden = sp !== "ameublement";
   try { localStorage.setItem("suivi-space", sp); } catch(e) {}
   render();
@@ -1338,6 +1366,7 @@ document.querySelectorAll(".rail-b").forEach(b => b.addEventListener("click", ()
 
 function render(){
   renderRail();
+  if (space === "general") { renderGeneral(); return; }
   if (space === "ameublement") { renderLists(); renderPanier(); return; }
   if (space === "conversation") { renderChat(); return; }
   if (space === "documents") { renderDocs(); return; }
@@ -1369,12 +1398,12 @@ function renderBanner(){
     : "Aucune ligne ne vous est encore attribuée sur ce chantier.";
 }
 
-function renderKpis(){
+function renderKpis(sel){
   const s = stats(actifs());
   const ents = [...knownEnts()].filter(e=>e!=="Perso");
   const paye = sum(ents, e=>payStats(e).paye);
   const w = v => (v*100).toFixed(1)+"%";
-  $("#kpis").innerHTML = `
+  $(sel || "#kpis").innerHTML = `
     <div class="kpi"><div class="lbl">Budget projeté</div><div class="val num">${eur(s.total)}</div><div class="sub">engagé ${eur(s.engage)} + perso ${eur(s.perso)}</div></div>
     <div class="kpi"><div class="lbl">Signé dans les devis</div><div class="val num">${eur(s.inclus)}</div><div class="sub">lignes « Inclus » des devis</div></div>
     <div class="kpi"><div class="lbl">Crédits attendus</div><div class="val num">−${eur(s.supp + s.red)}</div><div class="sub">${eur(s.supp)} supprimés · ${eur(s.red)} réductions</div></div>
@@ -1411,6 +1440,15 @@ function renderEnts(){
   $("#tEnts").innerHTML = `<thead><tr><th>Intervenant</th><th class="r">Lignes</th><th class="r">Signé</th><th class="r">Crédits</th><th class="r">Hors devis</th><th class="r">Engagé</th><th class="r">Payé</th><th class="r">Reste</th><th>Avancement</th></tr></thead>
     <tbody>${body}</tbody>
     <tfoot><tr><td>Total</td><td class="r num">${T.n}</td><td class="r num">${eur(T.inclus)}</td><td class="r num">−${eur(T.supp)}</td><td class="r num">${eur(T.hors)}</td><td class="r num">${eur(T.engage + T.perso)}</td><td class="r num">${eur(T.paye)}</td><td class="r num">${eur(T.engage - T.paye)}</td><td></td></tr></tfoot>`;
+}
+
+/* ============ Page générale (dashboard d'accueil) ============ */
+function renderGeneral(){
+  renderKpis("#genKpis");
+  const all = mList();
+  const s = mStats(all);
+  $("#genPanierTitle").innerHTML = `Panier → <span class="h2-sub">${all.length} article${all.length>1?"s":""} · ${eur(s.budget)}</span>`;
+  $("#genRecap").innerHTML = recapCardHtml(all, s);
 }
 
 function opts(el, label, values, cur){
@@ -2345,6 +2383,21 @@ function mStats(list){
           nPoss: list.filter(m => m.statut === POSSEDE).length,
           nAband: list.filter(m => m.statut === ABANDON).length};
 }
+function recapCardHtml(all, s){
+  const w = v => (s.budget ? v / s.budget * 100 : 0).toFixed(1) + "%";
+  return `<div class="recap-card">
+    <h3>Récapitulatif</h3>
+    <div class="rl"><span>Décidé, pas commandé</span><b>${eur(s.choisi)}</b></div>
+    <div class="rl"><span>Commandé</span><b>${eur(s.engage - s.livre)}</b></div>
+    <div class="rl"><span>Reçu</span><b>${eur(s.livre)}</b></div>
+    <div class="rl${s.aChoisir?"":" mut"}"><span>Reste à décider</span><b>${s.aChoisir} article${s.aChoisir>1?"s":""}</b></div>
+    <div class="rbar" role="img" aria-label="${pct(s.budget ? s.engage/s.budget : 0)} du panier commandé">
+      <i style="width:${w(s.livre)};background:var(--good)"></i><i style="width:${w(s.engage - s.livre)};background:var(--warn)"></i><i style="width:${w(s.choisi)};background:var(--accent)"></i></div>
+    <div class="rleg"><span><i style="background:var(--good)"></i>Reçu</span><span><i style="background:var(--warn)"></i>Commandé</span><span><i style="background:var(--accent)"></i>Décidé</span><span><i style="background:var(--surface-2)"></i>À initier</span></div>
+    <div class="rtot"><span>Total estimé</span><b>${eur(s.budget)}</b></div>
+    <p class="rnote">TTC, hors livraison.${s.sansPrix ? ` ${s.sansPrix} article${s.sansPrix>1?"s":""} sans prix.` : ""}${s.nPoss ? ` ${s.nPoss} déjà possédé${s.nPoss>1?"s":""}.` : ""}${s.nAband ? ` ${s.nAband} abandonné${s.nAband>1?"s":""}.` : ""}</p>
+  </div>`;
+}
 function renderPanier(){
   const all = mList();
   const s = mStats(all);
@@ -2411,22 +2464,10 @@ function renderPanier(){
   if (MF.st) noMatchBits.push(`au statut « ${esc(MF.st)} »`);
   $("#cart").innerHTML = h || `<div class="empty">Aucun article ne correspond${noMatchBits.length ? " " + noMatchBits.join(" et ") : ""}${MF.cat ? (noMatchBits.length ? " dans " : " dans le groupe ") + esc(MF.cat) : ""}.</div>`;
 
-  const w = v => (s.budget ? v / s.budget * 100 : 0).toFixed(1) + "%";
   const pieces = [...new Set(all.map(m => pieceLbl(m.piece)))]
     .map(k => [k, mStats(all.filter(m => pieceLbl(m.piece) === k)).budget]).filter(x => x[1] > 0).sort((a,b) => b[1]-a[1]);
-  $("#recap").innerHTML = `<div class="recap-card">
-    <h3>Récapitulatif</h3>
-    <div class="rl"><span>Décidé, pas commandé</span><b>${eur(s.choisi)}</b></div>
-    <div class="rl"><span>Commandé</span><b>${eur(s.engage - s.livre)}</b></div>
-    <div class="rl"><span>Reçu</span><b>${eur(s.livre)}</b></div>
-    <div class="rl${s.aChoisir?"":" mut"}"><span>Reste à décider</span><b>${s.aChoisir} article${s.aChoisir>1?"s":""}</b></div>
-    <div class="rbar" role="img" aria-label="${pct(s.budget ? s.engage/s.budget : 0)} du panier commandé">
-      <i style="width:${w(s.livre)};background:var(--good)"></i><i style="width:${w(s.engage - s.livre)};background:var(--warn)"></i><i style="width:${w(s.choisi)};background:var(--accent)"></i></div>
-    <div class="rleg"><span><i style="background:var(--good)"></i>Reçu</span><span><i style="background:var(--warn)"></i>Commandé</span><span><i style="background:var(--accent)"></i>Décidé</span><span><i style="background:var(--surface-2)"></i>À initier</span></div>
-    <div class="rtot"><span>Total estimé</span><b>${eur(s.budget)}</b></div>
-    <p class="rnote">TTC, hors livraison.${s.sansPrix ? ` ${s.sansPrix} article${s.sansPrix>1?"s":""} sans prix.` : ""}${s.nPoss ? ` ${s.nPoss} déjà possédé${s.nPoss>1?"s":""}.` : ""}${s.nAband ? ` ${s.nAband} abandonné${s.nAband>1?"s":""}.` : ""}</p>
-  </div>
-  ${pieces.length ? `<div class="recap-card"><h3>Par pièce</h3>${pieces.map(([k,v]) => `<div class="rpiece"><span>${esc(k)}</span><b>${eur(v)}</b></div>`).join("")}</div>` : ""}`;
+  $("#recap").innerHTML = recapCardHtml(all, s) +
+    (pieces.length ? `<div class="recap-card"><h3>Par pièce</h3>${pieces.map(([k,v]) => `<div class="rpiece"><span>${esc(k)}</span><b>${eur(v)}</b></div>`).join("")}</div>` : "");
 
   $("#cartbar").innerHTML = `<span>${s.articles} article${s.articles>1?"s":""} · ${s.aChoisir} à décider</span><b>${eur(s.budget)}</b>`;
 }
@@ -2842,9 +2883,9 @@ async function start(session){
   setSync("busy", "Chargement…");
   await reload();
   selectView(isClient() ? (view === "artisan" ? "artisan" : "client") : "artisan");
-  let sp = "travaux";
-  try { const x = localStorage.getItem("suivi-space"); if (["ameublement","conversation","documents"].includes(x)) sp = x; } catch(e) {}
-  if (!isClient() && (sp === "ameublement" || sp === "documents")) sp = "travaux";
+  let sp = isClient() ? "general" : "travaux";
+  try { const x = localStorage.getItem("suivi-space"); if (["general","ameublement","conversation","documents"].includes(x)) sp = x; } catch(e) {}
+  if (!isClient() && (sp === "general" || sp === "ameublement" || sp === "documents")) sp = "travaux";
   selectSpace(sp);
   subscribe();
   enterApp();
