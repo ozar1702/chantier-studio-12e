@@ -525,7 +525,8 @@ body{padding-block:0 0}
 .role b{display:block;font-size:13.5px}
 .role span{font-size:12px;color:var(--muted)}
 .gate-alt{font-size:13px;color:var(--ink-2)}
-.otp{display:flex;gap:8px}
+.otp{display:flex;gap:6px}
+.otp input{min-width:0;font-size:18px}
 .otp input{width:100%;text-align:center;font-family:var(--mono);font-size:20px;padding:12px 0;
   border:1px solid var(--line-strong);background:var(--surface);color:var(--ink)}
 .inv{display:flex;gap:12px;align-items:center;border:1px solid var(--line-strong);border-left:4px solid var(--accent);
@@ -576,6 +577,9 @@ body{padding-block:0 0}
   cursor:pointer;font-size:26px;line-height:1;border-radius:4px;display:grid;place-items:center}
 .xclose:hover{background:var(--surface-2);color:var(--ink)}
 .ci-mod{font-size:12.5px;color:var(--ink-2);margin:0}
+.prio-h{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:#c0392b;border-radius:999px;padding:2px 8px;margin-right:8px;vertical-align:2px}
+.prio-b{font-size:11.5px;font-weight:400;color:var(--muted)}
+.shop-side{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
 .ci-warn{color:var(--warn-text);font-weight:600}
 
 .sugg{display:flex;flex-direction:column;gap:7px}
@@ -709,16 +713,16 @@ body.artisan .fab{display:none!important}
       <div class="sep">ou par e-mail</div>
       <div class="field"><label for="gMail2">Adresse e-mail</label><input type="email" id="gMail2" autocomplete="email" placeholder="vous@exemple.fr"></div>
       <button class="btn primary btn-wide" type="button" data-go="code">Recevoir mon lien de connexion</button>
-      <p class="note">Un lien et un code à six chiffres, valables une heure.</p>
+      <p class="note">Un lien et un code, valables une heure.</p>
       <p class="gate-alt">Pas encore de compte ? <button class="linkbtn" type="button" data-go="inscription">Créer mon espace</button></p>
     </div>
 
     <!-- Code e-mail -->
     <div class="gate-card" id="g-code" hidden>
       <div><div class="eyebrow">Vérification</div><h1>Votre code</h1></div>
-      <p>Nous avons écrit à <b id="gDest">vous@exemple.fr</b>. Ouvrez le lien sur cet appareil, ou saisissez les six chiffres du message.</p>
+      <p>Nous avons écrit à <b id="gDest">vous@exemple.fr</b>. Ouvrez le lien sur cet appareil, ou saisissez le code reçu dans le message.</p>
       <div class="otp" id="gOtp">
-        <input inputmode="numeric" maxlength="1" aria-label="Chiffre 1"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 2"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 3"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 4"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 5"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 6">
+        <input inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Chiffre 1"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 2"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 3"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 4"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 5"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 6"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 7"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 8">
       </div>
       <button class="btn primary btn-wide" type="button" id="gValider">Valider</button>
       <p class="gate-alt"><button class="linkbtn" type="button" data-resend>Renvoyer le code</button> · <button class="linkbtn" type="button" data-go="inscription">Changer d'adresse</button></p>
@@ -789,12 +793,12 @@ body.artisan .fab{display:none!important}
   </header>
 
   <section class="card">
-    <div class="card-head"><div><h2><button class="lnk-h2" type="button" onclick="selectSpace('travaux')">Travaux →</button></h2></div></div>
+    <div class="card-head"><div><h2><button class="lnk-h2" type="button" data-sp-go="travaux">Travaux →</button></h2></div></div>
     <section class="kpis" id="genKpis" aria-label="Indicateurs travaux"></section>
   </section>
 
   <section class="card">
-    <div class="card-head"><div><h2><button class="lnk-h2" type="button" onclick="selectSpace('ameublement')" id="genPanierTitle">Panier →</button></h2></div></div>
+    <div class="card-head"><div><h2><button class="lnk-h2" type="button" data-sp-go="ameublement" id="genPanierTitle">Panier →</button></h2></div></div>
     <div id="genRecap" class="general-recap"></div>
   </section>
 </section>
@@ -985,13 +989,14 @@ body.artisan .fab{display:none!important}
       <div class="shop-kicker">Studio 12e · Ameublement</div>
       <h1>Le panier du logement</h1>
     </div>
-    <div class="shop-count" id="shopCount"></div>
+    <div class="shop-side"><div class="shop-count" id="shopCount"></div><button class="btn ghost" type="button" id="mCsv">Exporter en CSV</button></div>
   </header>
   <div class="filters" id="mFilters">
     <input type="search" id="mQ" placeholder="Rechercher un article, un modèle, un fournisseur…" aria-label="Rechercher un article">
   </div>
   <div class="chips" id="grChips" role="group" aria-label="Filtrer par groupe"></div>
   <div class="chips chips-st" id="stChips" role="group" aria-label="Filtrer par statut"></div>
+  <div class="chips chips-st" id="prChips" role="group" aria-label="Filtrer par priorité"></div>
 
 
   <div class="shop-grid">
@@ -1102,6 +1107,10 @@ body.artisan .fab{display:none!important}
     <h2 id="dMeubleT"><button class="xclose" type="button" data-close aria-label="Fermer">&times;</button><span id="dMeubleTitle">Modifier l'article</span></h2>
     <div class="form">
       <div class="field full"><label for="mNom">Article *</label><input type="text" id="mNom" required placeholder="Lit 160 × 200 avec sommier"></div>
+      <div class="field"><label for="mPrix">Prix unitaire (€)</label><input type="number" id="mPrix" step="0.01" min="0"></div>
+      <div class="field"><label for="mQte">Quantité</label><input type="number" id="mQte" step="any" min="0" value="1"></div>
+      <div class="field"><label for="mPrio">Priorité</label><select id="mPrio"><option value="Haute">Haute</option><option value="Normale">Normale</option><option value="Basse">Basse</option></select></div>
+      <div class="field"><label for="mCatI">Catégorie</label><input type="text" id="mCatI" list="lCats" placeholder="Couchage"></div>
       <div class="field full"><label for="mStatutI">Statut</label>
         <div class="stslide full" id="mStatutW"><input type="range" id="mStatutI" min="0" max="4" step="1"><span class="stlab" id="mStatutL"></span></div>
         <div class="stticks" id="mStatutT"></div>
@@ -1127,14 +1136,11 @@ body.artisan .fab{display:none!important}
         </div>
         <input type="file" id="mPhotoFile" accept="image/*" hidden>
       </div>
-      <div class="field"><label for="mCatI">Catégorie</label><input type="text" id="mCatI" list="lCats" placeholder="Couchage"></div>
       <div class="field"><label for="mPieceI">Pièce</label><input type="text" id="mPieceI" list="lPieces"></div>
-      <div class="field full"><label for="mModele">Modèle ou référence</label><input type="text" id="mModele" placeholder="VESTERÖY, SUNNERSTA IKEA…"></div>
       <div class="field"><label for="mFour">Boutique</label><input type="text" id="mFour" list="lFours"></div>
+      <div class="field full"><label for="mModele">Modèle ou référence</label><input type="text" id="mModele" placeholder="VESTERÖY, SUNNERSTA IKEA…"></div>
       <div class="field"><label for="mDelai">Délai (semaines)</label><input type="number" id="mDelai" min="0" step="1"></div>
       <div class="field"><label for="mCmd">À commander avant</label><input type="date" id="mCmd"></div>
-      <div class="field"><label for="mPrix">Prix unitaire (€)</label><input type="number" id="mPrix" step="0.01" min="0"></div>
-      <div class="field"><label for="mQte">Quantité</label><input type="number" id="mQte" step="any" min="0" value="1"></div>
       <div class="field"><label for="mLiv">Livraison prévue</label><input type="date" id="mLiv"></div>
       <div class="field"><label for="mPose">Pose / montage par</label><input type="text" id="mPose" placeholder="Moi, ISO DECO…"></div>
       <div class="field full"><label for="mComm">Commentaire</label><textarea id="mComm"></textarea></div>
@@ -1363,6 +1369,7 @@ function selectSpace(sp){
   render();
 }
 document.querySelectorAll(".rail-b").forEach(b => b.addEventListener("click", () => selectSpace(b.dataset.sp)));
+document.querySelectorAll("[data-sp-go]").forEach(b => b.addEventListener("click", () => selectSpace(b.dataset.spGo)));
 
 function render(){
   renderRail();
@@ -2052,7 +2059,7 @@ $("#gOtp").addEventListener("keydown", async e => {
 });
 async function valider(){
   const code = [...$("#gOtp").children].map(x => x.value).join("");
-  if (code.length < 6) { gateMsg("Saisissez les six chiffres reçus."); return; }
+  if (code.length < 6) { gateMsg("Saisissez le code reçu par e-mail."); return; }
   const {error} = await sb.auth.verifyOtp({email: mailCourant, token: code, type: "email"});
   if (error) gateMsg(/expired|invalid/i.test(error.message) ? "Code expiré ou incorrect. Demandez un nouveau lien." : error.message);
 }
@@ -2094,14 +2101,16 @@ async function envoiLien(email){
 }
 let mailCourant = "";
 $("#gOtp").addEventListener("input", e => {
-  const i = e.target; i.value = i.value.replace(/\D/g, "").slice(0,1);
+  const i = e.target; const v = i.value.replace(/\D/g, "");
+  if (v.length > 1) { const cs = [...$("#gOtp").children]; const k0 = cs.indexOf(i); [...v].slice(0, cs.length - k0).forEach((d, k) => cs[k0 + k].value = d); (cs[Math.min(cs.length - 1, k0 + v.length)]).focus(); return; }
+  i.value = v.slice(0,1);
   if (i.value && i.nextElementSibling) i.nextElementSibling.focus();
 });
 $("#gOtp").addEventListener("keydown", e => {
   if (e.key === "Backspace" && !e.target.value && e.target.previousElementSibling) e.target.previousElementSibling.focus();
 });
 $("#gOtp").addEventListener("paste", e => {
-  const t = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0,6);
+  const t = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0,8);
   if (!t) return;
   e.preventDefault();
   [...$("#gOtp").children].forEach((x, k) => x.value = t[k] || "");
@@ -2325,7 +2334,10 @@ const ST_C = {"À initier":"var(--muted)", "Décidé":"var(--accent)", "Command�
 const GORDER = ["Électroménager","Cuisine","Robinetterie","Sanitaires","Literie","Lits","Assises","Tables",
                 "Luminaires","Chauffage","Rangement","Revêtements & finitions","Menuiserie","Textile","Multimédia","Divers"];
 const MCATS = GORDER;
-const MF = {cat:"", st:"", q:""};
+const MF = {cat:"", st:"", q:"", pr:""};
+const PRIOS = ["Haute","Normale","Basse"];
+const PRIO_C = {Haute:"var(--crit, #c0392b)", Normale:"var(--muted)", Basse:"var(--line-strong)"};
+const prioRank = m => { const i = PRIOS.indexOf(m.priorite); return i < 0 ? 1 : i; };
 const stIdx = st => Math.max(0, STEPS.indexOf(st));
 const stMax = STEPS.length - 1;
 const stPct = i => (i / stMax * 100).toFixed(0);
@@ -2414,10 +2426,14 @@ function renderPanier(){
   const nSt = st => all.filter(m => m.statut === st).length;
   $("#stChips").innerHTML = [`<button class="chip" type="button" data-st="" aria-pressed="${!MF.st}">Tous les statuts</button>`]
     .concat(MSTATUTS.filter(st => nSt(st)).map(st => `<button class="chip" type="button" data-st="${esc(st)}" aria-pressed="${MF.st === st}" style="--c:${ST_C[st]}"><i></i>${esc(st === POSSEDE ? "Déjà possédé" : st)} (${nSt(st)})</button>`)).join("");
+  const nPr = p => all.filter(m => (m.priorite || "Normale") === p).length;
+  $("#prChips").innerHTML = [`<button class="chip" type="button" data-pr="" aria-pressed="${!MF.pr}">Toutes priorités</button>`]
+    .concat(PRIOS.filter(p => nPr(p)).map(p => `<button class="chip" type="button" data-pr="${p}" aria-pressed="${MF.pr === p}" style="--c:${PRIO_C[p]}"><i></i>${p} (${nPr(p)})</button>`)).join("");
 
   const groups = new Map();
   cats.forEach(c => {
-    const ms = all.filter(m => m.categorie === c && (!MF.cat || MF.cat === c) && (!MF.st || m.statut === MF.st) && matchQ(m)).sort((a,b) => (a.ordre||0)-(b.ordre||0));
+    const ms = all.filter(m => m.categorie === c && (!MF.cat || MF.cat === c) && (!MF.st || m.statut === MF.st) && (!MF.pr || (m.priorite || "Normale") === MF.pr) && matchQ(m))
+      .sort((a,b) => prioRank(a) - prioRank(b) || (a.ordre||0)-(b.ordre||0));
     if (ms.length) groups.set(c, ms);
   });
   let h = "";
@@ -2430,7 +2446,7 @@ function renderPanier(){
         ${vig(m)}
         <div class="ci-main">
           <div class="ci-top">
-            <h4>${esc(m.nom)}</h4>
+            <h4>${m.priorite === "Haute" ? `<span class="prio-h" title="Priorité haute">Prioritaire</span>` : ""}${esc(m.nom)}${m.priorite === "Basse" ? ` <span class="prio-b">basse priorité</span>` : ""}</h4>
             ${curseur(m)}
           </div>
           ${m.modele ? `<p class="ci-mod">${esc(m.modele)}</p>` : ""}
@@ -2462,6 +2478,7 @@ function renderPanier(){
   const noMatchBits = [];
   if (MF.q) noMatchBits.push(`à « ${esc(MF.q)} »`);
   if (MF.st) noMatchBits.push(`au statut « ${esc(MF.st)} »`);
+  if (MF.pr) noMatchBits.push(`en priorité ${esc(MF.pr.toLowerCase())}`);
   $("#cart").innerHTML = h || `<div class="empty">Aucun article ne correspond${noMatchBits.length ? " " + noMatchBits.join(" et ") : ""}${MF.cat ? (noMatchBits.length ? " dans " : " dans le groupe ") + esc(MF.cat) : ""}.</div>`;
 
   const pieces = [...new Set(all.map(m => pieceLbl(m.piece)))]
@@ -2515,6 +2532,7 @@ $("#cart").addEventListener("click", e => {
 $("#fab").addEventListener("click", () => openMeuble(null));
 $("#grChips").addEventListener("click", e => { const b = e.target.closest("[data-gr]"); if (b) { MF.cat = b.dataset.gr; renderPanier(); } });
 $("#stChips").addEventListener("click", e => { const b = e.target.closest("[data-st]"); if (b) { MF.st = b.dataset.st; renderPanier(); } });
+$("#prChips").addEventListener("click", e => { const b = e.target.closest("[data-pr]"); if (b) { MF.pr = b.dataset.pr; renderPanier(); } });
 let mqT; $("#mQ").addEventListener("input", e => { clearTimeout(mqT); mqT = setTimeout(() => { MF.q = e.target.value; renderPanier(); }, 150); });
 
 /* ---- Compléments fréquents ----
@@ -2719,11 +2737,11 @@ function openMeuble(id){
   mEditing = id;
   $("#dMeubleTitle").textContent = m ? "Fiche article" : "Nouvel article";
   $("#mStatutT").innerHTML = STEPS.map(x => `<span>${esc(x)}</span>`).join("");
-  const v = m || {nom:"",lien:"",categorie:"",piece:"",fournisseur:"",prix:null,quantite:1,statut:STEPS[0],date_livraison:"",pose:"",commentaire:"",modele:"",delai:null,date_commande:""};
+  const v = m || {nom:"",lien:"",categorie:"",piece:"",fournisseur:"",prix:null,quantite:1,statut:STEPS[0],date_livraison:"",pose:"",commentaire:"",modele:"",delai:null,date_commande:"",priorite:"Normale"};
   const set = (sel, val) => $(sel).value = val ?? "";
   set("#mNom",v.nom); set("#mLien",v.lien); set("#mCatI",v.categorie); set("#mPieceI",v.piece); set("#mFour",v.fournisseur);
   set("#mModele",v.modele); set("#mDelai",v.delai); set("#mCmd",v.date_commande);
-  set("#mPrix",v.prix); set("#mQte", v.quantite == null ? 1 : v.quantite); ficheStatut(v.statut);
+  set("#mPrix",v.prix); set("#mQte", v.quantite == null ? 1 : v.quantite); set("#mPrio", PRIOS.includes(v.priorite) ? v.priorite : "Normale"); ficheStatut(v.statut);
   set("#mLiv",v.date_livraison); set("#mPose",v.pose); set("#mComm",v.commentaire);
   $("#mPhotoUrl").value = ""; setPhoto(v.image || "");
   renderSugg();
@@ -2747,7 +2765,7 @@ $("#meubleForm").addEventListener("submit", e => {
     quantite: Math.max(1, +$("#mQte").value || 1), statut: mHorsVal || (STEPS[+$("#mStatutI").value] || STEPS[0]),
     date_livraison: $("#mLiv").value || "", pose: $("#mPose").value.trim(), commentaire: $("#mComm").value.trim(),
     modele: $("#mModele").value.trim(), delai: numOrNull("#mDelai"), date_commande: $("#mCmd").value || "",
-    image: mImg
+    image: mImg, priorite: $("#mPrio").value || "Normale"
   };
   const id = mEditing || ("M" + Date.now().toString(36));
   meubles.set(id, {id, ...data});
@@ -2802,6 +2820,15 @@ $("#bCsv").addEventListener("click", async () => {
   const list = actifs().sort((a,b)=>a.ordre-b.ordre);
   const csv = "﻿" + cols.map(c=>c[1]).join(";") + "\n" + list.map(r => cols.map(([k]) => cell(r[k])).join(";")).join("\n");
   saveFile(`travaux-${todayIso()}.csv`, csv);
+});
+
+$("#mCsv").addEventListener("click", () => {
+  const cols = [["priorite","Priorité"],["categorie","Catégorie"],["piece","Pièce"],["nom","Article"],["modele","Modèle"],["fournisseur","Boutique"],["prix","Prix unitaire"],["quantite","Quantité"],["total","Total"],["statut","Statut"],["date_commande","À commander avant"],["delai","Délai (sem.)"],["date_livraison","Livraison"],["pose","Pose"],["lien","Lien"],["commentaire","Commentaire"]];
+  const cell = v => { if (v == null) return ""; if (typeof v === "number") return String(v).replace(".", ","); const s = String(v); return /[;"\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s; };
+  const list = mList().map(m => ({...m, priorite: m.priorite || "Normale", total: mTotal(m) || null}))
+    .sort((a,b) => prioRank(a) - prioRank(b) || String(a.categorie).localeCompare(String(b.categorie), "fr") || (a.ordre||0)-(b.ordre||0));
+  const csv = "\ufeff" + cols.map(c=>c[1]).join(";") + "\n" + list.map(m => cols.map(([k]) => cell(m[k])).join(";")).join("\n");
+  saveFile(`panier-${todayIso()}.csv`, csv);
 });
 
 /* ============ Interactions ============ */
